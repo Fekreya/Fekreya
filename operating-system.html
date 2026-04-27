@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fekreya · Operating System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg: #0a0e0d;
+            --bg-elevated: #131817;
+            --bg-card: #161c1b;
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.15);
+
+            --text: #ffffff;
+            --text-secondary: #a8b0ae;
+            --text-muted: #6a7270;
+
+            --brand: #0fb39e;
+            --brand-glow: rgba(15, 179, 158, 0.15);
+            --brand-deep: #086a5d;
+
+            --accent: #d4a04e;
+            --accent-glow: rgba(212, 160, 78, 0.15);
+
+            --success: #22c55e;
+            --success-glow: rgba(34, 197, 94, 0.15);
+            --warning: #eab308;
+            --warning-glow: rgba(234, 179, 8, 0.15);
+            --error: #ef4444;
+            --error-glow: rgba(239, 68, 68, 0.12);
+
+            --gradient-brand: linear-gradient(135deg, #0fb39e 0%, #086a5d 100%);
+            --gradient-accent: linear-gradient(135deg, #d4a04e 0%, #a87a30 100%);
+            --gradient-card: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+
+            --radius: 18px;
+            --radius-sm: 12px;
+            --radius-xs: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-size: 15px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection { background: var(--brand); color: white; }
+
+        .app { display: flex; min-height: 100vh; }
+
+        .sidebar {
+            width: 290px;
+            background: var(--bg);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .sidebar-header { padding: 36px 26px 28px; }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .logo-mark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            background: var(--gradient-brand);
+            border-radius: 9px;
+            font-weight: 800;
+            font-size: 16px;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-name {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.3px;
+        }
+
+        .logo-tag {
+            font-size: 10px;
+            color: var(--brand);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-top: 2px;
+        }
+
+        .sidebar-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.3px;
+            line-height: 1.25;
+        }
+
+        .sidebar-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .meta-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--success);
+        }
+
+        .nav { flex: 1; padding: 0 14px; overflow-y: auto; }
+        .nav-group { margin-bottom: 26px; }
+        .nav-label {
+            font-size: 9.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--text-muted);
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            margin-bottom: 3px;
+        }
+
+        .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+        .nav-item.active { color: var(--text); background: rgba(15, 179, 158, 0.1); }
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 22px;
+            background: var(--brand);
+            border-radius: 0 4px 4px 0;
+            box-shadow: 0 0 18px var(--brand);
+        }
+
+        .nav-icon { width: 17px; height: 17px; opacity: 0.7; stroke-width: 2; }
+        .nav-item.active .nav-icon { opacity: 1; color: var(--brand); }
+        .nav-text { font-size: 13px; font-weight: 500; }
+
+        .sidebar-footer {
+            padding: 20px 26px;
+            border-top: 1px solid var(--border);
+        }
+        .footer-brand { font-size: 11px; color: var(--text-muted); }
+        .footer-brand strong { color: var(--text-secondary); }
+
+        .main { flex: 1; margin-left: 290px; }
+        .content { max-width: 1100px; margin: 0 auto; padding: 44px 56px 100px; }
+
+        .section { display: none; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .section.active { display: block; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header { margin-bottom: 44px; }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--brand-glow);
+            border: 1px solid rgba(15, 179, 158, 0.3);
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--brand);
+            margin-bottom: 18px;
+        }
+
+        .section-title {
+            font-size: 44px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -1.2px;
+            line-height: 1.1;
+            margin-bottom: 14px;
+        }
+
+        .section-desc {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 720px;
+        }
+
+        .bento { display: grid; gap: 14px; }
+        .bento-4 { grid-template-columns: repeat(4, 1fr); }
+        .bento-3 { grid-template-columns: repeat(3, 1fr); }
+        .bento-2 { grid-template-columns: repeat(2, 1fr); }
+        @media (max-width: 1000px) { .bento-4, .bento-3 { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 700px) { .bento-4, .bento-3, .bento-2 { grid-template-columns: 1fr; } }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, var(--brand-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .stat-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 10pt;
+        }
+        .stat-value {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.8px;
+            line-height: 1;
+        }
+        .stat-value.brand { color: var(--brand); }
+        .stat-value.accent { color: var(--accent); }
+        .stat-context {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, rgba(15, 179, 158, 0.08) 0%, rgba(15, 179, 158, 0.02) 100%);
+            border: 1px solid rgba(15, 179, 158, 0.22);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            margin-bottom: 32px;
+            position: relative;
+        }
+        .insight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-brand);
+            border-radius: 4px 0 0 4px;
+        }
+        .insight-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--brand);
+            margin-bottom: 12px;
+        }
+        .insight-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--brand);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--brand);
+        }
+        .insight-text {
+            font-size: 16px;
+            color: var(--text);
+            line-height: 1.75;
+        }
+        .insight-text strong { color: var(--brand); font-weight: 600; }
+
+        .insight-card.accent { background: linear-gradient(135deg, rgba(212, 160, 78, 0.08) 0%, rgba(212, 160, 78, 0.02) 100%); border-color: rgba(212, 160, 78, 0.22); }
+        .insight-card.accent::before { background: var(--gradient-accent); }
+        .insight-card.accent .insight-badge { color: var(--accent); }
+        .insight-card.accent .insight-badge::before { background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+        .insight-card.accent .insight-text strong { color: var(--accent); }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover { border-color: var(--border-hover); transform: translateY(-3px); }
+        .feature-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            background: var(--brand-glow);
+            border: 1px solid rgba(15, 179, 158, 0.25);
+            color: var(--brand);
+        }
+        .feature-icon svg { width: 18px; height: 18px; }
+        .feature-icon.accent { background: var(--accent-glow); border-color: rgba(212, 160, 78, 0.25); color: var(--accent); }
+        .feature-icon.green { background: var(--success-glow); border-color: rgba(34, 197, 94, 0.25); color: var(--success); }
+        .feature-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 7px;
+        }
+        .feature-desc {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        .feature-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 14px;
+        }
+        .tag {
+            font-size: 10.5px;
+            font-weight: 600;
+            padding: 4px 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--text-secondary);
+        }
+        .tag.brand { background: var(--brand-glow); border-color: rgba(15, 179, 158, 0.3); color: var(--brand); }
+        .tag.accent { background: var(--accent-glow); border-color: rgba(212, 160, 78, 0.3); color: var(--accent); }
+        .tag.green { background: var(--success-glow); border-color: rgba(34, 197, 94, 0.3); color: var(--success); }
+
+        .table-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            padding: 14px 22px;
+            text-align: left;
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 14px 22px;
+            font-size: 13.5px;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.6;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+        .td-bold { font-weight: 600; }
+        .td-muted { color: var(--text-secondary); font-size: 12.5px; }
+        .td-cost { font-weight: 700; color: var(--brand); white-space: nowrap; }
+        .td-cost.free { color: var(--success); }
+        .td-cost.warn { color: var(--accent); }
+
+        .step-card {
+            display: grid;
+            grid-template-columns: 50px 1fr;
+            gap: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 26px;
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
+        }
+        .step-card:hover { border-color: var(--border-hover); transform: translateX(3px); }
+        .step-num {
+            width: 44px;
+            height: 44px;
+            border-radius: 11px;
+            background: var(--gradient-brand);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 6px 18px var(--brand-glow);
+        }
+        .step-content h4 {
+            font-size: 15.5px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+        .step-content p {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
+        .step-meta {
+            font-size: 11.5px;
+            color: var(--brand);
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .subsection { margin-bottom: 40px; }
+        .subsection-title {
+            font-size: 21px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 18px;
+            letter-spacing: -0.3px;
+        }
+
+        .roadmap-week {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        .roadmap-week::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--brand);
+        }
+        .roadmap-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .roadmap-week-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--brand);
+        }
+        .roadmap-week-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            margin-top: 2px;
+            letter-spacing: -0.2px;
+        }
+        .roadmap-status {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .roadmap-tasks {
+            list-style: none;
+        }
+        .roadmap-tasks li {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            padding: 6px 0 6px 22px;
+            position: relative;
+            line-height: 1.55;
+        }
+        .roadmap-tasks li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 13px;
+            width: 7px;
+            height: 7px;
+            border: 1.5px solid var(--brand);
+            border-radius: 50%;
+        }
+
+        .next-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 26px;
+            margin-bottom: 12px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 22px;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .next-card:hover { border-color: var(--brand); transform: translateY(-2px); }
+        .next-card-content h4 {
+            font-size: 15.5px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+        .next-card-content p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .next-card-time {
+            background: var(--brand-glow);
+            color: var(--brand);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 6px 14px;
+            border-radius: 100px;
+            white-space: nowrap;
+        }
+
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            width: 44px;
+            height: 44px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            cursor: pointer;
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            z-index: 90;
+        }
+        @media (max-width: 1000px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .overlay.open { display: block; }
+            .main { margin-left: 0; }
+            .content { padding: 76px 22px 100px; }
+            .mobile-toggle { display: flex; }
+            .section-title { font-size: 32px; }
+        }
+        @media print {
+            .sidebar, .mobile-toggle { display: none; }
+            .main { margin-left: 0; }
+            .section { display: block !important; margin-bottom: 56px; page-break-after: always; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <button class="mobile-toggle" onclick="toggleSidebar()">
+            <i data-lucide="menu"></i>
+        </button>
+        <div class="overlay" onclick="toggleSidebar()"></div>
+
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-mark">F</div>
+                    <div>
+                        <div class="logo-name">Fekreya</div>
+                        <div class="logo-tag">Operating System</div>
+                    </div>
+                </div>
+                <h1 class="sidebar-title">Your agency, blueprinted.</h1>
+                <div class="sidebar-meta">
+                    <span class="meta-dot"></span>
+                    <span>v1 · April 2026</span>
+                </div>
+            </div>
+
+            <nav class="nav">
+                <div class="nav-group">
+                    <div class="nav-label">The Idea</div>
+                    <div class="nav-item active" data-section="vision">
+                        <i class="nav-icon" data-lucide="compass"></i>
+                        <span class="nav-text">Vision &amp; Positioning</span>
+                    </div>
+                    <div class="nav-item" data-section="stack">
+                        <i class="nav-icon" data-lucide="layers"></i>
+                        <span class="nav-text">Tech Stack &amp; Costs</span>
+                    </div>
+                    <div class="nav-item" data-section="org">
+                        <i class="nav-icon" data-lucide="users-2"></i>
+                        <span class="nav-text">Org Structure</span>
+                    </div>
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-label">Workflows</div>
+                    <div class="nav-item" data-section="outreach">
+                        <i class="nav-icon" data-lucide="send"></i>
+                        <span class="nav-text">Cold Outreach</span>
+                    </div>
+                    <div class="nav-item" data-section="onboarding">
+                        <i class="nav-icon" data-lucide="rocket"></i>
+                        <span class="nav-text">Client Onboarding</span>
+                    </div>
+                    <div class="nav-item" data-section="daily-ops">
+                        <i class="nav-icon" data-lucide="calendar-clock"></i>
+                        <span class="nav-text">Daily VA Operations</span>
+                    </div>
+                    <div class="nav-item" data-section="monitoring">
+                        <i class="nav-icon" data-lucide="eye"></i>
+                        <span class="nav-text">Monitoring &amp; QA</span>
+                    </div>
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-label">Delivery</div>
+                    <div class="nav-item" data-section="hub">
+                        <i class="nav-icon" data-lucide="layout-grid"></i>
+                        <span class="nav-text">Client Hub Template</span>
+                    </div>
+                    <div class="nav-item" data-section="roadmap">
+                        <i class="nav-icon" data-lucide="route"></i>
+                        <span class="nav-text">30-Day Launch Plan</span>
+                    </div>
+                    <div class="nav-item" data-section="next">
+                        <i class="nav-icon" data-lucide="zap"></i>
+                        <span class="nav-text">What to Build Next</span>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="footer-brand">Built for <strong>Mariam</strong> · Founder, Fekreya</div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <div class="content">
+
+                <section id="vision" class="section active">
+                    <div class="section-header">
+                        <div class="section-badge">The Idea</div>
+                        <h1 class="section-title">Fekreya is an Egypt-based agency placing trained executive assistants with global SMB owners.</h1>
+                        <p class="section-desc">You handle relationship + matching + monitoring. Your assistants handle execution. Clients get premium-quality support at half the US cost. The operating system below is everything you need to run this from solo to your first 20 clients.</p>
+                    </div>
+
+                    <div class="insight-card">
+                        <div class="insight-badge">Why this works in 2026</div>
+                        <p class="insight-text">SMB owners worldwide are time-broke and AI-curious. They want help but can't justify hiring full-time. The post-COVID norm of remote work means a sharp, English-fluent assistant in Cairo is functionally indistinguishable from one in Austin — at <strong>40–60% the cost</strong>. Egypt has a deep pool of bilingual graduates and a favorable USD/EGP rate. Fekreya is the bridge.</p>
+                    </div>
+
+                    <div class="bento bento-3" style="margin-bottom: 32px;">
+                        <div class="stat-card">
+                            <div class="stat-label">Target client</div>
+                            <div class="stat-value brand">SMB</div>
+                            <div class="stat-context">Realtors, coaches, consultants, dentists, e-com founders — solo or small team</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Service</div>
+                            <div class="stat-value brand">Executive VA</div>
+                            <div class="stat-context">Inbox, calendar, CRM, social, research — 20 to 40 hrs/week dedicated</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Geography</div>
+                            <div class="stat-value accent">Global</div>
+                            <div class="stat-context">English-speaking — US, UK, Gulf, Australia. Time-zone-aligned per client.</div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">What makes Fekreya defensible</div>
+                        <div class="bento bento-2">
+                            <div class="feature-card">
+                                <div class="feature-icon"><i data-lucide="user-check"></i></div>
+                                <div class="feature-title">Hand-picked, hand-matched</div>
+                                <div class="feature-desc">You personally meet every client + every VA before pairing. Not a marketplace, not a pool. The match is the moat.</div>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon"><i data-lucide="message-square"></i></div>
+                                <div class="feature-title">You stay in the loop</div>
+                                <div class="feature-desc">Weekly check-ins with both sides. Recordings of major meetings. Friday reports. Issues caught in week one, not month three.</div>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon accent"><i data-lucide="dollar-sign"></i></div>
+                                <div class="feature-title">Premium product, fair price</div>
+                                <div class="feature-desc">Your monthly fee sits well above generic Filipino VA agencies and well below US executive assistants. Sweet spot premium.</div>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon accent"><i data-lucide="layers"></i></div>
+                                <div class="feature-title">Custom hub per client</div>
+                                <div class="feature-desc">Every client gets a private branded hub — ClickUp embedded, weekly reports, what's done, what's next. White-glove from day one.</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="stack" class="section">
+                    <div class="section-header">
+                        <div class="section-badge">The Idea</div>
+                        <h1 class="section-title">Tech stack &amp; what each tool costs</h1>
+                        <p class="section-desc">Lean by design — every line item earns its keep. You can run Fekreya end-to-end on the stack below for under $200/month while you have under 10 clients. Scales linearly per VA after that.</p>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Communications &amp; Email</div>
+                        <div class="table-card">
+                            <table>
+                                <thead><tr><th>Tool</th><th>Role</th><th>Cost / month</th><th>Why this one</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="td-bold">Google Workspace</td><td class="td-muted">Domain email · <code>name@fekreya.com</code> for you + every VA</td><td class="td-cost">$7 / user</td><td class="td-muted">Industry standard, instant credibility, includes Drive + Calendar + Meet</td></tr>
+                                    <tr><td class="td-bold">Shortwave</td><td class="td-muted">AI inbox layer on top of Gmail · auto-summaries, smart replies</td><td class="td-cost free">Free → $9</td><td class="td-muted">You + each VA gets one. Cuts inbox time in half. Worth every cent.</td></tr>
+                                    <tr><td class="td-bold">Slack</td><td class="td-muted">Internal team comms · #va-team, #client-alerts, per-client channels</td><td class="td-cost free">Free</td><td class="td-muted">Free tier is enough for under 20 people. Async-first = fewer meetings.</td></tr>
+                                    <tr><td class="td-bold">WhatsApp Business</td><td class="td-muted">Egypt-friendly client + VA backup channel</td><td class="td-cost free">Free</td><td class="td-muted">Many clients in MENA expect WhatsApp. Don't fight the local norm.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Project &amp; Task Management</div>
+                        <div class="table-card">
+                            <table>
+                                <thead><tr><th>Tool</th><th>Role</th><th>Cost / month</th><th>Why this one</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="td-bold">ClickUp</td><td class="td-muted">Per-client folder · tasks, lists, calendars, embeds in client hubs</td><td class="td-cost free">Free → $7</td><td class="td-muted">You already know it. Public-share URLs embed cleanly into hubs.</td></tr>
+                                    <tr><td class="td-bold">Loom</td><td class="td-muted">Async video — VA explainers to clients, your training to VAs</td><td class="td-cost free">Free → $15</td><td class="td-muted">5x faster than typing. Looms in client emails get 3x reply rate.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Meetings &amp; Recording</div>
+                        <div class="table-card">
+                            <table>
+                                <thead><tr><th>Tool</th><th>Role</th><th>Cost / month</th><th>Why this one</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="td-bold">Google Meet</td><td class="td-muted">Default video platform · included with Workspace</td><td class="td-cost free">Free</td><td class="td-muted">No download needed for clients. Works on any device.</td></tr>
+                                    <tr><td class="td-bold">Fathom</td><td class="td-muted">Auto-records every Meet/Zoom call · AI summary · shared with team</td><td class="td-cost free">Free unlimited</td><td class="td-muted">The single most-undervalued free tool of 2026. You see every client conversation without sitting in.</td></tr>
+                                    <tr><td class="td-bold">Calendly</td><td class="td-muted">Client booking · intake calls, monthly reviews</td><td class="td-cost free">Free → $10</td><td class="td-muted">Embed in fekreya.com + email signatures. Removes scheduling friction.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">CRM, Outreach &amp; Lead Data</div>
+                        <div class="table-card">
+                            <table>
+                                <thead><tr><th>Tool</th><th>Role</th><th>Cost / month</th><th>Why this one</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="td-bold">HubSpot Free CRM</td><td class="td-muted">Pipeline tracking · prospects → calls → signed</td><td class="td-cost free">Free</td><td class="td-muted">More than enough for your first 200 prospects. Upgrade later only if you need workflows.</td></tr>
+                                    <tr><td class="td-bold">Instantly.ai</td><td class="td-muted">Cold email sending · domain warmup · sequencing</td><td class="td-cost warn">$37 / mo</td><td class="td-muted">Critical — protects your fekreya.com domain reputation. Don't send cold from raw Gmail.</td></tr>
+                                    <tr><td class="td-bold">Apollo.io</td><td class="td-muted">Find verified emails + phones for target prospects</td><td class="td-cost free">Free → $49</td><td class="td-muted">Free tier gives 50 emails/month — enough to start. Upgrade once outbound proves out.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">AI &amp; Content</div>
+                        <div class="table-card">
+                            <table>
+                                <thead><tr><th>Tool</th><th>Role</th><th>Cost / month</th><th>Why this one</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="td-bold">Claude (Cowork or Pro)</td><td class="td-muted">Personalized prospect reports · client deliverables · doc generation</td><td class="td-cost warn">$20</td><td class="td-muted">Your default for any document, report, email draft, research. Strongest leverage you have.</td></tr>
+                                    <tr><td class="td-bold">ChatGPT Plus</td><td class="td-muted">Backup AI · image generation · voice mode for quick brainstorms</td><td class="td-cost warn">$20</td><td class="td-muted">Optional. Some tasks (image gen, voice) are smoother in GPT than Claude.</td></tr>
+                                    <tr><td class="td-bold">Canva Pro</td><td class="td-muted">Brand assets, social images, simple decks</td><td class="td-cost warn">$13</td><td class="td-muted">Your VAs will live in this for client social tasks. Get one team account.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Web &amp; Hosting</div>
+                        <div class="table-card">
+                            <table>
+                                <thead><tr><th>Tool</th><th>Role</th><th>Cost / month</th><th>Why this one</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="td-bold">Domain (you have it)</td><td class="td-muted">fekreya.com · already secured</td><td class="td-cost free">~$1</td><td class="td-muted">Done. You're ahead of where most founders are at month one.</td></tr>
+                                    <tr><td class="td-bold">Cloudflare Pages</td><td class="td-muted">Hosts fekreya.com landing page + every client hub at fekreya.com/hub/[client]</td><td class="td-cost free">Free</td><td class="td-muted">What Marketive uses. Free, fast, custom domains, deploy from a folder.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="insight-card accent">
+                        <div class="insight-badge">Total monthly cost — first 6 months</div>
+                        <p class="insight-text">Solo founder + 1 VA + 5 clients: <strong>~$120/month</strong>. Founder + 3 VAs + 15 clients: <strong>~$220/month</strong>. The biggest line item is Workspace email seats — everything else is free or cheap. Scale your stack only when your client base has earned it, not before.</p>
+                    </div>
+                </section>
+
+                <section id="org" class="section">
+                    <div class="section-header">
+                        <div class="section-badge">The Idea</div>
+                        <h1 class="section-title">Org structure — three roles, one rhythm</h1>
+                        <p class="section-desc">Fekreya only has three job titles for now. Resist the urge to add more. The clarity of who-does-what is what stops a one-person agency from drowning in handoffs.</p>
+                    </div>
+
+                    <div class="bento bento-3">
+                        <div class="feature-card">
+                            <div class="feature-icon"><i data-lucide="user-cog"></i></div>
+                            <div class="feature-title">You · Founder &amp; Manager</div>
+                            <div class="feature-desc">Outreach, intake calls, VA matching, weekly QA, escalations, client renewals, team hiring. Never the day-to-day VA work itself.</div>
+                            <div class="feature-tags">
+                                <span class="tag brand">Sells</span>
+                                <span class="tag brand">Matches</span>
+                                <span class="tag brand">Monitors</span>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon accent"><i data-lucide="user"></i></div>
+                            <div class="feature-title">VAs · Executors</div>
+                            <div class="feature-desc">Inbox, calendar, CRM, social posting, research, light admin per client. One VA → one client (mostly). Friday reporting to you + their client.</div>
+                            <div class="feature-tags">
+                                <span class="tag accent">Inbox</span>
+                                <span class="tag accent">Tasks</span>
+                                <span class="tag accent">Reports</span>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon green"><i data-lucide="briefcase"></i></div>
+                            <div class="feature-title">Clients · Paying customers</div>
+                            <div class="feature-desc">SMB owners. Receive a dedicated VA + a private hub. Monthly invoiced. Onboarded by you, run by their VA, supervised by you.</div>
+                            <div class="feature-tags">
+                                <span class="tag green">Pay</span>
+                                <span class="tag green">Direct VA</span>
+                                <span class="tag green">Quarterly review w/ you</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection" style="margin-top: 36px;">
+                        <div class="subsection-title">Who reports to whom</div>
+                        <div class="table-card">
+                            <table>
+                                <thead><tr><th>Person</th><th>Reports to</th><th>Daily check-in with</th><th>Weekly meeting</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="td-bold">VA</td><td class="td-muted">You</td><td class="td-muted">Their assigned client (async)</td><td class="td-muted">15 min Friday w/ you · Slack</td></tr>
+                                    <tr><td class="td-bold">Client</td><td class="td-muted">N/A</td><td class="td-muted">Their VA (async)</td><td class="td-muted">Receives Friday report from VA</td></tr>
+                                    <tr><td class="td-bold">You</td><td class="td-muted">Yourself</td><td class="td-muted">Your VAs (Slack #va-team)</td><td class="td-muted">30 min Monday solo planning</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="insight-card">
+                        <div class="insight-badge">The principle</div>
+                        <p class="insight-text">You are <strong>not the chief assistant</strong> — you are the conductor. The moment you start doing VA work for a client because "it's just easier this once," you've stopped being able to scale. Every task that comes to you should bounce to a VA, even if it takes longer the first time. That's the whole game.</p>
+                    </div>
+                </section>
+
+                <section id="outreach" class="section">
+                    <div class="section-header">
+                        <div class="section-badge">Workflow</div>
+                        <h1 class="section-title">Cold outreach — from dataset to first call</h1>
+                        <p class="section-desc">Hyperpersonalized, not bulk. The system below produces ~30 deeply-personalized sends per week and books 3–5 calls. That's enough to grow steadily. You can scale up by hiring a junior outreach VA later.</p>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <h4>Curate your batch (10 prospects at a time)</h4>
+                            <p>From your dataset, pick 10 prospects who fit the ICP (SMB owner, English-speaking, business obviously time-strapped — realtors with active listings, coaches with social presence, etc.). Drop them in the HubSpot pipeline as "New."</p>
+                            <div class="step-meta">Tools: HubSpot · Apollo (verify emails)</div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <h4>Generate personalized PDF for each</h4>
+                            <p>Hand each prospect to Claude: name, business, website. Claude researches them, writes the "I noticed" hook, customizes 2–3 sections of the VA pitch template, generates a branded PDF named <code>VA-Proposal-[BusinessName].pdf</code>.</p>
+                            <div class="step-meta">Tools: Claude · the VA pitch template</div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <h4>Send 4-line email with PDF attached</h4>
+                            <p>Subject: <em>"Made this for [Business Name]"</em>. Body: 4 lines max — personal observation + "made you something specific" + soft "delete if not useful." PDF attached. Sent from Instantly.ai (warmed fekreya.com domain).</p>
+                            <div class="step-meta">Tools: Instantly.ai · Gmail (Workspace) for warmer 1-on-1s</div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <h4>One follow-up after 5 days · then move on</h4>
+                            <p>Single follow-up: "Just floating this back up — no pressure." If no reply, mark "Cold" in HubSpot and stop. Re-add to a 90-day reactivation list. There are always more prospects.</p>
+                            <div class="step-meta">Tools: HubSpot pipeline + Instantly sequence</div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">5</div>
+                        <div class="step-content">
+                            <h4>Reply → Calendly link → 15-min intro call</h4>
+                            <p>When someone replies interested, immediately drop your Calendly link. The call is 15 minutes — confirm fit, hear their day-to-day, share 2–3 specific things a VA would handle for them. End with: "I'll send a customized proposal by tomorrow."</p>
+                            <div class="step-meta">Tools: Calendly · Google Meet · Fathom (auto-records)</div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">6</div>
+                        <div class="step-content">
+                            <h4>Customized proposal → signed agreement</h4>
+                            <p>Use Claude + Fathom transcript to produce the customized v2 proposal (now with their actual workflows, not generic). Send + simple monthly agreement (Stripe link or invoice). On signed, hand off to onboarding workflow.</p>
+                            <div class="step-meta">Tools: Claude · Stripe / Wise for invoicing</div>
+                        </div>
+                    </div>
+
+                    <div class="insight-card">
+                        <div class="insight-badge">Outreach math</div>
+                        <p class="insight-text">Hyperpersonalized at this depth: expect <strong>15–25% open rates</strong>, <strong>5–10% reply rates</strong>, <strong>1–3% conversion to paid client</strong>. Per 100 sends → ~2 new clients. Per month at 30 sends/week → 4–6 new clients/month at full ramp. That fills your VA roster fast.</p>
+                    </div>
+                </section>
+
+                <section id="onboarding" class="section">
+                    <div class="section-header">
+                        <div class="section-badge">Workflow</div>
+                        <h1 class="section-title">Client onboarding — signed to live in 10 days</h1>
+                        <p class="section-desc">The promise made in your pitch deck. This workflow delivers it. Repeat for every new client without thinking — that's why it's documented.</p>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <h4>Day 0 — Welcome email + intake form</h4>
+                            <p>Within 1 hour of signed agreement: warm welcome email + a Google Form / Typeform intake. Captures their tools (CRM, calendar, email), top 5 time-drains, communication style preferences, weekend coverage needs.</p>
+                            <div class="step-meta">Tools: Gmail · Typeform or Google Forms</div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <h4>Day 1–2 — Match a VA + spin up infrastructure</h4>
+                            <p>Pick the VA whose skills + time-zone overlap fits. Create their ClickUp folder for this client. Spin up the client's hub at <code>fekreya.com/hub/[client-slug]</code>. Embed ClickUp folder. Set up shared Google Drive. Invite their VA's <code>@fekreya.com</code> email as a delegate to the client's tools (with permission).</p>
+                            <div class="step-meta">Tools: ClickUp · Google Drive · Cloudflare Pages</div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <h4>Day 3 — Kickoff call (45 min)</h4>
+                            <p>You + the VA + the client. Full intro. Walk through the hub. Get verbal consent for call recording. Define the first 5 tasks the VA will own this week. Recording auto-saved by Fathom and added to the hub for client reference.</p>
+                            <div class="step-meta">Tools: Google Meet · Fathom</div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <h4>Day 4–7 — Shadow week</h4>
+                            <p>VA mirrors the client's workflow. Inbox triage drafts go to client for review before sending. You check Slack for blockers daily but stay out of the way. Adjustments captured in the SOP doc inside the client folder.</p>
+                            <div class="step-meta">Tools: Slack · Shortwave · ClickUp</div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">5</div>
+                        <div class="step-content">
+                            <h4>Day 8–10 — Full operation + first Friday report</h4>
+                            <p>VA running autonomously. First Friday report delivered through the hub: tasks completed, time spent, blockers, next week's plan. Client receives a Loom from the VA walking through the report.</p>
+                            <div class="step-meta">Tools: Loom · ClickUp report widget · email</div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">6</div>
+                        <div class="step-content">
+                            <h4>Day 30 — Your monthly client review</h4>
+                            <p>You join a 20-min call with the client. No VA. Honest check-in. Adjust scope if needed. This is also the moment to plant the seed for upgrades or referrals.</p>
+                            <div class="step-meta">Tools: Calendly · Google Meet · Fathom</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="daily-ops" class="section">
+                    <div class="section-header">
+                        <div class="section-badge">Workflow</div>
+                        <h1 class="section-title">Daily VA operations — the rhythm that runs itself</h1>
+                        <p class="section-desc">Once the rhythm is set, you don't manage daily — you watch. The VA runs the loop with their client. You watch the dashboard and step in only on exceptions.</p>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">A typical VA day</div>
+                        <div class="table-card">
+                            <table>
+                                <thead><tr><th>Time</th><th>Action</th><th>Where it happens</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="td-bold">8:30 AM client local</td><td>Morning digest sent to client (3 items needing them, everything else handled)</td><td class="td-muted">Email · Shortwave</td></tr>
+                                    <tr><td class="td-bold">9:00 AM</td><td>Inbox triage + appointment confirmations for the day</td><td class="td-muted">Gmail · Calendar</td></tr>
+                                    <tr><td class="td-bold">10:00 AM</td><td>Client-specific tasks from ClickUp queue (CRM updates, listings, social, research)</td><td class="td-muted">ClickUp · client tools</td></tr>
+                                    <tr><td class="td-bold">12:00 PM</td><td>Mid-day check — anything new urgent? · quick Slack to client if needed</td><td class="td-muted">Slack · client tools</td></tr>
+                                    <tr><td class="td-bold">2:00 PM</td><td>Deep work — the harder client task of the day (CMA, deck, research, Loom)</td><td class="td-muted">Client tools · Loom</td></tr>
+                                    <tr><td class="td-bold">5:00 PM</td><td>End-of-day Slack summary to client + you · log hours in ClickUp</td><td class="td-muted">Slack · ClickUp</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">ClickUp folder structure per client</div>
+                        <div class="bento bento-2">
+                            <div class="feature-card">
+                                <div class="feature-icon"><i data-lucide="folder-tree"></i></div>
+                                <div class="feature-title">Folder: [Client Name]</div>
+                                <div class="feature-desc">One folder per client. Inside: 4 lists (Inbox, This Week, Recurring, Archive). Tags by category (admin, social, research, urgent).</div>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon accent"><i data-lucide="repeat"></i></div>
+                                <div class="feature-title">Recurring list</div>
+                                <div class="feature-desc">Auto-repeating tasks (Friday report, weekly social posts, monthly CRM cleanup). Set once, never thought about again.</div>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon green"><i data-lucide="share"></i></div>
+                                <div class="feature-title">Public-share view</div>
+                                <div class="feature-desc">A filtered "client-facing" view of the folder. Hides internal notes. This is the URL you embed in the client's hub.</div>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon"><i data-lucide="file-clock"></i></div>
+                                <div class="feature-title">Time tracking on</div>
+                                <div class="feature-desc">Every task gets time logged via ClickUp's built-in tracker. Friday report pulls totals automatically.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="insight-card">
+                        <div class="insight-badge">The Friday Report ritual</div>
+                        <p class="insight-text">Every Friday by 2pm client local: VA delivers a 1-pager via the hub (auto-pulled from ClickUp + a 60-second Loom). Tasks done · hours spent · what's next · any blockers needing client decision. <strong>This single ritual is what keeps clients renewing.</strong> They never wonder where their money is going.</p>
+                    </div>
+                </section>
+
+                <section id="monitoring" class="section">
+                    <div class="section-header">
+                        <div class="section-badge">Workflow</div>
+                        <h1 class="section-title">Monitoring &amp; QA — staying informed without micromanaging</h1>
+                        <p class="section-desc">Your goal is to know what's going on with every client + VA without sitting in every meeting or reviewing every email. The system below gives you that visibility in about 30 minutes per day.</p>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Your daily monitoring loop (30 min)</div>
+                        <div class="step-card">
+                            <div class="step-num">A</div>
+                            <div class="step-content">
+                                <h4>Morning · Slack #va-team scan (5 min)</h4>
+                                <p>Quick scroll. Any blocker flags from yesterday? Any clients showing dissatisfaction? Reply only where needed.</p>
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">B</div>
+                            <div class="step-content">
+                                <h4>Midday · Fathom recordings inbox (10 min)</h4>
+                                <p>New client meetings auto-summarized by Fathom. Read the AI summaries (not the full transcripts). Flag any that need your follow-up.</p>
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">C</div>
+                            <div class="step-content">
+                                <h4>Late afternoon · ClickUp dashboard sweep (10 min)</h4>
+                                <p>"All Clients" master view. Look for: tasks overdue more than 24 hours · clients with no activity in 3+ days · any "urgent" tag still open.</p>
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">D</div>
+                            <div class="step-content">
+                                <h4>End of day · 1 personal touch (5 min)</h4>
+                                <p>Send a short Slack to one VA + one client. Different people each day. Just human. "Saw you closed Elm Street — nice." This is the glue.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Meeting recording — the right way</div>
+                        <div class="insight-card accent">
+                            <div class="insight-badge">Important · ethical &amp; legal</div>
+                            <p class="insight-text">Recording a call without consent is illegal in many jurisdictions (Egypt included). Always: (1) Verbally announce at the start of every meeting that "we record our calls for quality and so my team is aligned." (2) Pause for verbal consent on the recording itself. (3) Store recordings in your private drive — never share publicly. (4) Delete recordings after 90 days unless flagged.</p>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">Weekly health metrics — your dashboard</div>
+                        <div class="bento bento-4">
+                            <div class="stat-card">
+                                <div class="stat-label">Active clients</div>
+                                <div class="stat-value">—</div>
+                                <div class="stat-context">Track in HubSpot</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">Tasks closed / week</div>
+                                <div class="stat-value">—</div>
+                                <div class="stat-context">From ClickUp totals</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">VA utilization</div>
+                                <div class="stat-value">—</div>
+                                <div class="stat-context">Hours logged vs. hours sold</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">Client NPS</div>
+                                <div class="stat-value">—</div>
+                                <div class="stat-context">1 question monthly</div>
+                            </div>
+                        </div>
+                        <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 12px; font-style: italic;">Track these weekly in a simple Google Sheet. Don't build a dashboard tool until you have 10+ clients — the sheet is enough.</p>
+                    </div>
+                </section>
+
+                <section id="hub" class="section">
+                    <div class="section-header">
+                        <div class="section-badge">Delivery</div>
+                        <h1 class="section-title">The Client Hub — your premium signature</h1>
+                        <p class="section-desc">Every client gets a private branded hub at <code>fekreya.com/hub/[their-slug]</code>. This is what makes you feel premium vs. every other VA agency. Built once as a template, customized per client in 10 minutes.</p>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">What lives inside each hub</div>
+                        <div class="bento bento-3">
+                            <div class="feature-card">
+                                <div class="feature-icon"><i data-lucide="check-square"></i></div>
+                                <div class="feature-title">Tasks tab</div>
+                                <div class="feature-desc">ClickUp public-share URL embedded as iframe. Shows the client their live task board, updated real-time. No "what's happening?" emails.</div>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon"><i data-lucide="calendar"></i></div>
+                                <div class="feature-title">Calendar tab</div>
+                                <div class="feature-desc">ClickUp calendar view embedded — shows what's scheduled and when their VA is on/off.</div>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon accent"><i data-lucide="file-bar-chart"></i></div>
+                                <div class="feature-title">Reports tab</div>
+                                <div class="feature-desc">Friday reports, monthly summaries, any custom deliverables (audits, plans, decks). All Looms embedded.</div>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon accent"><i data-lucide="folder"></i></div>
+                                <div class="feature-title">Documents tab</div>
+                                <div class="feature-desc">Their SOP doc, their VA's profile, recordings of their kickoff and monthly reviews, any shared assets.</div>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon green"><i data-lucide="message-circle"></i></div>
+                                <div class="feature-title">"Reach me" panel</div>
+                                <div class="feature-desc">Their VA's direct Slack/email/WhatsApp. Your direct contact for escalation. Calendly to book monthly review with you.</div>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon green"><i data-lucide="trending-up"></i></div>
+                                <div class="feature-title">Wins ticker</div>
+                                <div class="feature-desc">Optional · simple list of recent wins ("48 leads contacted this week", "responded to 12 reviews"). Reinforces value subliminally.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <div class="subsection-title">How to spin up a hub for a new client (10 min)</div>
+                        <div class="step-card">
+                            <div class="step-num">1</div>
+                            <div class="step-content">
+                                <h4>Tell Claude to copy the hub template</h4>
+                                <p>"Spin up a hub for [Client Name] using the Fekreya hub template. ClickUp share URL: [paste]. VA assigned: [name]." Claude duplicates the template, swaps name/logo/colors/embed, saves to the right folder.</p>
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">2</div>
+                            <div class="step-content">
+                                <h4>Cloudflare auto-deploys</h4>
+                                <p>Once the file is saved, Cloudflare Pages publishes <code>fekreya.com/hub/[client-slug]</code> within 30 seconds. Done.</p>
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">3</div>
+                            <div class="step-content">
+                                <h4>Send the hub link to the client</h4>
+                                <p>Email subject: "Your Fekreya hub is live." One-line body: "Bookmark this — it's where everything lives." Link.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="roadmap" class="section">
+                    <div class="section-header">
+                        <div class="section-badge">Delivery</div>
+                        <h1 class="section-title">30-Day Launch Plan</h1>
+                        <p class="section-desc">From zero to first paying client in 4 weeks. This is paced for a solo founder doing this part-time. Faster is possible if you're full-time.</p>
+                    </div>
+
+                    <div class="roadmap-week">
+                        <div class="roadmap-header">
+                            <div>
+                                <div class="roadmap-week-label">Week 1</div>
+                                <div class="roadmap-week-title">Foundation — make Fekreya real</div>
+                            </div>
+                            <div class="roadmap-status">Setup phase</div>
+                        </div>
+                        <ul class="roadmap-tasks">
+                            <li>Set up Google Workspace on fekreya.com · create your <code>mariam@fekreya.com</code></li>
+                            <li>Create logo + 1-color brand (Canva or hire a 1-day designer) · simple wordmark is fine</li>
+                            <li>Build fekreya.com landing page (Claude can do this — see "Build Next" section)</li>
+                            <li>Set up Calendly with your booking link · embed in email signature</li>
+                            <li>Set up HubSpot Free CRM · import your prospect dataset</li>
+                            <li>Sign up for Instantly.ai · start domain warmup (sends 5 emails/day to test addresses for 14 days before real cold sending)</li>
+                        </ul>
+                    </div>
+
+                    <div class="roadmap-week">
+                        <div class="roadmap-header">
+                            <div>
+                                <div class="roadmap-week-label">Week 2</div>
+                                <div class="roadmap-week-title">Infrastructure — make Fekreya operational</div>
+                            </div>
+                            <div class="roadmap-status">Build phase</div>
+                        </div>
+                        <ul class="roadmap-tasks">
+                            <li>Build the Client Hub template (Claude does this) · publish at fekreya.com/hub/template</li>
+                            <li>Build the VA Onboarding Pack — 1-page Loom + checklist + welcome doc · for every new VA</li>
+                            <li>Set up your ClickUp workspace · create the per-client folder template</li>
+                            <li>Sign your first VA (one of your friends/colleagues) · onboard them as the test case</li>
+                            <li>Run a mock client engagement with a friend acting as a fake client · iterate the process before paying customers see it</li>
+                        </ul>
+                    </div>
+
+                    <div class="roadmap-week">
+                        <div class="roadmap-header">
+                            <div>
+                                <div class="roadmap-week-label">Week 3</div>
+                                <div class="roadmap-week-title">Launch outreach — first 30 sends</div>
+                            </div>
+                            <div class="roadmap-status">Selling phase</div>
+                        </div>
+                        <ul class="roadmap-tasks">
+                            <li>Domain warmup complete · start cold outreach</li>
+                            <li>10 personalized PDFs/day for 3 days · 30 total sends</li>
+                            <li>Calendly fills with intake calls · take every one personally</li>
+                            <li>Track everything in HubSpot · open rates, replies, calls booked</li>
+                            <li>Iterate the email subject line + opening if open rates are below 20%</li>
+                        </ul>
+                    </div>
+
+                    <div class="roadmap-week">
+                        <div class="roadmap-header">
+                            <div>
+                                <div class="roadmap-week-label">Week 4</div>
+                                <div class="roadmap-week-title">First paying client + first VA placement</div>
+                            </div>
+                            <div class="roadmap-status">Live phase</div>
+                        </div>
+                        <ul class="roadmap-tasks">
+                            <li>First signed client · run them through the 10-day onboarding workflow</li>
+                            <li>Spin up their hub · embed their ClickUp folder · invite them in</li>
+                            <li>Their VA goes live · first Friday report sent</li>
+                            <li>Continue outreach — 30 more sends this week</li>
+                            <li>End of month: write a 30-day reflection · what worked, what didn't · adjust the OS doc</li>
+                        </ul>
+                    </div>
+
+                    <div class="insight-card">
+                        <div class="insight-badge">Honest expectation</div>
+                        <p class="insight-text">Most founders panic in week 3 because outreach feels slow. <strong>Your first sale typically lands between days 18–35.</strong> If you've sent 30 personalized PDFs and gotten 4 calls + 1 signed by Day 30, you're on track. If you've sent 200 generic emails and gotten 0 calls, you're doing it wrong. Quality over quantity, every time.</p>
+                    </div>
+                </section>
+
+                <section id="next" class="section">
+                    <div class="section-header">
+                        <div class="section-badge">Delivery</div>
+                        <h1 class="section-title">What to build next — your menu of deliverables</h1>
+                        <p class="section-desc">Each item below is something I can build for you in this conversation or a future one. They're roughly ordered by what unblocks you fastest. Pick the next one and tell me to build it.</p>
+                    </div>
+
+                    <div class="next-card">
+                        <div class="next-card-content">
+                            <h4>1 · The Fekreya landing page</h4>
+                            <p>Single page at fekreya.com explaining what you do, who it's for, with a Calendly button. Same dark + teal aesthetic as this doc. Hosted on Cloudflare Pages free tier.</p>
+                        </div>
+                        <div class="next-card-time">~10 min build</div>
+                    </div>
+
+                    <div class="next-card">
+                        <div class="next-card-content">
+                            <h4>2 · The Client Hub template</h4>
+                            <p>The branded hub structure with placeholder for ClickUp embed, reports tab, contact panel, etc. Once built, every new client = 10-minute customization.</p>
+                        </div>
+                        <div class="next-card-time">~15 min build</div>
+                    </div>
+
+                    <div class="next-card">
+                        <div class="next-card-content">
+                            <h4>3 · Cold email templates pack</h4>
+                            <p>5 variations of the 4-line hook email + the follow-up + the post-call thank-you + the proposal cover note. Ready to copy into Instantly.ai.</p>
+                        </div>
+                        <div class="next-card-time">~10 min build</div>
+                    </div>
+
+                    <div class="next-card">
+                        <div class="next-card-content">
+                            <h4>4 · VA onboarding pack</h4>
+                            <p>A polished welcome doc for every new VA — what Fekreya is, expectations, tools, weekly cadence, escalation paths. Written to feel premium, not corporate.</p>
+                        </div>
+                        <div class="next-card-time">~15 min build</div>
+                    </div>
+
+                    <div class="next-card">
+                        <div class="next-card-content">
+                            <h4>5 · Client SOP template</h4>
+                            <p>A blank-but-structured doc each VA fills in for each new client during the shadow week. Captures their preferences, tools, workflows, "do this / never do this" rules.</p>
+                        </div>
+                        <div class="next-card-time">~10 min build</div>
+                    </div>
+
+                    <div class="next-card">
+                        <div class="next-card-content">
+                            <h4>6 · Friday Report template</h4>
+                            <p>The 1-pager VA's send each Friday. Pulls structure from ClickUp (tasks done, hours), leaves a section for the Loom embed and "next week" priorities.</p>
+                        </div>
+                        <div class="next-card-time">~10 min build</div>
+                    </div>
+
+                    <div class="next-card">
+                        <div class="next-card-content">
+                            <h4>7 · Pricing calculator (private)</h4>
+                            <p>A small interactive tool you use during intake calls — punch in client's industry, hours/week, weekend coverage — instant quote across Starter / Growth / Team tiers.</p>
+                        </div>
+                        <div class="next-card-time">~20 min build</div>
+                    </div>
+
+                    <div class="next-card">
+                        <div class="next-card-content">
+                            <h4>8 · Your first 5 personalized prospect PDFs</h4>
+                            <p>Pick 5 real businesses from your dataset — I research each, write the hook, generate the customized PDF with their name on it. You send. We learn from open rates.</p>
+                        </div>
+                        <div class="next-card-time">~30 min total</div>
+                    </div>
+
+                    <div class="insight-card">
+                        <div class="insight-badge">My honest order recommendation</div>
+                        <p class="insight-text">Build in this order: <strong>1 → 2 → 8 → 3 → 4 → 6 → 5 → 7</strong>. Reasoning: landing page makes you real. Hub template lets you sign your first client. Five real prospect PDFs proves outreach works (or doesn't) before you invest in templates around it. Everything else is infrastructure for scaling — wait until you have 2 paying clients to bother.</p>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const navItems = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('.section');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.overlay');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const sectionId = item.dataset.section;
+                navItems.forEach(n => n.classList.remove('active'));
+                item.classList.add('active');
+                sections.forEach(s => {
+                    s.classList.remove('active');
+                    if (s.id === sectionId) s.classList.add('active');
+                });
+                sidebar.classList.remove('open');
+                overlay.classList.remove('open');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+        }
+
+        if (window.lucide) { lucide.createIcons(); }
+        else { window.addEventListener('load', () => { if (window.lucide) lucide.createIcons(); }); }
+    </script>
+</body>
+</html>
