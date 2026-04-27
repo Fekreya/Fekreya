@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fekreya · Executive Assistants for Busy Founders</title>
+    <meta name="description" content="Hand-matched, tech-savvy executive assistants. Trained, English-fluent, working in your time zone.">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --navy: #0F1830;
+            --navy-2: #1D2A4D;
+            --navy-soft: #4a5066;
+            --sand: #E8DCC4;
+            --sand-light: #f1e8d4;
+            --sand-soft: #faf5e9;
+            --cream: #fdfaf2;
+            --coral: #E87A5D;
+            --coral-deep: #c85f43;
+            --coral-soft: #fbe5dd;
+            --tan: #C2A279;
+            --tan-soft: #e5d6bd;
+
+            --text: var(--navy);
+            --text-soft: var(--navy-soft);
+            --text-muted: #8a8270;
+            --border: rgba(15, 24, 48, 0.10);
+            --border-strong: rgba(15, 24, 48, 0.18);
+
+            --gradient-coral: linear-gradient(135deg, #E87A5D 0%, #c85f43 100%);
+            --shadow-soft: 0 10px 30px rgba(15, 24, 48, 0.06);
+            --shadow-card: 0 4px 16px rgba(15, 24, 48, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
+            background: var(--sand);
+            color: var(--text);
+            line-height: 1.65;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        ::selection { background: var(--coral); color: white; }
+        a { color: inherit; text-decoration: none; }
+        button { font-family: inherit; cursor: pointer; border: none; }
+
+        /* ============== NAV ============== */
+        .nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            background: rgba(232, 220, 196, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-inner {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 18px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: -1px;
+            color: var(--navy);
+        }
+        .nav-brand span { color: var(--coral); }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+        .nav-link {
+            font-size: 14.5px;
+            font-weight: 500;
+            color: var(--navy-soft);
+            transition: color 0.2s ease;
+        }
+        .nav-link:hover { color: var(--navy); }
+        .nav-cta {
+            background: var(--gradient-coral);
+            color: white;
+            padding: 10px 22px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(232, 122, 93, 0.3); }
+
+        @media (max-width: 800px) {
+            .nav-links { gap: 12px; }
+            .nav-link:not(.nav-cta) { display: none; }
+            .nav-inner { padding: 14px 22px; }
+        }
+
+        /* ============== HERO ============== */
+        .hero {
+            position: relative;
+            padding: 160px 36px 100px;
+            text-align: center;
+            background: var(--sand);
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 120%; height: 120%;
+            background: radial-gradient(ellipse at center top, rgba(232, 122, 93, 0.20) 0%, transparent 55%);
+            pointer-events: none;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -10%; left: -10%;
+            width: 50%; height: 60%;
+            background: radial-gradient(circle, rgba(194, 162, 121, 0.25) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .hero-inner {
+            max-width: 920px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 16px;
+            background: rgba(232, 122, 93, 0.10);
+            border: 1px solid rgba(232, 122, 93, 0.30);
+            border-radius: 100px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--coral-deep);
+            margin-bottom: 28px;
+        }
+        .hero-eyebrow::before {
+            content: '';
+            width: 7px; height: 7px;
+            background: var(--coral);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--coral);
+        }
+        h1.hero-title {
+            font-size: 64px;
+            font-weight: 800;
+            letter-spacing: -2.5px;
+            line-height: 1.05;
+            margin-bottom: 24px;
+            color: var(--navy);
+        }
+        .hero-title em {
+            font-style: normal;
+            color: var(--coral);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .hero-sub {
+            font-size: 19px;
+            color: var(--navy-soft);
+            line-height: 1.65;
+            max-width: 680px;
+            margin: 0 auto 40px;
+        }
+        .hero-ctas {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 36px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 30px;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-primary {
+            background: var(--gradient-coral);
+            color: white;
+            box-shadow: 0 10px 30px rgba(232, 122, 93, 0.30);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(232, 122, 93, 0.40); }
+        .btn-ghost {
+            background: rgba(15, 24, 48, 0.04);
+            color: var(--navy);
+            border: 1px solid var(--border);
+        }
+        .btn-ghost:hover { background: rgba(15, 24, 48, 0.08); transform: translateY(-1px); }
+        .btn svg { width: 16px; height: 16px; }
+
+        .hero-trust {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 26px;
+            font-size: 13px;
+            color: var(--navy-soft);
+            flex-wrap: wrap;
+        }
+        .hero-trust-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .hero-trust-item svg { width: 14px; height: 14px; color: var(--coral); }
+
+        @media (max-width: 700px) {
+            h1.hero-title { font-size: 42px; letter-spacing: -1.5px; }
+            .hero { padding: 130px 22px 80px; }
+            .hero-sub { font-size: 17px; }
+        }
+
+        /* ============== SECTION SHELL ============== */
+        section.s {
+            padding: 100px 36px;
+            position: relative;
+        }
+        section.s.cream { background: var(--cream); }
+        section.s.softer { background: var(--sand-light); }
+        .s-inner {
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+        .s-eyebrow {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--coral-deep);
+            font-weight: 700;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        h2.s-title {
+            font-size: 44px;
+            font-weight: 800;
+            letter-spacing: -1.4px;
+            line-height: 1.12;
+            text-align: center;
+            margin-bottom: 18px;
+            max-width: 780px;
+            margin-left: auto;
+            margin-right: auto;
+            color: var(--navy);
+        }
+        .s-sub {
+            font-size: 17px;
+            color: var(--navy-soft);
+            line-height: 1.7;
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto 60px;
+        }
+
+        @media (max-width: 700px) {
+            section.s { padding: 70px 22px; }
+            h2.s-title { font-size: 30px; letter-spacing: -1px; }
+            .s-sub { font-size: 16px; margin-bottom: 40px; }
+        }
+
+        /* ============== PROBLEM CARDS ============== */
+        .prob-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .prob {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 32px 28px;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .prob:hover { transform: translateY(-4px); box-shadow: var(--shadow-soft); }
+        .prob-icon {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--coral-soft);
+            color: var(--coral-deep);
+            margin-bottom: 18px;
+        }
+        .prob-icon svg { width: 20px; height: 20px; }
+        .prob h3 {
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.4px;
+            color: var(--navy);
+        }
+        .prob p {
+            font-size: 14.5px;
+            color: var(--navy-soft);
+            line-height: 1.65;
+        }
+        @media (max-width: 800px) { .prob-grid { grid-template-columns: 1fr; } }
+
+        /* ============== HOW IT WORKS ============== */
+        .how-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            counter-reset: step;
+        }
+        @media (max-width: 1000px) { .how-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .how-grid { grid-template-columns: 1fr; } }
+        .how {
+            background: white;
+            border-radius: 16px;
+            padding: 28px 26px;
+            position: relative;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-card);
+        }
+        .how-num {
+            counter-increment: step;
+            display: inline-block;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--coral-deep);
+            margin-bottom: 14px;
+            letter-spacing: 0.05em;
+        }
+        .how-num::before { content: 'STEP 0' counter(step); }
+        .how h4 {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+            color: var(--navy);
+        }
+        .how p {
+            font-size: 14px;
+            color: var(--navy-soft);
+            line-height: 1.65;
+        }
+        .how-time {
+            display: inline-block;
+            margin-top: 16px;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--coral-deep);
+            background: var(--coral-soft);
+            padding: 4px 10px;
+            border-radius: 100px;
+        }
+
+        /* ============== COMPARISON ============== */
+        .compare-wrap {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            overflow: hidden;
+            overflow-x: auto;
+            box-shadow: var(--shadow-soft);
+        }
+        .compare {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 720px;
+        }
+        .compare th, .compare td {
+            padding: 18px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 14.5px;
+        }
+        .compare thead th {
+            background: var(--sand-light);
+            color: var(--navy-soft);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-strong);
+        }
+        .compare th.us {
+            color: var(--coral-deep);
+            background: var(--coral-soft);
+        }
+        .compare tbody th {
+            font-weight: 600;
+            color: var(--navy);
+            min-width: 200px;
+            background: var(--sand-soft);
+        }
+        .compare td {
+            color: var(--navy-soft);
+        }
+        .compare td.col-us {
+            background: rgba(232, 122, 93, 0.06);
+            color: var(--navy);
+            font-weight: 600;
+        }
+        .compare tr:last-child th, .compare tr:last-child td { border-bottom: none; }
+        .check { color: var(--coral-deep); font-weight: 700; }
+        .cross { color: var(--text-muted); }
+        .meh { color: var(--tan); font-weight: 500; }
+
+        @media (max-width: 700px) {
+            .compare th, .compare td { padding: 14px 16px; font-size: 13.5px; }
+        }
+
+        /* ============== TECH SAVVY SECTION ============== */
+        .tech-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 60px 48px;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+        .tech-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 60%; height: 200%;
+            background: radial-gradient(circle, rgba(232, 122, 93, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .tech-card::after {
+            content: '';
+            position: absolute;
+            bottom: -50%; left: -20%;
+            width: 60%; height: 200%;
+            background: radial-gradient(circle, rgba(194, 162, 121, 0.10) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .tech-card-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        .tech-eyebrow {
+            display: inline-block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--coral-deep);
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+        .tech-statement {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 36px;
+            font-weight: 600;
+            letter-spacing: -1.2px;
+            line-height: 1.25;
+            color: var(--navy);
+            margin-bottom: 24px;
+        }
+        .tech-statement em {
+            font-style: normal;
+            color: var(--coral);
+        }
+        .tech-sub {
+            font-size: 17px;
+            color: var(--navy-soft);
+            line-height: 1.7;
+        }
+
+        @media (max-width: 700px) {
+            .tech-card { padding: 40px 28px; }
+            .tech-statement { font-size: 26px; letter-spacing: -0.8px; }
+            .tech-sub { font-size: 15.5px; }
+        }
+
+        /* ============== PACKAGES ============== */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            align-items: stretch;
+        }
+        @media (max-width: 900px) { .pricing-grid { grid-template-columns: 1fr; max-width: 460px; margin: 0 auto; } }
+
+        .price {
+            background: white;
+            border-radius: 22px;
+            padding: 36px 32px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .price:hover { transform: translateY(-4px); box-shadow: var(--shadow-soft); }
+
+        .price.featured {
+            border: 2px solid var(--coral);
+            box-shadow: 0 16px 50px rgba(232, 122, 93, 0.18);
+            transform: translateY(-12px);
+        }
+        @media (max-width: 900px) { .price.featured { transform: translateY(0); } }
+
+        .price-pop {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient-coral);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 6px 16px;
+            border-radius: 100px;
+            box-shadow: 0 6px 14px rgba(232, 122, 93, 0.25);
+        }
+
+        .price-name {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--coral-deep);
+            margin-bottom: 14px;
+        }
+        .price-headline {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--navy);
+            letter-spacing: -0.8px;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+        .price-best {
+            font-size: 14px;
+            color: var(--navy-soft);
+            margin-bottom: 18px;
+            min-height: 42px;
+        }
+        .price hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 8px 0 22px;
+        }
+        .price-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+            margin-bottom: 26px;
+            flex: 1;
+        }
+        .price-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--navy-soft);
+            line-height: 1.5;
+        }
+        .price-list li svg {
+            width: 16px; height: 16px;
+            color: var(--coral);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .btn-tier {
+            display: inline-block;
+            text-align: center;
+            padding: 14px 20px;
+            border-radius: 100px;
+            font-size: 14.5px;
+            font-weight: 600;
+            background: var(--navy);
+            color: white;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .btn-tier:hover { transform: translateY(-1px); background: var(--navy-2); }
+        .price.featured .btn-tier {
+            background: var(--gradient-coral);
+        }
+        .price.featured .btn-tier:hover { background: var(--gradient-coral); box-shadow: 0 8px 20px rgba(232, 122, 93, 0.30); }
+
+        .price-fine {
+            text-align: center;
+            font-size: 14px;
+            color: var(--navy-soft);
+            margin-top: 28px;
+        }
+        .price-fine a { color: var(--coral-deep); font-weight: 600; border-bottom: 1px solid currentColor; }
+
+        /* ============== FAQ ============== */
+        .faq-wrap {
+            max-width: 760px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 16px 32px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-card);
+        }
+        .faq {
+            border-bottom: 1px solid var(--border);
+            padding: 22px 0;
+        }
+        .faq:last-child { border-bottom: none; }
+        .faq summary {
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            color: var(--navy);
+        }
+        .faq summary::-webkit-details-marker { display: none; }
+        .faq summary::after {
+            content: '+';
+            font-size: 24px;
+            font-weight: 400;
+            color: var(--coral);
+            transition: transform 0.2s ease;
+            line-height: 1;
+        }
+        .faq[open] summary::after { content: '\2212'; }
+        .faq p {
+            margin-top: 14px;
+            font-size: 15px;
+            color: var(--navy-soft);
+            line-height: 1.7;
+        }
+
+        /* ============== FINAL CTA ============== */
+        .final {
+            padding: 100px 36px;
+            background: linear-gradient(135deg, var(--sand) 0%, var(--tan-soft) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .final::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: 50%;
+            transform: translateX(-50%);
+            width: 80%; height: 200%;
+            background: radial-gradient(circle, rgba(232, 122, 93, 0.18) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .final-inner {
+            max-width: 760px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .final h2 {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -1.6px;
+            line-height: 1.1;
+            margin-bottom: 18px;
+            color: var(--navy);
+        }
+        .final p {
+            font-size: 17px;
+            color: var(--navy-soft);
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+        @media (max-width: 700px) {
+            .final h2 { font-size: 32px; letter-spacing: -1.2px; }
+            .final { padding: 70px 22px; }
+        }
+
+        /* ============== FOOTER ============== */
+        footer {
+            background: var(--sand-light);
+            padding: 40px 36px;
+            border-top: 1px solid var(--border);
+        }
+        .foot-inner {
+            max-width: 1180px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--navy-soft);
+        }
+        .foot-inner a { color: var(--navy); }
+        .foot-inner a:hover { color: var(--coral-deep); }
+        .foot-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--navy);
+        }
+        .foot-brand span { color: var(--coral); }
+    </style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="nav">
+    <div class="nav-inner">
+        <a href="#" class="nav-brand">fekreya<span>.</span></a>
+        <div class="nav-links">
+            <a href="#how" class="nav-link">How it works</a>
+            <a href="#why" class="nav-link">Why us</a>
+            <a href="#packages" class="nav-link">Packages</a>
+            <a href="#faq" class="nav-link">FAQ</a>
+            <a href="mailto:mariam@fekreya.com?subject=Fekreya%20Intro%20Call&body=Hi%20Mariam%2C%20I%27d%20like%20to%20book%20a%2015-minute%20intro%20call." class="nav-cta">Book a call</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-eyebrow">Now accepting 5 founders this month</div>
+        <h1 class="hero-title">Get back the hours <em>you keep losing</em> to admin.</h1>
+        <p class="hero-sub">Hand-matched executive assistants. Trained, English-fluent, tech-savvy, working in your time zone. Live in 10 days.</p>
+        <div class="hero-ctas">
+            <a href="mailto:mariam@fekreya.com?subject=Fekreya%20Intro%20Call&body=Hi%20Mariam%2C%20I%27d%20like%20to%20book%20a%2015-minute%20intro%20call." class="btn btn-primary">
+                Book a 15-min call
+                <i data-lucide="arrow-right"></i>
+            </a>
+            <a href="#packages" class="btn btn-ghost">See packages</a>
+        </div>
+        <div class="hero-trust">
+            <span class="hero-trust-item"><i data-lucide="check"></i> No long-term contract</span>
+            <span class="hero-trust-item"><i data-lucide="check"></i> Replace anytime</span>
+            <span class="hero-trust-item"><i data-lucide="check"></i> Live in 10 days</span>
+        </div>
+    </div>
+</section>
+
+<!-- ===== PROBLEM ===== -->
+<section class="s cream">
+    <div class="s-inner">
+        <div class="s-eyebrow">If any of this sounds familiar</div>
+        <h2 class="s-title">You're a $100/hr founder spending most of your week on $15/hr work.</h2>
+        <p class="s-sub">Email triage. Calendar tetris. CRM updates. Social posts. Lead follow-ups. The work has to happen, but it shouldn't be happening to you.</p>
+
+        <div class="prob-grid">
+            <div class="prob">
+                <div class="prob-icon"><i data-lucide="inbox"></i></div>
+                <h3>Drowning in admin</h3>
+                <p>You came home at 9pm and the most important thing you did all day was reply to 47 emails. The real work didn't happen.</p>
+            </div>
+            <div class="prob">
+                <div class="prob-icon"><i data-lucide="user-x"></i></div>
+                <h3>Can't justify a full hire</h3>
+                <p>A US executive assistant costs more than your rent. A local part-timer wastes hours of training. You need help, not headcount.</p>
+            </div>
+            <div class="prob">
+                <div class="prob-icon"><i data-lucide="alert-triangle"></i></div>
+                <h3>DIY isn't working</h3>
+                <p>Hiring on Upwork gives you a different person each week. Generic VA agencies feel like a pool, not a partner. Quality is a coin flip.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="s softer" id="how">
+    <div class="s-inner">
+        <div class="s-eyebrow">How it works</div>
+        <h2 class="s-title">From signed to fully operational in 10 days.</h2>
+        <p class="s-sub">No 3-week interview process. No training overhead on your side. We do the heavy lifting before your assistant touches your inbox.</p>
+
+        <div class="how-grid">
+            <div class="how">
+                <div class="how-num"></div>
+                <h4>Discovery call</h4>
+                <p>30 minutes. We map your tools, your top time-drains, and your communication style. Honest fit check, no sales pitch.</p>
+                <span class="how-time">Day 0</span>
+            </div>
+            <div class="how">
+                <div class="how-num"></div>
+                <h4>Assistant matching</h4>
+                <p>We pair you with the assistant whose skills and time-zone fit you best. You review their profile and short intro video before committing.</p>
+                <span class="how-time">Day 1 to 2</span>
+            </div>
+            <div class="how">
+                <div class="how-num"></div>
+                <h4>Kickoff &amp; shadow week</h4>
+                <p>You, your assistant, your account manager on a kickoff call. Then 4 days of supervised work as they mirror your style before flying solo.</p>
+                <span class="how-time">Day 3 to 7</span>
+            </div>
+            <div class="how">
+                <div class="how-num"></div>
+                <h4>Full operation</h4>
+                <p>Your assistant runs autonomously. You get a Friday report. You get your week back.</p>
+                <span class="how-time">Day 8 to 10</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== WHY US (COMPARISON) ===== -->
+<section class="s cream" id="why">
+    <div class="s-inner">
+        <div class="s-eyebrow">Why Fekreya</div>
+        <h2 class="s-title">The premium assistant, without the premium overhead.</h2>
+        <p class="s-sub">Side-by-side with the alternatives, so the choice is obvious.</p>
+
+        <div class="compare-wrap">
+            <table class="compare">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="us">Fekreya</th>
+                        <th>Local hire</th>
+                        <th>Other VA agency</th>
+                        <th>Upwork / DIY</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Cost positioning</th>
+                        <td class="col-us">$$ Premium-fair</td>
+                        <td>$$$$ Very high</td>
+                        <td>$ Cheap</td>
+                        <td>Free + your time</td>
+                    </tr>
+                    <tr>
+                        <th>English fluency</th>
+                        <td class="col-us"><span class="check">Full, written and spoken</span></td>
+                        <td>Full</td>
+                        <td><span class="meh">Variable</span></td>
+                        <td><span class="meh">Variable</span></td>
+                    </tr>
+                    <tr>
+                        <th>Time-zone aligned</th>
+                        <td class="col-us"><span class="check">Always</span></td>
+                        <td><span class="check">Always</span></td>
+                        <td><span class="meh">Often delayed</span></td>
+                        <td><span class="cross">Unpredictable</span></td>
+                    </tr>
+                    <tr>
+                        <th>Tech-savvy with AI tools</th>
+                        <td class="col-us"><span class="check">Trained on AI workflows</span></td>
+                        <td><span class="meh">Variable</span></td>
+                        <td><span class="cross">Often basic</span></td>
+                        <td><span class="meh">Variable</span></td>
+                    </tr>
+                    <tr>
+                        <th>Dedicated to you</th>
+                        <td class="col-us"><span class="check">Same person, every day</span></td>
+                        <td><span class="check">Yes</span></td>
+                        <td><span class="cross">Pool / rotation</span></td>
+                        <td><span class="cross">Different each task</span></td>
+                    </tr>
+                    <tr>
+                        <th>Time to start</th>
+                        <td class="col-us"><span class="check">10 days</span></td>
+                        <td>30 to 90 days</td>
+                        <td>14 to 21 days</td>
+                        <td>Hours, but unstable</td>
+                    </tr>
+                    <tr>
+                        <th>Backup assistant built in</th>
+                        <td class="col-us"><span class="check">Cross-trained backup</span></td>
+                        <td><span class="cross">You're on your own</span></td>
+                        <td><span class="meh">Quality varies</span></td>
+                        <td><span class="cross">None</span></td>
+                    </tr>
+                    <tr>
+                        <th>Replacement guarantee</th>
+                        <td class="col-us"><span class="check">Within 7 days</span></td>
+                        <td>Months</td>
+                        <td><span class="meh">Variable</span></td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <th>Branded client hub</th>
+                        <td class="col-us"><span class="check">Live tasks, reports, recordings</span></td>
+                        <td><span class="cross">DIY</span></td>
+                        <td><span class="cross">Generic</span></td>
+                        <td><span class="cross">None</span></td>
+                    </tr>
+                    <tr>
+                        <th>You manage them</th>
+                        <td class="col-us"><span class="check">No, we do</span></td>
+                        <td>Yes</td>
+                        <td>Half-half</td>
+                        <td>Yes</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TECH SAVVY ===== -->
+<section class="s softer">
+    <div class="s-inner">
+        <div class="tech-card">
+            <div class="tech-card-inner">
+                <div class="tech-eyebrow">The Fekreya difference</div>
+                <h2 class="tech-statement">Whatever tool you live in, we get you someone <em>who lives in it too.</em></h2>
+                <p class="tech-sub">From inbox to invoicing, CRM to creative, automation to admin. Your stack stays your stack. We just make sure the person running it is the pro you wish you'd hired three years ago.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== PACKAGES ===== -->
+<section class="s cream" id="packages">
+    <div class="s-inner">
+        <div class="s-eyebrow">Simple packages</div>
+        <h2 class="s-title">Pick the package that matches your week.</h2>
+        <p class="s-sub">Month-to-month. No long-term contract. Move up or down with 14 days' notice.</p>
+
+        <div class="pricing-grid">
+            <!-- Project -->
+            <div class="price">
+                <div class="price-name">Project</div>
+                <div class="price-headline">For one task at a time.</div>
+                <p class="price-best">Best for first-timers testing the model with a defined scope.</p>
+                <hr>
+                <ul class="price-list">
+                    <li><i data-lucide="check"></i> One-off task or sprint</li>
+                    <li><i data-lucide="check"></i> Dedicated assistant for the duration</li>
+                    <li><i data-lucide="check"></i> Examples: CRM cleanup, market research, content batch, audit</li>
+                    <li><i data-lucide="check"></i> Custom quote within 24 hours</li>
+                    <li><i data-lucide="check"></i> Pay on delivery</li>
+                </ul>
+                <a href="mailto:mariam@fekreya.com?subject=Fekreya%20Project%20Quote" class="btn-tier">Get a quote</a>
+            </div>
+
+            <!-- Part-Time (FEATURED) -->
+            <div class="price featured">
+                <div class="price-pop">Most popular</div>
+                <div class="price-name">Part-Time</div>
+                <div class="price-headline">6 hours a day, every weekday.</div>
+                <p class="price-best">Best for solo founders and growing teams that need real, daily support.</p>
+                <hr>
+                <ul class="price-list">
+                    <li><i data-lucide="check"></i> Dedicated assistant in your time zone</li>
+                    <li><i data-lucide="check"></i> Inbox and calendar management</li>
+                    <li><i data-lucide="check"></i> CRM updates and lead follow-up</li>
+                    <li><i data-lucide="check"></i> Social posting (3 per week)</li>
+                    <li><i data-lucide="check"></i> Weekly Friday report</li>
+                    <li><i data-lucide="check"></i> Backup assistant cross-trained</li>
+                </ul>
+                <a href="mailto:mariam@fekreya.com?subject=Fekreya%20Part-Time%20Quote" class="btn-tier">Get a quote</a>
+            </div>
+
+            <!-- Full-Time -->
+            <div class="price">
+                <div class="price-name">Full-Time</div>
+                <div class="price-headline">8 hours a day, fully on board.</div>
+                <p class="price-best">Best for established owners with consistent volume and bigger ambitions.</p>
+                <hr>
+                <ul class="price-list">
+                    <li><i data-lucide="check"></i> Everything in Part-Time</li>
+                    <li><i data-lucide="check"></i> First-touch lead calls within 10 minutes</li>
+                    <li><i data-lucide="check"></i> Project and transaction management</li>
+                    <li><i data-lucide="check"></i> Monthly CRM deep-clean</li>
+                    <li><i data-lucide="check"></i> Priority backup coverage</li>
+                    <li><i data-lucide="check"></i> Optional weekend coverage</li>
+                </ul>
+                <a href="mailto:mariam@fekreya.com?subject=Fekreya%20Full-Time%20Quote" class="btn-tier">Get a quote</a>
+            </div>
+        </div>
+
+        <p class="price-fine">Need more than 8 hours a day or a team setup? <a href="mailto:mariam@fekreya.com?subject=Fekreya%20Custom%20Quote">Talk to us</a> about a custom plan.</p>
+    </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="s softer" id="faq">
+    <div class="s-inner">
+        <div class="s-eyebrow">Common questions</div>
+        <h2 class="s-title">FAQ. Short answers, no fluff.</h2>
+        <p class="s-sub" style="margin-bottom: 40px;">Anything missing? Reply to your booking confirmation and ask.</p>
+
+        <div class="faq-wrap">
+            <details class="faq">
+                <summary>Where are your assistants based?</summary>
+                <p>Across multiple time zones. We match each client with an assistant whose working hours overlap yours. The location matters less than the fit. All assistants are vetted personally, English-fluent, and tech-savvy.</p>
+            </details>
+            <details class="faq">
+                <summary>What if I don't like my assistant?</summary>
+                <p>Tell us within the first 30 days and we'll re-match you within 7 days, no charge. After 30 days, we'll still re-match. We just need a heads-up so we can find the right fit. We track satisfaction monthly so problems surface early.</p>
+            </details>
+            <details class="faq">
+                <summary>How is this different from a generic VA agency?</summary>
+                <p>Three things. (1) You get a dedicated assistant, not a pool. (2) They're trained on AI workflows, not just inbox triage. (3) You get a branded client hub showing live tasks, reports, and recordings, so you always know what's happening without asking.</p>
+            </details>
+            <details class="faq">
+                <summary>Do I need to manage my assistant?</summary>
+                <p>No. Each engagement comes with an account manager (us) who handles performance, coverage, escalations. You give feedback once a month. We run the operation. You get the output.</p>
+            </details>
+            <details class="faq">
+                <summary>Can you sign an NDA?</summary>
+                <p>Yes. Every assistant signs a client NDA before being matched. Access to your tools is granted via a password manager (we never see raw credentials). Deletion-on-offboarding is contractually guaranteed.</p>
+            </details>
+            <details class="faq">
+                <summary>What about weekends and time off?</summary>
+                <p>Standard plans cover Monday to Friday in your time zone. Weekend coverage is included with Full-Time, optional add-on with Part-Time. When your primary assistant takes time off, your cross-trained backup steps in seamlessly.</p>
+            </details>
+            <details class="faq">
+                <summary>Can I scale up or down later?</summary>
+                <p>Yes. Move between Project, Part-Time, and Full-Time month-to-month with 14 days' notice. No annual lock-in, no cancellation fee.</p>
+            </details>
+            <details class="faq">
+                <summary>How do you ensure quality?</summary>
+                <p>Three layers. (1) Every assistant is personally vetted before being added to the roster. (2) Weekly Friday reports keep work visible. (3) Monthly client check-ins surface anything before it becomes a problem. We catch issues in week one, not month three.</p>
+            </details>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FINAL CTA ===== -->
+<section class="final">
+    <div class="final-inner">
+        <h2>Ready for your week back?</h2>
+        <p>15 minutes on a call. We learn your business. You learn whether this fits. No deck, no pressure. If it's a yes, you have a working assistant in 10 days.</p>
+        <a href="mailto:mariam@fekreya.com?subject=Fekreya%20Intro%20Call&body=Hi%20Mariam%2C%20I%27d%20like%20to%20book%20a%2015-minute%20intro%20call." class="btn btn-primary">
+            Book the 15-min call
+            <i data-lucide="arrow-right"></i>
+        </a>
+    </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+    <div class="foot-inner">
+        <div class="foot-brand">fekreya<span>.</span></div>
+        <div>
+            <a href="mailto:mariam@fekreya.com">mariam@fekreya.com</a>
+        </div>
+        <div>© 2026 Fekreya. All rights reserved.</div>
+    </div>
+</footer>
+
+<script>
+    if (window.lucide) { lucide.createIcons(); }
+    else { window.addEventListener('load', () => { if (window.lucide) lucide.createIcons(); }); }
+</script>
+
+</body>
+</html>
