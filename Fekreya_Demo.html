@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fekreya — Client Voice Inbox demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0F1830;
+    --navy-2: #1D2A4D;
+    --navy-soft: #4a5066;
+    --sand: #E8DCC4;
+    --sand-light: #f1e8d4;
+    --sand-soft: #faf5e9;
+    --cream: #fdfaf2;
+    --coral: #E87A5D;
+    --coral-deep: #c85f43;
+    --coral-soft: #fbe5dd;
+    --tan: #C2A279;
+    --tan-soft: #e5d6bd;
+    --border: rgba(15,24,48,0.12);
+    --gradient-coral: linear-gradient(135deg, #E87A5D 0%, #c85f43 100%);
+    --shadow-soft: 0 12px 40px rgba(15,24,48,0.08);
+    --shadow-card: 0 4px 18px rgba(15,24,48,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    background: var(--sand);
+    color: var(--navy);
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(232,122,93,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 0% 100%, rgba(194,162,121,0.20) 0%, transparent 55%),
+      var(--sand);
+  }
+
+  .stage {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    background: var(--cream);
+    overflow: hidden;
+    border-radius: 24px;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--border);
+  }
+  @media (max-width: 1320px) { .stage { transform: scale(0.78); } }
+  @media (max-width: 1040px) { .stage { transform: scale(0.6); } }
+  @media (max-width: 800px)  { .stage { transform: scale(0.45); } }
+
+  .scene {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+    padding: 60px;
+  }
+  .scene.active { opacity: 1; }
+
+  .brand-mark {
+    position: absolute;
+    top: 28px;
+    left: 36px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.5px;
+    color: var(--navy);
+  }
+  .brand-mark .dot { color: var(--coral); }
+  .scene-num {
+    position: absolute;
+    bottom: 24px;
+    right: 36px;
+    font-size: 11px;
+    color: var(--navy-soft);
+    letter-spacing: 3px;
+    opacity: 0.6;
+  }
+
+  /* Progress bar */
+  .progress {
+    position: absolute;
+    top: 0; left: 0;
+    height: 3px;
+    background: var(--gradient-coral);
+    width: 0%;
+    z-index: 10;
+  }
+
+  /* ===== Scene 1: Title ===== */
+  .title-scene { display: flex; align-items: center; justify-content: center; flex-direction: column; }
+  .title-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 18px;
+    background: rgba(232,122,93,0.10);
+    border: 1px solid rgba(232,122,93,0.30);
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--coral-deep);
+    margin-bottom: 36px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+  .title-eyebrow::before {
+    content: '';
+    width: 7px; height: 7px;
+    background: var(--coral);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--coral);
+  }
+  .title-main {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 84px;
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 1.05;
+    text-align: center;
+    color: var(--navy);
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.45s forwards;
+  }
+  .title-main em {
+    font-style: normal;
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--coral);
+  }
+  .title-sub {
+    margin-top: 24px;
+    font-size: 22px;
+    color: var(--navy-soft);
+    text-align: center;
+    max-width: 700px;
+    line-height: 1.55;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.85s forwards;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== Phone ===== */
+  .phone {
+    width: 360px;
+    height: 600px;
+    background: var(--navy);
+    border-radius: 36px;
+    padding: 14px;
+    box-shadow: 0 24px 60px rgba(15,24,48,0.20);
+    position: relative;
+  }
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 26px;
+    background: #ECE5DD;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .wa-header {
+    background: #075E54;
+    color: white;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .wa-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--gradient-coral);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    font-family: 'Space Grotesk';
+  }
+  .wa-name { font-size: 15px; font-weight: 600; }
+  .wa-status { font-size: 11px; opacity: 0.85; }
+  .wa-body {
+    flex: 1;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  .bubble {
+    background: white;
+    color: var(--navy);
+    padding: 8px 12px;
+    border-radius: 8px;
+    max-width: 80%;
+    font-size: 13px;
+    line-height: 1.4;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.07);
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .bubble.client { align-self: flex-start; }
+  .bubble.assistant { align-self: flex-end; background: #DCF8C6; }
+  .bubble .time { font-size: 10px; color: #888; display:block; margin-top: 2px; text-align: right; }
+  .voice-bubble {
+    background: white;
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 90%;
+    align-self: flex-start;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.07);
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .voice-bubble .play-btn {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #25D366; color: white;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 11px;
+  }
+  .voice-wave {
+    flex: 1; height: 22px;
+    display: flex; align-items: center; gap: 2px;
+  }
+  .voice-wave span {
+    flex: 1; background: #25D366; border-radius: 2px;
+    height: 30%; animation: wave 1s ease-in-out infinite;
+  }
+  .voice-wave span:nth-child(2n) { height: 80%; animation-delay: 0.1s; }
+  .voice-wave span:nth-child(3n) { height: 50%; animation-delay: 0.2s; }
+  .voice-wave span:nth-child(5n) { height: 95%; animation-delay: 0.3s; }
+  @keyframes wave {
+    0%,100% { transform: scaleY(0.6); }
+    50% { transform: scaleY(1.2); }
+  }
+  .voice-time { font-size: 11px; color: #888; }
+
+  /* ===== Scene 2: Phone with voice + transcript ===== */
+  .scene-2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+  }
+  .scene-2 .right-side { display: flex; flex-direction: column; gap: 18px; width: 460px; }
+  .label {
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--coral-deep);
+    font-size: 12px;
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  .transcript-card {
+    background: var(--cream);
+    border: 1px solid rgba(232,122,93,0.30);
+    border-left: 4px solid var(--coral);
+    border-radius: 12px;
+    padding: 22px 26px;
+    color: var(--navy);
+    font-size: 18px;
+    line-height: 1.55;
+    opacity: 0;
+    transform: translateX(20px);
+    box-shadow: var(--shadow-card);
+  }
+  .transcript-card .quote { color: var(--navy); font-weight: 500; }
+  .transcript-card .meta {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--coral-deep);
+    letter-spacing: 2px;
+    font-weight: 600;
+  }
+  .typing-cursor {
+    display: inline-block;
+    width: 2px; height: 18px;
+    background: var(--coral);
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: blink 0.8s infinite;
+  }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+  /* ===== Scene 3: AI pipeline ===== */
+  .scene-3 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 36px;
+  }
+  .scene-3 h2 {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: var(--navy);
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .scene-3 h2 em { font-style: normal; color: var(--coral); font-family: 'Space Grotesk'; }
+  .pipeline { display: flex; align-items: center; gap: 18px; }
+  .pipe-node {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 28px;
+    text-align: center;
+    min-width: 180px;
+    opacity: 0;
+    transform: translateY(10px);
+    box-shadow: var(--shadow-card);
+  }
+  .pipe-node .ico { font-size: 32px; margin-bottom: 8px; }
+  .pipe-node .name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--coral-deep);
+    letter-spacing: 2px;
+  }
+  .pipe-node .desc {
+    font-size: 12px;
+    color: var(--navy-soft);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+  .pipe-arrow { color: var(--coral); font-size: 24px; opacity: 0; font-weight: 700; }
+  .json-output {
+    background: var(--navy);
+    border-radius: 12px;
+    padding: 22px 26px;
+    font-family: 'SF Mono', Consolas, Monaco, monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--cream);
+    width: 720px;
+    opacity: 0;
+    box-shadow: var(--shadow-soft);
+  }
+  .json-output .key { color: #F2A98A; }
+  .json-output .str { color: #E5D6BD; }
+  .json-output .bool { color: var(--coral); }
+
+  /* Magic cards (replaces pipeline) */
+  .magic-row { display: flex; gap: 22px; margin-top: 8px; }
+  .magic-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--coral);
+    border-radius: 16px;
+    padding: 24px 26px;
+    width: 260px;
+    text-align: left;
+    opacity: 0;
+    transform: translateY(15px);
+    box-shadow: var(--shadow-card);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+  .magic-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--coral);
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+  }
+  .magic-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+  .magic-desc {
+    font-size: 13.5px;
+    color: var(--navy-soft);
+    line-height: 1.55;
+  }
+
+  /* Speed bar */
+  .speed-bar { width: 800px; margin-top: 20px; opacity: 0; transition: opacity 0.6s; }
+  .speed-track {
+    height: 8px;
+    background: rgba(15,24,48,0.08);
+    border-radius: 100px;
+    overflow: hidden;
+    position: relative;
+  }
+  .speed-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--gradient-coral);
+    border-radius: 100px;
+    transition: width 2s ease-out;
+  }
+  .speed-marks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--navy-soft);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .speed-time {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 14px;
+    color: var(--navy-soft);
+  }
+  .speed-time strong { color: var(--coral-deep); font-weight: 700; }
+
+  /* ===== Scene 4: ClickUp ===== */
+  .scene-4 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 80px;
+  }
+  .clickup-window {
+    width: 980px;
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--border);
+  }
+  .cu-titlebar {
+    background: var(--sand-light);
+    padding: 10px 16px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .cu-titlebar .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .cu-titlebar .red { background: #ff5f57; }
+  .cu-titlebar .yellow { background: #ffbd2e; }
+  .cu-titlebar .green { background: #28ca42; }
+  .cu-titlebar .url {
+    margin-left: 14px;
+    background: white;
+    color: var(--navy-soft);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    flex: 1;
+    border: 1px solid var(--border);
+  }
+  .cu-header {
+    padding: 14px 22px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .cu-logo {
+    background: var(--gradient-coral);
+    color: white;
+    font-family: 'Space Grotesk';
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+  }
+  .cu-list-name { font-size: 14px; color: var(--navy-soft); }
+  .cu-list-name strong { color: var(--navy); }
+  .cu-row-header, .cu-row {
+    display: grid;
+    grid-template-columns: 50px 1fr 130px 130px 110px 110px;
+    align-items: center;
+    padding: 12px 22px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .cu-row-header {
+    color: var(--navy-soft);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    background: var(--sand-soft);
+    font-weight: 600;
+  }
+  .cu-row { color: var(--navy); }
+  .cu-row .status {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .status.new { background: var(--coral-soft); color: var(--coral-deep); }
+  .status.progress { background: var(--tan-soft); color: #7a5e34; }
+  .status.done { background: rgba(46,128,72,0.12); color: #2e8048; }
+  .priority-dot {
+    display: inline-block;
+    width: 8px; height: 8px; border-radius: 50%;
+    margin-right: 6px;
+  }
+  .priority-dot.normal { background: var(--coral); }
+  .priority-dot.high { background: var(--coral-deep); }
+  .new-task {
+    opacity: 0;
+    transform: translateY(-15px);
+    animation: dropIn 0.7s ease forwards;
+    background: rgba(232,122,93,0.08);
+    border-left: 3px solid var(--coral);
+  }
+  @keyframes dropIn {
+    0% { opacity: 0; transform: translateY(-25px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .new-flag {
+    display: inline-block;
+    background: var(--coral);
+    color: white;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-left: 8px;
+    font-family: 'Space Grotesk';
+  }
+  .scene-4 .caption {
+    margin-top: 30px;
+    font-size: 18px;
+    color: var(--navy-soft);
+    text-align: center;
+    opacity: 0;
+  }
+  .scene-4 .caption strong { color: var(--coral-deep); font-weight: 700; }
+
+  /* ===== Scene 5: Notification ===== */
+  .scene-5 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 30px;
+  }
+  .scene-5 h2 {
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: -1.2px;
+    color: var(--navy);
+    text-align: center;
+    line-height: 1.2;
+  }
+  .scene-5 h2 em { font-style: normal; color: var(--coral); font-family: 'Space Grotesk'; }
+  .notif {
+    width: 480px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    box-shadow: var(--shadow-soft);
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  .notif-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: var(--gradient-coral);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    font-family: 'Space Grotesk';
+    font-weight: 700;
+  }
+  .notif-text { flex: 1; }
+  .notif-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .notif-body { font-size: 13px; color: var(--navy-soft); line-height: 1.45; }
+
+  /* ===== Scene 6: Closing ===== */
+  .scene-6 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .scene-6 h2 {
+    font-size: 60px;
+    font-weight: 800;
+    letter-spacing: -2.5px;
+    color: var(--navy);
+    text-align: center;
+    line-height: 1.1;
+    max-width: 980px;
+  }
+  .scene-6 h2 em { font-style: normal; color: var(--coral); font-family: 'Space Grotesk'; }
+  .stat-row { display: flex; gap: 60px; margin-top: 20px; }
+  .stat {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  .stat-num {
+    font-family: 'Space Grotesk';
+    font-size: 56px;
+    font-weight: 700;
+    color: var(--coral);
+    letter-spacing: -2px;
+  }
+  .stat-label {
+    font-size: 13px;
+    color: var(--navy-soft);
+    letter-spacing: 2px;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+  .scene-6 .cta {
+    margin-top: 20px;
+    background: var(--gradient-coral);
+    color: white;
+    padding: 14px 32px;
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: 0 12px 30px rgba(232,122,93,0.30);
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .scene-6 .cta:hover { transform: translateY(-2px); box-shadow: 0 16px 36px rgba(232,122,93,0.40); }
+
+  /* Replay button */
+  .replay-btn {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15,24,48,0.06);
+    border: 1px solid var(--border);
+    color: var(--navy);
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 13px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.4s, background 0.2s;
+    font-family: inherit;
+    font-weight: 600;
+  }
+  .replay-btn.visible { opacity: 1; }
+  .replay-btn:hover { background: rgba(15,24,48,0.10); }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div class="progress" id="progress"></div>
+
+  <!-- Scene 1: Title -->
+  <div class="scene title-scene" id="scene-1">
+    <div class="brand-mark">Fekreya<span class="dot">.</span></div>
+    <div class="title-eyebrow">FEKREYA · IN ACTION</div>
+    <div class="title-main">Just talk to us.<br/>We <em>handle the rest.</em></div>
+    <div class="title-sub">Send a voice note. We turn it into action — instantly.<br/>You stay in flow. The work just gets done.</div>
+    <div class="scene-num">01 / 06</div>
+  </div>
+
+  <!-- Scene 2: Phone + transcript -->
+  <div class="scene scene-2" id="scene-2">
+    <div class="brand-mark">Fekreya<span class="dot">.</span></div>
+    <div class="phone">
+      <div class="phone-screen">
+        <div class="wa-header">
+          <div class="wa-avatar">F</div>
+          <div>
+            <div class="wa-name">Fekreya</div>
+            <div class="wa-status">your assistant · online</div>
+          </div>
+        </div>
+        <div class="wa-body" id="wa-body">
+          <div class="bubble client" id="msg-1">
+            Morning! Hope you had a good weekend ☀️
+            <span class="time">10:42</span>
+          </div>
+          <div class="bubble assistant" id="msg-2">
+            It was lovely, thanks! How can I help today?
+            <span class="time">10:43</span>
+          </div>
+          <div class="voice-bubble" id="voice-1">
+            <div class="play-btn">▶</div>
+            <div class="voice-wave">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div class="voice-time">0:08</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="right-side">
+      <div>
+        <div class="label">✨ WE'RE LISTENING</div>
+        <div class="transcript-card" id="transcript">
+          <div class="quote" id="transcript-text"></div>
+          <div class="meta" id="transcript-meta" style="opacity:0;">Captured in 0.8 seconds</div>
+        </div>
+      </div>
+    </div>
+    <div class="scene-num">02 / 06</div>
+  </div>
+
+  <!-- Scene 3: Behind the scenes (no tool names) -->
+  <div class="scene scene-3" id="scene-3">
+    <div class="brand-mark">Fekreya<span class="dot">.</span></div>
+    <h2>While you keep chatting,<br/><em>we're already on it.</em></h2>
+
+    <div class="magic-row">
+      <div class="magic-card" id="magic-1">
+        <div class="magic-num">01</div>
+        <div class="magic-title">We catch every word</div>
+        <div class="magic-desc">Voice notes, texts, mid-conversation requests. Nothing slips by.</div>
+      </div>
+      <div class="magic-card" id="magic-2">
+        <div class="magic-num">02</div>
+        <div class="magic-title">We turn it into a task</div>
+        <div class="magic-desc">A clear to-do with a deadline, priority, and the right person on it.</div>
+      </div>
+      <div class="magic-card" id="magic-3">
+        <div class="magic-num">03</div>
+        <div class="magic-title">You see it happen</div>
+        <div class="magic-desc">Live in your dashboard, ready to track from start to ship.</div>
+      </div>
+    </div>
+
+    <div class="speed-bar" id="speed-bar">
+      <div class="speed-track"><div class="speed-fill" id="speed-fill"></div></div>
+      <div class="speed-marks">
+        <span>You speak</span>
+        <span>Captured</span>
+        <span>Organized</span>
+        <span>Ready</span>
+      </div>
+      <div class="speed-time">All in <strong>under 10 seconds</strong></div>
+    </div>
+
+    <div class="scene-num">03 / 06</div>
+  </div>
+
+  <!-- Scene 4: ClickUp -->
+  <div class="scene scene-4" id="scene-4">
+    <div class="brand-mark">Fekreya<span class="dot">.</span></div>
+    <div class="clickup-window">
+      <div class="cu-titlebar">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+        <div class="url">your dashboard · live</div>
+      </div>
+      <div class="cu-header">
+        <div class="cu-logo">F</div>
+        <div class="cu-list-name">Your tasks · <strong>this week</strong></div>
+      </div>
+      <div class="cu-rows">
+        <div class="cu-row-header">
+          <div></div>
+          <div>WHAT</div>
+          <div>STATUS</div>
+          <div>WHO</div>
+          <div>DUE</div>
+          <div>PRIORITY</div>
+        </div>
+        <div class="cu-row new-task" id="new-task" style="animation-delay: 0.6s;">
+          <div>📝</div>
+          <div>Draft newsletter for next Tuesday <span class="new-flag">NEW</span></div>
+          <div><span class="status new">NEW</span></div>
+          <div>Fekreya</div>
+          <div>May 5</div>
+          <div><span class="priority-dot normal"></span>Normal</div>
+        </div>
+        <div class="cu-row">
+          <div>🎨</div>
+          <div>Instagram reel — product launch</div>
+          <div><span class="status progress">IN PROGRESS</span></div>
+          <div>Fekreya</div>
+          <div>Apr 30</div>
+          <div><span class="priority-dot high"></span>High</div>
+        </div>
+        <div class="cu-row">
+          <div>📊</div>
+          <div>Weekly report — April week 4</div>
+          <div><span class="status done">DONE</span></div>
+          <div>Fekreya</div>
+          <div>Apr 25</div>
+          <div><span class="priority-dot normal"></span>Normal</div>
+        </div>
+      </div>
+    </div>
+    <div class="caption" id="cu-caption">
+      Task captured in <strong>9 seconds</strong> — already in motion. You didn't lift a finger.
+    </div>
+    <div class="scene-num">04 / 06</div>
+  </div>
+
+  <!-- Scene 5: Notification -->
+  <div class="scene scene-5" id="scene-5">
+    <div class="brand-mark">Fekreya<span class="dot">.</span></div>
+    <h2>You keep chatting.<br/>The work <em>keeps moving.</em></h2>
+    <div class="notif" id="notif">
+      <div class="notif-icon">F</div>
+      <div class="notif-text">
+        <div class="notif-title">Your task is being handled</div>
+        <div class="notif-body">"Draft newsletter for next Tuesday"<br/>Assigned · Due May 5 · We'll keep you posted</div>
+      </div>
+    </div>
+    <div class="scene-num">05 / 06</div>
+  </div>
+
+  <!-- Scene 6: Closing -->
+  <div class="scene scene-6" id="scene-6">
+    <div class="brand-mark">Fekreya<span class="dot">.</span></div>
+    <h2>You stay <em>in flow.</em><br/>We do the thinking.</h2>
+    <div class="stat-row">
+      <div class="stat" style="animation-delay:0.3s;">
+        <div class="stat-num">9s</div>
+        <div class="stat-label">VOICE → ACTION</div>
+      </div>
+      <div class="stat" style="animation-delay:0.6s;">
+        <div class="stat-num">24/7</div>
+        <div class="stat-label">ALWAYS ON</div>
+      </div>
+      <div class="stat" style="animation-delay:0.9s;">
+        <div class="stat-num">0</div>
+        <div class="stat-label">FOLLOW-UPS NEEDED</div>
+      </div>
+    </div>
+    <button class="cta" id="cta">Meet your Fekreya assistant  →</button>
+    <button class="replay-btn" id="replay-btn">⟲ Replay</button>
+    <div class="scene-num">06 / 06</div>
+  </div>
+</div>
+
+<script>
+const SCENES = [
+  { id: 'scene-1', duration: 3000, onEnter: noop },
+  { id: 'scene-2', duration: 6500, onEnter: scene2 },
+  { id: 'scene-3', duration: 5500, onEnter: scene3 },
+  { id: 'scene-4', duration: 5500, onEnter: scene4 },
+  { id: 'scene-5', duration: 3500, onEnter: scene5 },
+  { id: 'scene-6', duration: 6000, onEnter: scene6 },
+];
+const TOTAL_DURATION = SCENES.reduce((s, x) => s + x.duration, 0);
+let currentTimeouts = [];
+
+function noop() {}
+function clearTimeouts() {
+  currentTimeouts.forEach(t => clearTimeout(t));
+  currentTimeouts = [];
+}
+function delay(ms, fn) {
+  const id = setTimeout(fn, ms);
+  currentTimeouts.push(id);
+}
+function showScene(idx) {
+  document.querySelectorAll('.scene').forEach(el => el.classList.remove('active'));
+  const scene = SCENES[idx];
+  document.getElementById(scene.id).classList.add('active');
+  scene.onEnter();
+}
+
+function scene2() {
+  ['msg-1','msg-2','voice-1'].forEach(id => {
+    const el = document.getElementById(id);
+    el.style.opacity = 0;
+    el.style.transform = 'translateY(8px)';
+  });
+  document.getElementById('transcript').style.opacity = 0;
+  document.getElementById('transcript').style.transform = 'translateX(20px)';
+  document.getElementById('transcript-text').textContent = '';
+  document.getElementById('transcript-meta').style.opacity = 0;
+
+  delay(300, () => animateBubble('msg-1'));
+  delay(1000, () => animateBubble('msg-2'));
+  delay(1900, () => animateBubble('voice-1'));
+  delay(3000, () => {
+    const t = document.getElementById('transcript');
+    t.style.transition = 'opacity 0.6s, transform 0.6s';
+    t.style.opacity = 1;
+    t.style.transform = 'translateX(0)';
+    typeText('transcript-text', 'Btw can you draft me a newsletter for next Tuesday? Make it punchy.', 22);
+  });
+  delay(5800, () => {
+    document.getElementById('transcript-meta').style.transition = 'opacity 0.5s';
+    document.getElementById('transcript-meta').style.opacity = 1;
+  });
+}
+function animateBubble(id) {
+  const el = document.getElementById(id);
+  el.style.transition = 'opacity 0.4s, transform 0.4s';
+  el.style.opacity = 1;
+  el.style.transform = 'translateY(0)';
+}
+function typeText(id, text, charDelay) {
+  const el = document.getElementById(id);
+  let i = 0;
+  function tick() {
+    if (i <= text.length) {
+      el.innerHTML = '"' + text.slice(0, i) + '"<span class="typing-cursor"></span>';
+      i++;
+      const tid = setTimeout(tick, charDelay);
+      currentTimeouts.push(tid);
+    } else {
+      el.innerHTML = '"' + text + '"';
+    }
+  }
+  tick();
+}
+
+function scene3() {
+  ['magic-1','magic-2','magic-3'].forEach(id => {
+    const el = document.getElementById(id);
+    el.style.opacity = 0;
+    el.style.transform = 'translateY(15px)';
+  });
+  const bar = document.getElementById('speed-bar');
+  const fill = document.getElementById('speed-fill');
+  bar.style.opacity = 0;
+  fill.style.width = '0%';
+
+  delay(200,  () => fadeInMagic('magic-1'));
+  delay(700,  () => fadeInMagic('magic-2'));
+  delay(1200, () => fadeInMagic('magic-3'));
+  delay(1900, () => { bar.style.opacity = 1; });
+  delay(2200, () => { fill.style.width = '100%'; });
+}
+function fadeInMagic(id) {
+  const el = document.getElementById(id);
+  el.style.opacity = 1;
+  el.style.transform = 'translateY(0)';
+}
+function fadeIn(id, withTransform) {
+  const el = document.getElementById(id);
+  el.style.transition = 'opacity 0.5s, transform 0.5s';
+  el.style.opacity = 1;
+  if (withTransform) el.style.transform = 'translateY(0)';
+}
+
+function scene4() {
+  const newTask = document.getElementById('new-task');
+  newTask.style.animation = 'none';
+  newTask.offsetHeight;
+  newTask.style.animation = '';
+  document.getElementById('cu-caption').style.opacity = 0;
+  delay(2000, () => {
+    const c = document.getElementById('cu-caption');
+    c.style.transition = 'opacity 0.6s';
+    c.style.opacity = 1;
+  });
+}
+
+function scene5() {
+  const n = document.getElementById('notif');
+  n.style.opacity = 0;
+  n.style.transform = 'translateY(15px)';
+  delay(700, () => {
+    n.style.transition = 'opacity 0.6s, transform 0.6s';
+    n.style.opacity = 1;
+    n.style.transform = 'translateY(0)';
+  });
+}
+
+function scene6() {
+  document.querySelectorAll('.scene-6 .stat').forEach(el => {
+    el.style.animation = 'none';
+    el.offsetHeight;
+    el.style.animation = 'fadeUp 0.7s ease forwards';
+  });
+  const cta = document.getElementById('cta');
+  cta.style.opacity = 0;
+  cta.style.transform = 'translateY(15px)';
+  delay(2200, () => {
+    cta.style.transition = 'opacity 0.6s, transform 0.6s';
+    cta.style.opacity = 1;
+    cta.style.transform = 'translateY(0)';
+  });
+  delay(4500, () => {
+    document.getElementById('replay-btn').classList.add('visible');
+  });
+}
+
+let sequenceTimeouts = [];
+function play() {
+  clearTimeouts();
+  sequenceTimeouts.forEach(t => clearTimeout(t));
+  sequenceTimeouts = [];
+  document.getElementById('replay-btn').classList.remove('visible');
+  let elapsed = 0;
+  SCENES.forEach((scene, i) => {
+    const id = setTimeout(() => showScene(i), elapsed);
+    sequenceTimeouts.push(id);
+    elapsed += scene.duration;
+  });
+  const p = document.getElementById('progress');
+  p.style.transition = 'none';
+  p.style.width = '0%';
+  setTimeout(() => {
+    p.style.transition = 'width ' + TOTAL_DURATION + 'ms linear';
+    p.style.width = '100%';
+  }, 50);
+}
+document.getElementById('replay-btn').addEventListener('click', play);
+play();
+</script>
+
+</body>
+</html>
