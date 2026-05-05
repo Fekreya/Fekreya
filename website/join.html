@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join Fekreya . Senior Executive Assistants</title>
+<meta name="description" content="Apply to join Fekreya as a senior executive assistant. Hand-matched, well-paid, supported by a real team.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0F1830;
+    --navy-2: #1D2A4D;
+    --navy-soft: #4a5066;
+    --sand: #E8DCC4;
+    --sand-light: #f1e8d4;
+    --cream: #fdfaf2;
+    --coral: #E87A5D;
+    --coral-deep: #c85f43;
+    --tan: #C2A279;
+    --green: #2FA15C;
+    --line: rgba(15,24,48,0.10);
+    --muted: rgba(15,24,48,0.65);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--navy);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== NAV ===== */
+  .nav {
+    position: sticky;
+    top: 0;
+    background: rgba(253, 250, 242, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--line);
+    z-index: 50;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 18px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-brand {
+    color: var(--navy);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+  }
+  .nav-brand svg { height: 22px; }
+  .nav-back {
+    color: var(--navy-soft);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .nav-back:hover { color: var(--coral-deep); }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: var(--navy);
+    color: var(--cream);
+    padding: 90px 36px 70px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -3in;
+    right: -3in;
+    width: 8in; height: 8in;
+    background: radial-gradient(circle, rgba(232,122,93,0.20) 0%, transparent 60%);
+  }
+  .hero-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-eyebrow {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 12px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--coral);
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--coral);
+    border-radius: 50%;
+    animation: pulse 1.4s infinite ease;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232,122,93,0.5); transform: scale(1); }
+    50% { box-shadow: 0 0 0 12px rgba(232,122,93,0); transform: scale(1.2); }
+  }
+  h1 {
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 22px;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--coral);
+  }
+  .hero-sub {
+    font-size: 18px;
+    color: rgba(253,250,242,0.7);
+    max-width: 580px;
+    line-height: 1.6;
+  }
+
+  /* ===== INTRO CONTENT ===== */
+  .intro {
+    padding: 70px 36px 50px;
+    max-width: 880px;
+    margin: 0 auto;
+  }
+  .intro-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 16px;
+  }
+  .intro-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px;
+    border-top: 3px solid var(--coral);
+  }
+  .intro-card h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .intro-card p {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  @media (max-width: 700px) {
+    .intro-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ===== FORM ===== */
+  .form-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 30px 36px 80px;
+  }
+  .section-eyebrow {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--coral-deep);
+    font-weight: 700;
+    margin: 30px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .field {
+    margin-bottom: 18px;
+  }
+  .field label {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .field label .req {
+    color: var(--coral);
+    margin-left: 3px;
+  }
+  .field .hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="tel"],
+  .field input[type="url"],
+  .field input[type="date"],
+  .field input[type="number"],
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14.5px;
+    color: var(--navy);
+    background: white;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--coral);
+    box-shadow: 0 0 0 3px rgba(232,122,93,0.12);
+  }
+  .field textarea {
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+  }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 700px) {
+    .field-row { grid-template-columns: 1fr; }
+  }
+
+  .checks {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 700px) {
+    .checks { grid-template-columns: 1fr; }
+  }
+  .check-item {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    padding: 10px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+  }
+  .check-item:hover { border-color: var(--coral); }
+  .check-item input { accent-color: var(--coral); flex-shrink: 0; }
+  .check-item input:checked + span { color: var(--coral-deep); font-weight: 600; }
+
+  .voice-callout {
+    background: linear-gradient(135deg, var(--sand) 0%, var(--sand-light) 100%);
+    border-radius: 12px;
+    padding: 22px;
+    margin: 8px 0;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .voice-callout .icon {
+    width: 44px; height: 44px;
+    background: var(--coral);
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .voice-callout .content { flex: 1; }
+  .voice-callout h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .voice-callout p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .voice-callout p strong { color: var(--coral-deep); }
+  .voice-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #25D366;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+  .voice-cta:hover { transform: translateY(-1px); }
+  .voice-cta svg { width: 16px; height: 16px; fill: white; }
+
+  .submit-row {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .submit-note {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 380px;
+    line-height: 1.5;
+  }
+  .btn-submit {
+    background: linear-gradient(135deg, var(--coral) 0%, var(--coral-deep) 100%);
+    color: white;
+    padding: 14px 30px;
+    border: 0;
+    border-radius: 100px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(232,122,93,0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(232,122,93,0.45);
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: white;
+    padding: 32px 36px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  footer a { color: var(--navy); text-decoration: none; }
+  footer a:hover { color: var(--coral-deep); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand" aria-label="Fekreya">
+      <svg viewBox="0 0 8166.4 1192.0" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img"><title>Fekreya</title><g transform="translate(563.2, 968.5) scale(1, -1)"><path d="M83 0V745H555V655H181V414H520V324H181V0Z" transform="translate(-83,0)" fill="currentColor"/><path d="M83 0V745H568V655H181V419H548V329H181V90H568V0Z" transform="translate(839,0)" fill="currentColor"/><path d="M83 0V745H181V364L513 745H636L366 433L651 0H534L298 354L181 220V0Z" transform="translate(1774,0)" fill="currentColor"/><path d="M83 0V745H346Q420 745 476.0 717.0Q532 689 563.5 637.0Q595 585 595 515Q595 436 555.0 381.0Q515 326 447 302L620 0H506L345 285H181V0ZM181 375H349Q393 375 426.0 392.0Q459 409 477.5 441.0Q496 473 496 515Q496 558 477.5 589.5Q459 621 426.0 638.0Q393 655 349 655H181Z" transform="translate(2792,0)" fill="currentColor"/><path d="M83 0V745H568V655H181V419H548V329H181V90H568V0Z" transform="translate(3779,0)" fill="currentColor"/><path d="M269 0V341L11 745H122L318 437L513 745H624L368 341V0Z" transform="translate(4786,0)" fill="currentColor"/><path d="M11 0 278 745H394L661 0H556L495 175H177L116 0ZM208 265H464L336 634Z" transform="translate(5849,0)" fill="currentColor"/><rect x="6960" y="0" width="80" height="80" fill="#E87A5D"/></g></svg>
+    </a>
+    <a href="index.html" class="nav-back">← Back to fekreya.com</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">NOW HIRING . SENIOR EXECUTIVE ASSISTANTS</div>
+    <h1>Join the team that <em>founders trust.</em></h1>
+    <p class="hero-sub">Hand-matched. Owned by us. Real assistants doing real work for real founders. If you've got the judgment, the tools, and the tone, we want to hear from you.</p>
+  </div>
+</section>
+
+<!-- INTRO CARDS -->
+<section class="intro">
+  <div class="intro-grid">
+    <div class="intro-card">
+      <h3>You bring the judgment.</h3>
+      <p>We do not hire task-takers. We hire people who can decide in the founder's tone.</p>
+    </div>
+    <div class="intro-card">
+      <h3>We bring the structure.</h3>
+      <p>Clear systems, clear playbooks, and a real human supporting you when something is hard.</p>
+    </div>
+    <div class="intro-card">
+      <h3>You stay one client.</h3>
+      <p>You go deep, not wide. One client. Real ownership. Real output.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FORM -->
+<section class="form-wrap">
+  <form
+    action="mailto:mariam@fekreya.com?subject=Fekreya%20Application"
+    method="POST"
+    enctype="text/plain"
+  >
+
+    <!-- BASICS -->
+    <div class="section-eyebrow">01 / About you</div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Full name<span class="req">*</span></label>
+        <input type="text" name="name" required>
+      </div>
+      <div class="field">
+        <label>Email<span class="req">*</span></label>
+        <input type="email" name="email" required>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>WhatsApp (with country code)<span class="req">*</span></label>
+        <input type="tel" name="whatsapp" placeholder="+1 234 567 8900" required>
+      </div>
+      <div class="field">
+        <label>LinkedIn URL<span class="req">*</span></label>
+        <input type="url" name="linkedin" placeholder="https://linkedin.com/in/yourname" required>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Country &amp; city<span class="req">*</span></label>
+        <input type="text" name="location" placeholder="e.g. Manila, Philippines" required>
+      </div>
+      <div class="field">
+        <label>Time zone<span class="req">*</span></label>
+        <input type="text" name="timezone" placeholder="e.g. UTC+8 / PHT" required>
+      </div>
+    </div>
+
+    <!-- EXPERIENCE -->
+    <div class="section-eyebrow">02 / Experience</div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Years as an EA / VA<span class="req">*</span></label>
+        <select name="years" required>
+          <option value="">Choose one</option>
+          <option>Less than 1 year</option>
+          <option>1 to 2 years</option>
+          <option>3 to 5 years</option>
+          <option>5 or more years</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Current commitment<span class="req">*</span></label>
+        <select name="commitment" required>
+          <option value="">Choose one</option>
+          <option>Full-time job (looking for side gig)</option>
+          <option>Freelancing / part-time available</option>
+          <option>Available full-time</option>
+          <option>Just exploring</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Most recent role + company</label>
+      <input type="text" name="recent_role" placeholder="e.g. Executive Assistant at Acme Corp">
+    </div>
+
+    <div class="field">
+      <label>Industries you have worked in (check all)</label>
+      <div class="checks">
+        <label class="check-item"><input type="checkbox" name="ind_realestate"><span>Real estate</span></label>
+        <label class="check-item"><input type="checkbox" name="ind_saas"><span>SaaS / Tech</span></label>
+        <label class="check-item"><input type="checkbox" name="ind_agencies"><span>Agencies</span></label>
+        <label class="check-item"><input type="checkbox" name="ind_coaches"><span>Coaches / Consultants</span></label>
+        <label class="check-item"><input type="checkbox" name="ind_family"><span>Family offices</span></label>
+        <label class="check-item"><input type="checkbox" name="ind_finance"><span>Finance</span></label>
+        <label class="check-item"><input type="checkbox" name="ind_health"><span>Healthcare</span></label>
+        <label class="check-item"><input type="checkbox" name="ind_other"><span>Other</span></label>
+      </div>
+    </div>
+
+    <!-- TOOLS -->
+    <div class="section-eyebrow">03 / Tools you live in</div>
+
+    <div class="field">
+      <label>Inbox &amp; calendar</label>
+      <div class="checks">
+        <label class="check-item"><input type="checkbox" name="t_gmail"><span>Gmail</span></label>
+        <label class="check-item"><input type="checkbox" name="t_outlook"><span>Outlook</span></label>
+        <label class="check-item"><input type="checkbox" name="t_gcal"><span>Google Calendar</span></label>
+        <label class="check-item"><input type="checkbox" name="t_calendly"><span>Calendly</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Project &amp; document tools</label>
+      <div class="checks">
+        <label class="check-item"><input type="checkbox" name="t_notion"><span>Notion</span></label>
+        <label class="check-item"><input type="checkbox" name="t_clickup"><span>ClickUp</span></label>
+        <label class="check-item"><input type="checkbox" name="t_asana"><span>Asana</span></label>
+        <label class="check-item"><input type="checkbox" name="t_trello"><span>Trello</span></label>
+        <label class="check-item"><input type="checkbox" name="t_monday"><span>Monday</span></label>
+        <label class="check-item"><input type="checkbox" name="t_office"><span>Microsoft 365</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>AI tools you use regularly</label>
+      <div class="checks">
+        <label class="check-item"><input type="checkbox" name="ai_claude"><span>Claude</span></label>
+        <label class="check-item"><input type="checkbox" name="ai_chatgpt"><span>ChatGPT</span></label>
+        <label class="check-item"><input type="checkbox" name="ai_gemini"><span>Gemini</span></label>
+        <label class="check-item"><input type="checkbox" name="ai_none"><span>None yet</span></label>
+      </div>
+    </div>
+
+    <!-- JUDGMENT -->
+    <div class="section-eyebrow">04 / The judgment test</div>
+
+    <div class="voice-callout">
+      <div class="icon">▶</div>
+      <div class="content">
+        <h4>Voice intro: 90 seconds.</h4>
+        <p>Record a quick voice note on WhatsApp and send it to <strong>+20 11 3156 1330</strong>. Tell us your name, your assistant superpower, and one task you've handled that you are proud of. <strong>This step is required.</strong></p>
+        <a href="https://wa.me/201131561330?text=Hi%2C%20here%20is%20my%20voice%20intro%20for%20my%20Fekreya%20application." class="voice-cta" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/></svg>
+          Send voice note on WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Written scenario<span class="req">*</span></label>
+      <div class="hint">A client texts you on a Sunday: "Need the Q3 deck before my Monday meeting. I know it is short notice." Draft your reply (200 words max).</div>
+      <textarea name="scenario" required maxlength="1500"></textarea>
+    </div>
+
+    <!-- COMMITMENT -->
+    <div class="section-eyebrow">05 / Commitment</div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Hours per week available<span class="req">*</span></label>
+        <select name="hours" required>
+          <option value="">Choose one</option>
+          <option>Up to 10</option>
+          <option>10 to 20</option>
+          <option>20 to 30</option>
+          <option>30 to 40</option>
+          <option>40 or more</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Earliest start date<span class="req">*</span></label>
+        <input type="date" name="start_date" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Pay expectation in USD per hour<span class="req">*</span></label>
+      <input type="number" name="rate" placeholder="e.g. 6" min="1" required>
+      <div class="hint">Be honest. We are a fair-pay agency. Your number stays private.</div>
+    </div>
+
+    <!-- REFERENCES + EXTRA -->
+    <div class="section-eyebrow">06 / Final</div>
+
+    <div class="field">
+      <label>Two references<span class="req">*</span></label>
+      <div class="hint">Name + role + email + phone for each. We only contact references for finalists.</div>
+      <textarea name="references" required placeholder="Reference 1: ...&#10;Reference 2: ..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Anything else we should know?</label>
+      <textarea name="other" placeholder="Optional"></textarea>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-row">
+      <div class="submit-note">
+        We read every submission. If we want to talk, we send a paid trial task within 5 business days.
+      </div>
+      <button type="submit" class="btn-submit">Send application →</button>
+    </div>
+  </form>
+</section>
+
+<footer>
+  <a href="index.html">fekreya.com</a> . Hand-matched executive support
+</footer>
+
+</body>
+</html>

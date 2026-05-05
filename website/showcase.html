@@ -315,7 +315,7 @@ body {
   padding: 8px 10px;
   box-shadow: 0 1px 2px rgba(15,24,48,0.05);
   font-size: 10px;
-  width: 156px;
+  width: calc(33.33% - 22px);
   transition: none;
 }
 .cu-card.from-wa { border-left: 3px solid var(--coral); }
@@ -1393,18 +1393,138 @@ body {
 }
 
 @media (max-width: 1100px) {
-  .phone { width: 240px; height: 460px; }
+  .phone { width: 260px; height: 480px; }
   .cu-board { width: 460px; height: 340px; }
   #scene-3 .cu-board { width: 380px; height: 320px; }
   .gmail { width: 380px; height: 320px; }
-  .report-card { width: 480px; }
+  .brief-card { width: 600px; }
+  .morning-phone { width: 280px; height: 520px; }
+  .cal-card { width: 600px; }
+  .travel-card { width: 440px; }
+  .decision-stack { width: 420px; }
+  #sleep .clock-wrap { width: 320px; height: 320px; }
+  .clock-face { width: 240px; height: 240px; }
+  .clock-time { font-size: 48px; }
 }
+
 @media (max-width: 800px) {
-  #scene-2 .stack, #scene-3 .stack { flex-direction: column; gap: 24px; }
-  .phone { transform: scale(0.7); transform-origin: top center; }
-  .cu-board, #scene-3 .cu-board, .gmail { width: 100%; max-width: 400px; }
-  #scene-4 .scope { grid-template-columns: repeat(2, 1fr); }
-  .report-card { width: 100%; max-width: 400px; }
+  .scene { padding: 24px 16px; }
+  .scene-label { left: 20px; top: 20px; font-size: 10px; }
+  .scene-headline { left: 20px; right: 20px; top: 50px; font-size: 18px; }
+
+  /* Scenes 2 & 3: stack vertically */
+  #scene-2, #scene-3 { padding-top: 90px; }
+  #scene-2 .stack, #scene-3 .stack { flex-direction: column; gap: 16px; align-items: center; }
+  .phone { width: 220px; height: 400px; transform: none; margin: 0 auto; }
+  .phone::before { width: 75px; height: 14px; top: 11px; }
+  .phone-screen { border-radius: 22px; }
+  .wa-header { padding: 26px 10px 8px; }
+  .wa-avatar { width: 26px; height: 26px; font-size: 11px; }
+  .wa-name { font-size: 12px; }
+  .wa-status { font-size: 9px; }
+  .wa-body { padding: 10px 8px 12px; gap: 4px; }
+  .bubble { font-size: 11px; padding: 6px 9px 4px; }
+  .wa-date { font-size: 8px; padding: 2px 8px; }
+  .flow { display: none; } /* hide horizontal arrow */
+  .cu-board, #scene-3 .cu-board { width: 100%; max-width: 340px; height: 240px; padding: 12px; }
+  .cu-card { font-size: 9px; padding: 6px 8px; width: calc(33% - 6px); }
+  .cu-card-title { font-size: 9px; }
+  .cu-card-meta { font-size: 8px; }
+  .cu-cols { gap: 6px; }
+
+  .gmail { width: 100%; max-width: 340px; height: 240px; }
+  .email-body { padding: 12px; }
+  .email-subject { font-size: 13px; }
+  .email-from { font-size: 11px; }
+
+  /* Scene 1: brand */
+  #scene-1 .brand-svg svg { height: 36px; }
+
+  /* Morning brief */
+  #morning .morning-phone { width: 260px; height: 480px; transform: none; }
+  .morning-screen { padding: 40px 16px 16px; }
+  .morning-greet { font-size: 22px; }
+  .morning-item { padding: 9px 11px; }
+  .morning-item .text { font-size: 12px; }
+  .morning-item .text .sub { font-size: 9.5px; }
+  .morning-item .stat { font-size: 15px; }
+
+  /* Inbox-zero */
+  .inbox { width: 100%; max-width: 340px; height: 380px; }
+  .inbox-header { padding: 14px 18px; }
+  .inbox-title { font-size: 14px; }
+  .inbox-count { font-size: 11px; padding: 5px 12px; }
+  .email-row { padding: 8px 18px; gap: 10px; }
+  .email-row .avatar { width: 24px; height: 24px; font-size: 10px; }
+  .email-row .check { width: 18px; height: 18px; font-size: 11px; }
+
+  /* Calendar */
+  #calendar .cal-card { width: 100%; max-width: 360px; padding: 14px; }
+  .cal-header { margin-bottom: 10px; padding-bottom: 8px; }
+  .cal-title { font-size: 12px; }
+  .cal-week { font-size: 9px; }
+  .cal-grid { grid-template-columns: 28px repeat(5, 1fr); gap: 2px; }
+  .cal-time { font-size: 8px; height: 22px; line-height: 22px; }
+  .cal-day-head { font-size: 8px; padding: 4px 0; }
+  .cal-block { font-size: 7px; padding: 2px 4px; height: 18px; }
+
+  /* Travel */
+  .travel-card { width: 100%; max-width: 360px; padding: 18px; }
+  .travel-header { font-size: 18px; margin-bottom: 4px; }
+  .travel-step { padding: 9px 11px; gap: 10px; }
+  .travel-step .icon { width: 28px; height: 28px; font-size: 13px; }
+  .travel-step .info .label { font-size: 8px; }
+  .travel-step .info .main { font-size: 11px; }
+  .travel-step .info .sub { font-size: 9.5px; }
+  .travel-step .check { width: 18px; height: 18px; font-size: 10px; }
+
+  /* Decision queue */
+  .decision-stack { width: 100%; max-width: 340px; gap: 10px; }
+  .decision-card { padding: 12px 14px; gap: 10px; }
+  .decision-card .label { font-size: 8px; }
+  .decision-card .question { font-size: 12px; }
+  .decision-card .btn-yes,
+  .decision-card .btn-no { width: 30px; height: 30px; font-size: 12px; }
+
+  /* Sleep clock */
+  #sleep .clock-wrap { width: 280px; height: 280px; }
+  .clock-face { width: 200px; height: 200px; border-width: 4px; }
+  .clock-time { font-size: 40px; }
+  .clock-hand { height: 64px; width: 3px; }
+  .sleep-event { font-size: 8px; padding: 5px 10px; }
+  .sleep-event::before { width: 6px; height: 6px; }
+  .sleep-event.e1 { left: -8%; top: 5%; }
+  .sleep-event.e2 { right: -3%; top: 18%; }
+  .sleep-event.e3 { left: -5%; bottom: 25%; }
+  .sleep-event.e4 { right: 0; bottom: 5%; }
+
+  /* Polished brief */
+  #scene-5 { padding-top: 80px; }
+  .brief-card { width: 100%; max-width: 360px; padding: 16px; }
+  .brief-header { margin-bottom: 12px; padding-bottom: 10px; gap: 10px; }
+  .brief-header .label { font-size: 8.5px; }
+  .brief-header h3 { font-size: 16px; }
+  .brief-header .stamp { font-size: 8.5px; }
+  .brief-body { grid-template-columns: 1fr; gap: 14px; }
+  .pie-wrap { width: 130px; height: 130px; margin: 0 auto; }
+  .pie { width: 130px; height: 130px; }
+  .pie::after { inset: 22px; }
+  .pie-center .big { font-size: 22px; }
+  .pie-legend { font-size: 9px; }
+  .brief-bars { height: 90px; }
+  .brief-bar-label { font-size: 8px; }
+  .brief-stat-num { font-size: 18px; }
+  .brief-stat-label { font-size: 8px; }
+  .brief-foot { font-size: 8px; bottom: 10px; right: 12px; }
+
+  /* Closing */
+  #scene-6 .brand-svg svg { height: 36px; }
+  #scene-6 .pulse-glow { width: 70px; height: 70px; }
+
+  /* Progress (hidden but if shown, smaller) */
+  .progress { padding: 6px 10px; gap: 5px; bottom: 12px; }
+  .progress span { width: 6px; height: 6px; }
+  .progress span.active { width: 18px; }
 }
 </style>
 </head>
@@ -1460,8 +1580,8 @@ body {
             <div class="wa-back">‹</div>
             <div class="wa-avatar">L</div>
             <div>
-              <div class="wa-name">Layla . your assistant</div>
-              <div class="wa-status">online</div>
+              <div class="wa-name">Layla</div>
+              <div class="wa-status">Your executive assistant</div>
             </div>
             <div class="wa-icons">
               <span>📞</span><span>⋮</span>
