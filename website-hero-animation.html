@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fekreya . Hero animation</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0F1830;
+  --navy-2: #1D2A4D;
+  --navy-soft: #4a5066;
+  --sand: #E8DCC4;
+  --cream: #fdfaf2;
+  --coral: #E87A5D;
+  --coral-deep: #c85f43;
+  --coral-soft: #fbe5dd;
+  --tan: #C2A279;
+  --green: #2FA15C;
+  --green-soft: rgba(47,161,92,0.12);
+  --blue: #2C7BE5;
+  --purple: #6B5BD2;
+  --border: rgba(15,24,48,0.10);
+  --shadow-soft: 0 30px 70px rgba(15,24,48,0.18);
+  --shadow-card: 0 6px 20px rgba(15,24,48,0.07);
+  --LOOP: 9s;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  min-height: 100%;
+  background: transparent;
+  font-family: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
+  color: var(--navy);
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: transparent;
+}
+
+.stage {
+  position: relative;
+  width: 1100px;
+  height: 580px;
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+@media (max-width: 1180px) { .stage { transform: scale(0.88); transform-origin: center; } }
+@media (max-width: 1000px) { .stage { transform: scale(0.72); } }
+@media (max-width: 820px)  { .stage { transform: scale(0.58); } }
+@media (max-width: 640px)  { .stage { transform: scale(0.44); } }
+
+/* ============== PHONE ============== */
+.phone {
+  position: relative;
+  width: 300px;
+  height: 560px;
+  background: var(--navy);
+  border-radius: 44px;
+  padding: 12px;
+  box-shadow: var(--shadow-soft);
+  flex-shrink: 0;
+}
+.phone::before {
+  content: '';
+  position: absolute;
+  top: 18px; left: 50%;
+  transform: translateX(-50%);
+  width: 100px; height: 22px;
+  background: var(--navy);
+  border-radius: 0 0 14px 14px;
+  z-index: 5;
+}
+.screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #ECE5DD;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(15,24,48,0.025) 1px, transparent 1px),
+    radial-gradient(circle at 80% 60%, rgba(15,24,48,0.025) 1px, transparent 1px);
+  background-size: 30px 30px, 40px 40px;
+  display: flex;
+  flex-direction: column;
+}
+.wa-header {
+  background: #075E54;
+  color: white;
+  padding: 38px 14px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.wa-back { font-size: 22px; opacity: 0.9; }
+.wa-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--coral) 0%, var(--coral-deep) 100%);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 13px;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.wa-name { font-size: 14px; font-weight: 600; }
+.wa-status { font-size: 10.5px; opacity: 0.85; margin-top: 1px; }
+.wa-icons { margin-left: auto; display: flex; gap: 14px; opacity: 0.85; font-size: 14px; }
+
+.wa-body {
+  flex: 1;
+  padding: 12px 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+  justify-content: flex-end;
+}
+.bubble {
+  padding: 8px 11px 6px 11px;
+  border-radius: 8px;
+  max-width: 84%;
+  font-size: 12.5px;
+  line-height: 1.4;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.06);
+  color: var(--navy);
+  opacity: 0;
+  transform: translateY(6px);
+}
+.bubble.client {
+  align-self: flex-start;
+  background: white;
+  border-top-left-radius: 2px;
+}
+.bubble.assistant {
+  align-self: flex-end;
+  background: #DCF8C6;
+  border-top-right-radius: 2px;
+  max-width: 86%;
+}
+.bubble .time {
+  display: inline-block;
+  font-size: 9.5px;
+  color: #888;
+  margin-left: 6px;
+}
+.bubble.assistant .time::after {
+  content: ' ✓✓';
+  color: #34B7F1;
+}
+.typing-dots {
+  align-self: flex-end;
+  background: #DCF8C6;
+  padding: 9px 13px;
+  border-radius: 8px;
+  border-top-right-radius: 2px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+}
+.typing-dots span {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #4a5066;
+  opacity: 0.4;
+  animation: typing 1.2s infinite ease-in-out;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* ============== RIGHT SIDE: Output panel ============== */
+.work {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+.work-eyebrow {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--coral-deep);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: uppercase;
+}
+.work-eyebrow::before {
+  content: '';
+  width: 8px; height: 8px;
+  background: var(--coral);
+  border-radius: 50%;
+  animation: pulse 1.4s infinite ease-in-out;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.35); }
+}
+
+.preview {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+.pv {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+}
+.pv-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+.pv-icon {
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 9.5px;
+}
+.pv-name {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: 0.5px;
+  color: var(--navy);
+}
+.pv-status {
+  margin-left: auto;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 4px 10px;
+  border-radius: 100px;
+  color: var(--coral-deep);
+  background: var(--coral-soft);
+  text-transform: uppercase;
+}
+.pv-status .dotty {
+  display: inline-block;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--coral);
+  margin-right: 6px;
+  vertical-align: middle;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+/* Doc preview */
+.pv-doc-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.4px;
+  margin-bottom: 4px;
+}
+.pv-doc-sub {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  color: var(--navy-soft);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.pv-doc-section {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--coral-deep);
+  margin-bottom: 8px;
+  margin-top: 6px;
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: 0.5px;
+}
+.pv-line {
+  height: 8px;
+  background: rgba(15,24,48,0.08);
+  border-radius: 100px;
+  margin-bottom: 8px;
+  width: 0;
+}
+.pv-cur {
+  display: inline-block;
+  width: 2px;
+  height: 18px;
+  background: var(--coral);
+  vertical-align: middle;
+  margin-left: 2px;
+  animation: blink 0.7s infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* Slides preview */
+.pv-slides {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  flex: 1;
+}
+.slide {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  opacity: 0;
+  transform: scale(0.92);
+}
+.slide-num {
+  position: absolute;
+  top: 6px; right: 8px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 8.5px;
+  color: var(--navy-soft);
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+.slide-eyebrow {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 7.5px;
+  letter-spacing: 1.2px;
+  color: var(--coral-deep);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.slide-headline {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+}
+.slide-mini-bar {
+  height: 4px;
+  background: rgba(15,24,48,0.08);
+  border-radius: 100px;
+}
+.slide-mini-bar.coral { background: var(--coral); width: 70%; }
+.slide-chart {
+  margin-top: auto;
+  height: 36px;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+}
+.slide-chart .bar {
+  flex: 1;
+  background: linear-gradient(135deg, var(--coral) 0%, var(--coral-deep) 100%);
+  border-radius: 2px 2px 0 0;
+}
+.slide-chart .bar:nth-child(1) { height: 30%; }
+.slide-chart .bar:nth-child(2) { height: 55%; }
+.slide-chart .bar:nth-child(3) { height: 42%; }
+.slide-chart .bar:nth-child(4) { height: 78%; }
+.slide-chart .bar:nth-child(5) { height: 90%; }
+
+/* Email preview */
+.pv-eml-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px dashed rgba(15,24,48,0.08);
+  font-size: 12px;
+}
+.pv-eml-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--navy-soft);
+  width: 56px;
+  flex-shrink: 0;
+}
+.pv-eml-value {
+  color: var(--navy);
+  font-weight: 500;
+}
+.pv-eml-value .pill {
+  display: inline-block;
+  background: var(--coral-soft);
+  color: var(--coral-deep);
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-size: 10.5px;
+  font-weight: 600;
+  margin-right: 4px;
+}
+.pv-eml-body { margin-top: 14px; flex: 1; }
+.pv-eml-sign {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--navy);
+  font-style: italic;
+  opacity: 0;
+}
+
+/* Done summary */
+.pv-done-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 12px;
+  letter-spacing: -0.2px;
+}
+.pv-done-title em {
+  font-style: normal;
+  color: var(--coral);
+  font-family: 'Space Grotesk', sans-serif;
+}
+.done-list { display: flex; flex-direction: column; gap: 10px; }
+.done-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  background: #faf8f1;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--green);
+  border-radius: 9px;
+  opacity: 0;
+}
+.done-icon {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 9.5px;
+  flex-shrink: 0;
+}
+.done-icon.doc { background: var(--blue); }
+.done-icon.eml { background: var(--purple); }
+.done-icon.ppt { background: #DC4C3F; }
+.done-text { font-size: 12px; font-weight: 600; color: var(--navy); flex: 1; }
+.done-text .sub { display: block; font-size: 10.5px; color: var(--navy-soft); font-weight: 500; margin-top: 2px; }
+.done-mark {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--green);
+  background: var(--green-soft);
+  padding: 4px 9px;
+  border-radius: 100px;
+}
+.done-mark::before { content: '✓ '; }
+
+.pv-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+  opacity: 0;
+}
+.stat {
+  background: rgba(15, 24, 48, 0.04);
+  border-radius: 8px;
+  padding: 10px 8px;
+  text-align: center;
+}
+.stat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.stat-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  color: var(--navy-soft);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-top: 4px;
+}
+.pv-foot {
+  margin-top: 14px;
+  font-size: 11px;
+  color: var(--navy-soft);
+  font-style: italic;
+  text-align: center;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(15, 24, 48, 0.08);
+  opacity: 0;
+}
+#pv-stats { animation: statsIn var(--LOOP) infinite ease; }
+@keyframes statsIn {
+  0%, 75% { opacity: 0; }
+  78%, 92% { opacity: 1; }
+  95%, 100% { opacity: 0; }
+}
+#pv-foot { animation: footIn var(--LOOP) infinite ease; }
+@keyframes footIn {
+  0%, 80% { opacity: 0; }
+  83%, 92% { opacity: 1; }
+  95%, 100% { opacity: 0; }
+}
+
+/* ============== ANIMATION TIMELINE (9s loop) ============== */
+.anim {
+  animation-duration: var(--LOOP);
+  animation-iteration-count: infinite;
+  animation-timing-function: ease;
+}
+
+/* WhatsApp messages: faster sequence
+   0.3s = 3.3%   cli-1
+   0.9s = 10%    cli-2
+   1.5s = 16.7%  cli-3
+   2.0s = 22.2%  typing
+   2.7s = 30%    asst-1 + work eyebrow + preview
+   3.5s = 38.9%  asst-2 + email preview
+   4.5s = 50%    asst-3 + slides preview
+   5.5s = 61.1%  done summary
+   8.3s = 92.2%  fade out
+*/
+
+#cli-1 { animation-name: cli1; }
+@keyframes cli1 {
+  0%, 1% { opacity: 0; transform: translateY(6px); }
+  3%, 95% { opacity: 1; transform: translateY(0); }
+  97%, 100% { opacity: 0; }
+}
+#cli-2 { animation-name: cli2; }
+@keyframes cli2 {
+  0%, 8% { opacity: 0; transform: translateY(6px); }
+  10%, 95% { opacity: 1; transform: translateY(0); }
+  97%, 100% { opacity: 0; }
+}
+#cli-3 { animation-name: cli3; }
+@keyframes cli3 {
+  0%, 15% { opacity: 0; transform: translateY(6px); }
+  17%, 95% { opacity: 1; transform: translateY(0); }
+  97%, 100% { opacity: 0; }
+}
+
+#typing-dots { animation-name: dotsShow; }
+@keyframes dotsShow {
+  0%, 20% { opacity: 0; }
+  22%, 27% { opacity: 1; }
+  29%, 100% { opacity: 0; }
+}
+
+#asst-1 { animation-name: asst1; }
+@keyframes asst1 {
+  0%, 28% { opacity: 0; transform: translateY(6px); }
+  30%, 95% { opacity: 1; transform: translateY(0); }
+  97%, 100% { opacity: 0; }
+}
+#asst-2 { animation-name: asst2; }
+@keyframes asst2 {
+  0%, 37% { opacity: 0; transform: translateY(6px); }
+  39%, 95% { opacity: 1; transform: translateY(0); }
+  97%, 100% { opacity: 0; }
+}
+#asst-3 { animation-name: asst3; }
+@keyframes asst3 {
+  0%, 48% { opacity: 0; transform: translateY(6px); }
+  50%, 95% { opacity: 1; transform: translateY(0); }
+  97%, 100% { opacity: 0; }
+}
+
+/* Right side appears alongside */
+#work-eye { animation-name: eyeFade; }
+@keyframes eyeFade {
+  0%, 25% { opacity: 0; }
+  28%, 92% { opacity: 1; }
+  95%, 100% { opacity: 0; }
+}
+#preview { animation-name: surfFade; }
+@keyframes surfFade {
+  0%, 25% { opacity: 0; transform: translateY(8px); }
+  28%, 92% { opacity: 1; transform: translateY(0); }
+  95%, 100% { opacity: 0; }
+}
+
+/* Preview rotation */
+#pv-doc { animation-name: pvDoc; }
+@keyframes pvDoc {
+  0%, 27% { opacity: 0; }
+  30%, 38% { opacity: 1; }
+  41%, 100% { opacity: 0; }
+}
+#pv-eml { animation-name: pvEml; }
+@keyframes pvEml {
+  0%, 38% { opacity: 0; }
+  41%, 49% { opacity: 1; }
+  52%, 100% { opacity: 0; }
+}
+#pv-slides { animation-name: pvSlides; }
+@keyframes pvSlides {
+  0%, 49% { opacity: 0; }
+  52%, 60% { opacity: 1; }
+  63%, 100% { opacity: 0; }
+}
+#pv-done { animation-name: pvDone; }
+@keyframes pvDone {
+  0%, 60% { opacity: 0; }
+  63%, 92% { opacity: 1; }
+  95%, 100% { opacity: 0; }
+}
+
+/* Doc lines fill */
+.pv-line { animation-duration: var(--LOOP); animation-iteration-count: infinite; animation-timing-function: ease; }
+#dl1 { animation-name: dl1; }
+#dl2 { animation-name: dl2; }
+#dl3 { animation-name: dl3; }
+#dl4 { animation-name: dl4; }
+@keyframes dl1 { 0%, 30% { width: 0; } 32% { width: 100%; } 38% { width: 100%; } 41%, 100% { width: 0; } }
+@keyframes dl2 { 0%, 32% { width: 0; } 34% { width: 90%; } 38% { width: 90%; } 41%, 100% { width: 0; } }
+@keyframes dl3 { 0%, 34% { width: 0; } 36% { width: 100%; } 38% { width: 100%; } 41%, 100% { width: 0; } }
+@keyframes dl4 { 0%, 35.5% { width: 0; } 37% { width: 70%; } 38% { width: 70%; } 41%, 100% { width: 0; } }
+
+/* Email lines */
+#el1 { animation-name: el1; }
+#el2 { animation-name: el2; }
+#el3 { animation-name: el3; }
+#el4 { animation-name: el4; }
+@keyframes el1 { 0%, 41% { width: 0; } 43% { width: 100%; } 49% { width: 100%; } 52%, 100% { width: 0; } }
+@keyframes el2 { 0%, 43% { width: 0; } 45% { width: 95%; } 49% { width: 95%; } 52%, 100% { width: 0; } }
+@keyframes el3 { 0%, 45% { width: 0; } 47% { width: 90%; } 49% { width: 90%; } 52%, 100% { width: 0; } }
+@keyframes el4 { 0%, 46.5% { width: 0; } 48% { width: 70%; } 49% { width: 70%; } 52%, 100% { width: 0; } }
+
+#el-sign { animation-name: elSign; }
+@keyframes elSign {
+  0%, 47% { opacity: 0; }
+  49% { opacity: 1; }
+  52%, 100% { opacity: 0; }
+}
+
+/* Slides pop in */
+#sl1 { animation-name: sl1; }
+#sl2 { animation-name: sl2; }
+#sl3 { animation-name: sl3; }
+#sl4 { animation-name: sl4; }
+.slide { animation-duration: var(--LOOP); animation-iteration-count: infinite; animation-timing-function: ease; }
+@keyframes sl1 { 0%, 52% { opacity: 0; transform: scale(0.92); } 54%, 60% { opacity: 1; transform: scale(1); } 63%, 100% { opacity: 0; transform: scale(0.92); } }
+@keyframes sl2 { 0%, 54% { opacity: 0; transform: scale(0.92); } 56%, 60% { opacity: 1; transform: scale(1); } 63%, 100% { opacity: 0; transform: scale(0.92); } }
+@keyframes sl3 { 0%, 56% { opacity: 0; transform: scale(0.92); } 58%, 60% { opacity: 1; transform: scale(1); } 63%, 100% { opacity: 0; transform: scale(0.92); } }
+@keyframes sl4 { 0%, 58% { opacity: 0; transform: scale(0.92); } 60%, 60% { opacity: 1; transform: scale(1); } 63%, 100% { opacity: 0; transform: scale(0.92); } }
+
+/* Done rows */
+.done-row { animation-duration: var(--LOOP); animation-iteration-count: infinite; animation-timing-function: ease; }
+#dr1 { animation-name: dr1; }
+#dr2 { animation-name: dr2; }
+#dr3 { animation-name: dr3; }
+@keyframes dr1 { 0%, 63% { opacity: 0; transform: translateX(-10px); } 65%, 92% { opacity: 1; transform: translateX(0); } 95%, 100% { opacity: 0; } }
+@keyframes dr2 { 0%, 67% { opacity: 0; transform: translateX(-10px); } 69%, 92% { opacity: 1; transform: translateX(0); } 95%, 100% { opacity: 0; } }
+@keyframes dr3 { 0%, 71% { opacity: 0; transform: translateX(-10px); } 73%, 92% { opacity: 1; transform: translateX(0); } 95%, 100% { opacity: 0; } }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- LEFT: Phone -->
+  <div class="phone">
+    <div class="screen">
+      <div class="wa-header">
+        <div class="wa-back">‹</div>
+        <div class="wa-avatar">L</div>
+        <div>
+          <div class="wa-name">Layla</div>
+          <div class="wa-status">Your executive assistant</div>
+        </div>
+        <div class="wa-icons">
+          <span>📞</span><span>⋮</span>
+        </div>
+      </div>
+
+      <div class="wa-body">
+        <div id="cli-1" class="bubble client anim">
+          minutes from leadership call → team
+          <span class="time">9:14</span>
+        </div>
+        <div id="cli-2" class="bubble client anim">
+          reply jason @ acme. yes to may 12.
+          <span class="time">9:15</span>
+        </div>
+        <div id="cli-3" class="bubble client anim">
+          Q1 deck. thursday board.
+          <span class="time">9:15</span>
+        </div>
+
+        <div id="typing-dots" class="typing-dots anim">
+          <span></span><span></span><span></span>
+        </div>
+
+        <div id="asst-1" class="bubble assistant anim">
+          Done. Sent.
+          <span class="time">10:48</span>
+        </div>
+        <div id="asst-2" class="bubble assistant anim">
+          Drafted. In your drafts.
+          <span class="time">11:06</span>
+        </div>
+        <div id="asst-3" class="bubble assistant anim">
+          Done. Link in your inbox.
+          <span class="time">11:31</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Output panel -->
+  <div class="work">
+    <div id="work-eye" class="work-eyebrow anim">WORKING ON YOUR LIST</div>
+
+    <div id="preview" class="preview anim">
+
+      <!-- Doc -->
+      <div id="pv-doc" class="pv anim">
+        <div class="pv-bar">
+          <div class="pv-icon" style="background:#2B7BE4">DOC</div>
+          <div class="pv-name">Leadership-Sync-Minutes.docx</div>
+          <div class="pv-status"><span class="dotty"></span>WRITING</div>
+        </div>
+        <div class="pv-doc-title">Leadership Sync . Tuesday<span class="pv-cur"></span></div>
+        <div class="pv-doc-sub">6 attendees . 47 min . owner: Mariam</div>
+        <div class="pv-doc-section">DECISIONS</div>
+        <div id="dl1" class="pv-line"></div>
+        <div id="dl2" class="pv-line"></div>
+        <div class="pv-doc-section" style="margin-top:12px">FOLLOW UPS</div>
+        <div id="dl3" class="pv-line"></div>
+        <div id="dl4" class="pv-line"></div>
+      </div>
+
+      <!-- Email -->
+      <div id="pv-eml" class="pv anim">
+        <div class="pv-bar">
+          <div class="pv-icon" style="background:#6B5BD2">EML</div>
+          <div class="pv-name">Drafting reply . Acme contract</div>
+          <div class="pv-status"><span class="dotty"></span>DRAFTING</div>
+        </div>
+        <div class="pv-eml-row">
+          <div class="pv-eml-label">TO</div>
+          <div class="pv-eml-value"><span class="pill">Jason . Acme</span> jason@acme.co</div>
+        </div>
+        <div class="pv-eml-row">
+          <div class="pv-eml-label">SUBJECT</div>
+          <div class="pv-eml-value">Re: Contract . start date adjustment</div>
+        </div>
+        <div class="pv-eml-body">
+          <div id="el1" class="pv-line"></div>
+          <div id="el2" class="pv-line"></div>
+          <div id="el3" class="pv-line"></div>
+          <div id="el4" class="pv-line"></div>
+          <div id="el-sign" class="pv-eml-sign anim">Best, Mariam</div>
+        </div>
+      </div>
+
+      <!-- Slides -->
+      <div id="pv-slides" class="pv anim">
+        <div class="pv-bar">
+          <div class="pv-icon" style="background:#DC4C3F">PPT</div>
+          <div class="pv-name">Q1-Board-Deck.pptx</div>
+          <div class="pv-status"><span class="dotty"></span>BUILDING</div>
+        </div>
+        <div class="pv-slides">
+          <div id="sl1" class="slide">
+            <div class="slide-num">01</div>
+            <div class="slide-eyebrow">COVER</div>
+            <div class="slide-headline">Q1 Board Review</div>
+            <div class="slide-mini-bar coral"></div>
+          </div>
+          <div id="sl2" class="slide">
+            <div class="slide-num">02</div>
+            <div class="slide-eyebrow">REVENUE</div>
+            <div class="slide-headline">$2.4M . +18%</div>
+            <div class="slide-chart">
+              <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+          </div>
+          <div id="sl3" class="slide">
+            <div class="slide-num">03</div>
+            <div class="slide-eyebrow">WINS</div>
+            <div class="slide-headline">3 enterprise logos</div>
+            <div class="slide-mini-bar"></div>
+            <div class="slide-mini-bar" style="width:80%"></div>
+            <div class="slide-mini-bar" style="width:60%"></div>
+          </div>
+          <div id="sl4" class="slide">
+            <div class="slide-num">04</div>
+            <div class="slide-eyebrow">AHEAD</div>
+            <div class="slide-headline">Q2 plan . hiring</div>
+            <div class="slide-mini-bar"></div>
+            <div class="slide-mini-bar" style="width:75%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Done summary -->
+      <div id="pv-done" class="pv anim">
+        <div class="pv-bar">
+          <div class="pv-icon" style="background:var(--coral)">✓</div>
+          <div class="pv-name">All caught up . delivered to your inbox</div>
+          <div class="pv-status" style="background:var(--green-soft); color:var(--green)">3 OF 3 DONE</div>
+        </div>
+        <div class="pv-done-title">3 things <em>off your plate.</em></div>
+        <div class="done-list">
+          <div id="dr1" class="done-row">
+            <div class="done-icon doc">DOC</div>
+            <div class="done-text">Leadership-Sync-Minutes.docx<span class="sub">Circulated to leadership@</span></div>
+            <div class="done-mark">SENT</div>
+          </div>
+          <div id="dr2" class="done-row">
+            <div class="done-icon eml">EML</div>
+            <div class="done-text">Reply to Jason @ Acme<span class="sub">In your drafts for approval</span></div>
+            <div class="done-mark">DRAFT</div>
+          </div>
+          <div id="dr3" class="done-row">
+            <div class="done-icon ppt">PPT</div>
+            <div class="done-text">Q1-Board-Deck.pptx<span class="sub">Link in your email</span></div>
+            <div class="done-mark">SENT</div>
+          </div>
+        </div>
+        <div id="pv-stats" class="pv-stats">
+          <div class="stat">
+            <div class="stat-num">2h 17m</div>
+            <div class="stat-label">Saved today</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">9:14</div>
+            <div class="stat-label">First message</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">11:31</div>
+            <div class="stat-label">Last delivered</div>
+          </div>
+        </div>
+        <div id="pv-foot" class="pv-foot">
+          Going quiet now. Back tomorrow morning ready for what's next.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

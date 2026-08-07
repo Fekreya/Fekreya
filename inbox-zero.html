@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fekreya . Inbox to zero</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0F1830;
+  --navy-soft: #4a5066;
+  --sand: #E8DCC4;
+  --cream: #fdfaf2;
+  --coral: #E87A5D;
+  --coral-deep: #c85f43;
+  --coral-soft: #fbe5dd;
+  --tan: #C2A279;
+  --green: #2FA15C;
+  --green-soft: rgba(47,161,92,0.12);
+  --blue: #2C7BE5;
+  --purple: #6B5BD2;
+  --line: rgba(15,24,48,0.10);
+  --LOOP: 8s;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: transparent;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: var(--navy);
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.inbox {
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 30px 80px rgba(15,24,48,0.14);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  width: 600px;
+  max-width: 100%;
+  height: 520px;
+  display: flex;
+  flex-direction: column;
+}
+.inbox-header {
+  background: white;
+  padding: 20px 26px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+}
+.inbox-title {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--navy);
+}
+.inbox-count {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: 100px;
+  background: var(--coral-soft);
+  color: var(--coral-deep);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  animation: countDone var(--LOOP) ease infinite;
+}
+.inbox-count .num { min-width: 36px; text-align: right; }
+@keyframes countDone {
+  0%, 5% { background: var(--coral-soft); color: var(--coral-deep); }
+  60%, 92% { background: var(--green-soft); color: var(--green); }
+  95%, 100% { background: var(--coral-soft); color: var(--coral-deep); }
+}
+
+.inbox-list {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.email-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 26px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  animation: rowRead var(--LOOP) ease infinite;
+}
+.email-row .avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+}
+.email-row .lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.email-row .ln {
+  height: 6px;
+  background: rgba(15,24,48,0.10);
+  border-radius: 100px;
+}
+.email-row .ln.short { width: 40%; height: 7px; background: rgba(15,24,48,0.16); }
+.email-row .ln.medium { width: 75%; }
+.email-row .ln.long { width: 92%; }
+.email-row .check {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--green);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0;
+  transform: scale(0.6);
+  animation: checkPop var(--LOOP) ease infinite;
+}
+@keyframes rowRead {
+  0%, 5% { opacity: 1; background: white; }
+  /* delayed dim per row via per-row override */
+}
+@keyframes checkPop {
+  0%, 5% { opacity: 0; transform: scale(0.6); }
+  /* delayed per row */
+}
+
+#er1 { animation: rowRead1 var(--LOOP) ease infinite; }
+#er2 { animation: rowRead2 var(--LOOP) ease infinite; }
+#er3 { animation: rowRead3 var(--LOOP) ease infinite; }
+#er4 { animation: rowRead4 var(--LOOP) ease infinite; }
+#er5 { animation: rowRead5 var(--LOOP) ease infinite; }
+#er6 { animation: rowRead6 var(--LOOP) ease infinite; }
+#er7 { animation: rowRead7 var(--LOOP) ease infinite; }
+#er8 { animation: rowRead8 var(--LOOP) ease infinite; }
+
+@keyframes rowRead1 { 0%, 8% { opacity: 1; background: white; } 12%, 92% { opacity: 0.4; background: #fafaf6; } 95%, 100% { opacity: 1; background: white; } }
+@keyframes rowRead2 { 0%, 14% { opacity: 1; background: white; } 18%, 92% { opacity: 0.4; background: #fafaf6; } 95%, 100% { opacity: 1; background: white; } }
+@keyframes rowRead3 { 0%, 20% { opacity: 1; background: white; } 24%, 92% { opacity: 0.4; background: #fafaf6; } 95%, 100% { opacity: 1; background: white; } }
+@keyframes rowRead4 { 0%, 26% { opacity: 1; background: white; } 30%, 92% { opacity: 0.4; background: #fafaf6; } 95%, 100% { opacity: 1; background: white; } }
+@keyframes rowRead5 { 0%, 32% { opacity: 1; background: white; } 36%, 92% { opacity: 0.4; background: #fafaf6; } 95%, 100% { opacity: 1; background: white; } }
+@keyframes rowRead6 { 0%, 38% { opacity: 1; background: white; } 42%, 92% { opacity: 0.4; background: #fafaf6; } 95%, 100% { opacity: 1; background: white; } }
+@keyframes rowRead7 { 0%, 44% { opacity: 1; background: white; } 48%, 92% { opacity: 0.4; background: #fafaf6; } 95%, 100% { opacity: 1; background: white; } }
+@keyframes rowRead8 { 0%, 50% { opacity: 1; background: white; } 54%, 92% { opacity: 0.4; background: #fafaf6; } 95%, 100% { opacity: 1; background: white; } }
+
+#er1 .check { animation: checkPop1 var(--LOOP) ease infinite; }
+#er2 .check { animation: checkPop2 var(--LOOP) ease infinite; }
+#er3 .check { animation: checkPop3 var(--LOOP) ease infinite; }
+#er4 .check { animation: checkPop4 var(--LOOP) ease infinite; }
+#er5 .check { animation: checkPop5 var(--LOOP) ease infinite; }
+#er6 .check { animation: checkPop6 var(--LOOP) ease infinite; }
+#er7 .check { animation: checkPop7 var(--LOOP) ease infinite; }
+#er8 .check { animation: checkPop8 var(--LOOP) ease infinite; }
+
+@keyframes checkPop1 { 0%, 8% { opacity: 0; transform: scale(0.6); } 12%, 92% { opacity: 1; transform: scale(1); } 95%, 100% { opacity: 0; transform: scale(0.6); } }
+@keyframes checkPop2 { 0%, 14% { opacity: 0; transform: scale(0.6); } 18%, 92% { opacity: 1; transform: scale(1); } 95%, 100% { opacity: 0; transform: scale(0.6); } }
+@keyframes checkPop3 { 0%, 20% { opacity: 0; transform: scale(0.6); } 24%, 92% { opacity: 1; transform: scale(1); } 95%, 100% { opacity: 0; transform: scale(0.6); } }
+@keyframes checkPop4 { 0%, 26% { opacity: 0; transform: scale(0.6); } 30%, 92% { opacity: 1; transform: scale(1); } 95%, 100% { opacity: 0; transform: scale(0.6); } }
+@keyframes checkPop5 { 0%, 32% { opacity: 0; transform: scale(0.6); } 36%, 92% { opacity: 1; transform: scale(1); } 95%, 100% { opacity: 0; transform: scale(0.6); } }
+@keyframes checkPop6 { 0%, 38% { opacity: 0; transform: scale(0.6); } 42%, 92% { opacity: 1; transform: scale(1); } 95%, 100% { opacity: 0; transform: scale(0.6); } }
+@keyframes checkPop7 { 0%, 44% { opacity: 0; transform: scale(0.6); } 48%, 92% { opacity: 1; transform: scale(1); } 95%, 100% { opacity: 0; transform: scale(0.6); } }
+@keyframes checkPop8 { 0%, 50% { opacity: 0; transform: scale(0.6); } 54%, 92% { opacity: 1; transform: scale(1); } 95%, 100% { opacity: 0; transform: scale(0.6); } }
+
+.av-1 { background: linear-gradient(135deg, var(--coral) 0%, var(--coral-deep) 100%); }
+.av-2 { background: linear-gradient(135deg, var(--blue) 0%, #1E5BB8 100%); }
+.av-3 { background: linear-gradient(135deg, var(--purple) 0%, #4A3B9C 100%); }
+.av-4 { background: linear-gradient(135deg, var(--green) 0%, #1F7846 100%); }
+.av-5 { background: linear-gradient(135deg, var(--tan) 0%, #8a6f4d 100%); }
+.av-6 { background: linear-gradient(135deg, #DC4C3F 0%, #a83c30 100%); }
+.av-7 { background: linear-gradient(135deg, var(--coral) 0%, var(--tan) 100%); }
+.av-8 { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%); }
+
+@media (max-width: 700px) {
+  .inbox { height: 460px; }
+  .email-row { padding: 11px 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="inbox">
+  <div class="inbox-header">
+    <div class="inbox-title">Inbox</div>
+    <div class="inbox-count">
+      <span class="num" id="inbox-num">247</span>
+      <span>UNREAD</span>
+    </div>
+  </div>
+  <div class="inbox-list">
+    <div id="er1" class="email-row">
+      <div class="avatar av-1">JK</div>
+      <div class="lines"><div class="ln short"></div><div class="ln long"></div></div>
+      <div class="check">✓</div>
+    </div>
+    <div id="er2" class="email-row">
+      <div class="avatar av-2">SM</div>
+      <div class="lines"><div class="ln short"></div><div class="ln medium"></div></div>
+      <div class="check">✓</div>
+    </div>
+    <div id="er3" class="email-row">
+      <div class="avatar av-3">RC</div>
+      <div class="lines"><div class="ln short"></div><div class="ln long"></div></div>
+      <div class="check">✓</div>
+    </div>
+    <div id="er4" class="email-row">
+      <div class="avatar av-4">AT</div>
+      <div class="lines"><div class="ln short"></div><div class="ln medium"></div></div>
+      <div class="check">✓</div>
+    </div>
+    <div id="er5" class="email-row">
+      <div class="avatar av-5">DV</div>
+      <div class="lines"><div class="ln short"></div><div class="ln long"></div></div>
+      <div class="check">✓</div>
+    </div>
+    <div id="er6" class="email-row">
+      <div class="avatar av-6">PL</div>
+      <div class="lines"><div class="ln short"></div><div class="ln medium"></div></div>
+      <div class="check">✓</div>
+    </div>
+    <div id="er7" class="email-row">
+      <div class="avatar av-7">MO</div>
+      <div class="lines"><div class="ln short"></div><div class="ln long"></div></div>
+      <div class="check">✓</div>
+    </div>
+    <div id="er8" class="email-row">
+      <div class="avatar av-8">KB</div>
+      <div class="lines"><div class="ln short"></div><div class="ln medium"></div></div>
+      <div class="check">✓</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Animated counter that ticks down from 247 to 0 then resets, in sync with the CSS loop
+const el = document.getElementById('inbox-num');
+const LOOP_MS = 8000;
+const start = 247;
+
+function tick() {
+  const t = (performance.now() % LOOP_MS) / LOOP_MS;
+  let val;
+  if (t < 0.05) {
+    val = start;
+  } else if (t < 0.55) {
+    // ease-out countdown from 247 to 0 over 50% of loop
+    const progress = (t - 0.05) / 0.50;
+    const eased = 1 - Math.pow(1 - progress, 2);
+    val = Math.round(start * (1 - eased));
+  } else if (t < 0.92) {
+    val = 0;
+  } else {
+    val = start;
+  }
+  el.textContent = val;
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fekreya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0F1830;
+  --navy-2: #1D2A4D;
+  --navy-soft: #4a5066;
+  --sand: #E8DCC4;
+  --sand-light: #f1e8d4;
+  --cream: #fdfaf2;
+  --coral: #E87A5D;
+  --coral-deep: #c85f43;
+  --coral-soft: #fbe5dd;
+  --tan: #C2A279;
+  --green: #2FA15C;
+  --green-soft: rgba(47,161,92,0.12);
+  --blue: #2C7BE5;
+  --purple: #6B5BD2;
+  --line: rgba(15, 24, 48, 0.10);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
+  background: transparent;
+  color: var(--navy);
+  -webkit-font-smoothing: antialiased;
+}
+.stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+.scene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  transition: opacity 0.3s ease;
+}
+.scene.active { opacity: 1; pointer-events: auto; }
+.scene.dark { background: var(--navy); }
+.scene.sand { background: linear-gradient(135deg, var(--sand) 0%, var(--sand-light) 100%); }
+.scene.cream { background: var(--cream); }
+.scene.sand-light { background: var(--sand-light); }
+
+.progress {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 50;
+  background: rgba(15, 24, 48, 0.7);
+  backdrop-filter: blur(10px);
+  padding: 10px 16px;
+  border-radius: 100px;
+}
+.progress span {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(253, 250, 242, 0.25);
+  transition: all 0.3s ease;
+}
+.progress span.active {
+  background: var(--coral);
+  width: 24px;
+  border-radius: 100px;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pulseDot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(232,122,93,0.5); transform: scale(1); }
+  50% { box-shadow: 0 0 0 14px rgba(232,122,93,0); transform: scale(1.15); }
+}
+
+/* ============================== SCENE 2: WhatsApp + Board ============================== */
+#scene-2 .stack {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+.phone {
+  background: var(--navy);
+  border-radius: 32px;
+  padding: 8px;
+  width: 280px;
+  height: 540px;
+  box-shadow: 0 30px 70px rgba(15,24,48,0.18);
+  position: relative;
+  flex-shrink: 0;
+}
+.phone::before {
+  content: '';
+  position: absolute;
+  top: 14px; left: 50%;
+  transform: translateX(-50%);
+  width: 90px; height: 18px;
+  background: var(--navy);
+  border-radius: 0 0 12px 12px;
+  z-index: 5;
+}
+.phone-screen {
+  background: #ECE5DD;
+  border-radius: 26px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.wa-header {
+  background: #075E54;
+  color: white;
+  padding: 32px 12px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.wa-back { font-size: 22px; opacity: 0.9; }
+.wa-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--coral) 0%, var(--coral-deep) 100%);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.wa-name { font-size: 13px; font-weight: 600; }
+.wa-status { font-size: 10px; opacity: 0.85; }
+.wa-icons { margin-left: auto; display: flex; gap: 12px; opacity: 0.85; font-size: 14px; }
+
+.wa-body {
+  flex: 1;
+  padding: 12px 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+.bubble {
+  padding: 7px 10px 5px 10px;
+  border-radius: 8px;
+  max-width: 84%;
+  font-size: 12px;
+  line-height: 1.4;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.06);
+  color: var(--navy);
+  opacity: 0;
+  transform: translateY(6px);
+}
+.bubble.client {
+  align-self: flex-start;
+  background: white;
+  border-top-left-radius: 2px;
+}
+.bubble.assistant {
+  align-self: flex-end;
+  background: #DCF8C6;
+  border-top-right-radius: 2px;
+}
+.bubble .time { font-size: 9px; color: #888; margin-left: 6px; }
+.bubble.assistant .time::after {
+  content: ' ✓✓';
+  color: #34B7F1;
+}
+.bubble.old { opacity: 0.55; }
+.wa-date {
+  align-self: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  color: #5a6370;
+  background: rgba(15,24,48,0.05);
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin: 6px 0 4px;
+  opacity: 0.7;
+}
+.wa-date.today { opacity: 1; color: var(--coral-deep); background: var(--coral-soft); }
+
+.typing-dots {
+  align-self: flex-end;
+  background: #DCF8C6;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border-top-right-radius: 2px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+}
+.typing-dots span {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #4a5066;
+  opacity: 0.4;
+  animation: typing 1.2s infinite ease-in-out;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-3px); opacity: 1; }
+}
+
+#scene-2.active #b1 { animation: bubbleIn 0.3s ease 0.08s forwards; }
+#scene-2.active #b2 { animation: bubbleIn 0.3s ease 0.32s forwards; }
+#scene-2.active #b3 { animation: bubbleIn 0.3s ease 0.56s forwards; }
+#scene-2.active #typing { animation: typingShow 0.6s ease 0.85s forwards; }
+#scene-2.active #r1 { animation: bubbleIn 0.3s ease 1.55s forwards; }
+#scene-2.active #r2 { animation: bubbleIn 0.3s ease 1.85s forwards; }
+#scene-2.active #r3 { animation: bubbleIn 0.3s ease 2.15s forwards; }
+
+@keyframes bubbleIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes typingShow {
+  0% { opacity: 0; }
+  20%, 80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Board */
+.cu-board {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  box-shadow: 0 20px 60px rgba(15,24,48,0.10);
+  padding: 16px;
+  width: 540px;
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.cu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.cu-title { font-size: 13px; font-weight: 700; color: var(--navy); }
+.cu-title .accent { color: var(--coral); }
+.cu-meta {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  font-weight: 600;
+  color: var(--green);
+  background: var(--green-soft);
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.cu-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  flex: 1;
+  position: relative;
+}
+.cu-col {
+  background: #faf8f1;
+  border-radius: 8px;
+  padding: 8px;
+}
+.cu-col-head {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 8px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--navy-soft);
+}
+.cu-col-dot { width: 6px; height: 6px; border-radius: 50%; }
+.cu-col-todo .cu-col-dot { background: #b9b9c2; }
+.cu-col-doing .cu-col-dot { background: var(--coral); animation: pulseDot 1.6s infinite ease; }
+.cu-col-done .cu-col-dot { background: var(--green); }
+
+.cu-card {
+  position: absolute;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 8px 10px;
+  box-shadow: 0 1px 2px rgba(15,24,48,0.05);
+  font-size: 10px;
+  width: calc(33.33% - 22px);
+  transition: none;
+}
+.cu-card.from-wa { border-left: 3px solid var(--coral); }
+.cu-card.existing { opacity: 0.45; }
+.cu-card.existing.done-static { border-left: 3px solid var(--green); }
+.cu-card.existing.done-static .cu-card-meta::before { content: '✓ '; color: var(--green); font-weight: 700; }
+.cu-card-title { font-weight: 600; line-height: 1.3; margin-bottom: 3px; color: var(--navy); }
+.cu-card-meta { font-size: 9px; color: var(--navy-soft); }
+
+/* Card slots: 3 columns at 0%, 33.85%, 67.7%, each 32% wide; tops 36, 90, 144 */
+#card-1 { top: 36px; }
+#card-2 { top: 90px; }
+#card-3 { top: 144px; }
+#scene-2.active #card-1 { animation: card1Move 2.4s ease 0.25s forwards; }
+#scene-2.active #card-2 { animation: card2Move 2.4s ease 0.55s forwards; }
+#scene-2.active #card-3 { animation: card3Move 2.4s ease 0.85s forwards; }
+
+@keyframes card1Move {
+  0%, 4% { left: 8px; opacity: 0; transform: scale(0.96); }
+  5%, 25% { left: 8px; opacity: 1; transform: scale(1); }
+  35%, 50% { left: calc(33.85% + 8px); }
+  60%, 100% { left: calc(67.7% + 8px); top: 36px; }
+}
+@keyframes card2Move {
+  0%, 4% { left: 8px; opacity: 0; transform: scale(0.96); }
+  6%, 35% { left: 8px; opacity: 1; transform: scale(1); }
+  45%, 60% { left: calc(33.85% + 8px); top: 36px; }
+  70%, 100% { left: calc(67.7% + 8px); top: 90px; }
+}
+@keyframes card3Move {
+  0%, 4% { left: 8px; opacity: 0; transform: scale(0.96); }
+  6%, 50% { left: 8px; opacity: 1; transform: scale(1); }
+  60%, 75% { left: calc(33.85% + 8px); top: 36px; }
+  85%, 100% { left: calc(67.7% + 8px); top: 144px; }
+}
+
+/* ============================== SCENE 3: Email -> Task ============================== */
+#scene-3 .stack {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  width: 100%;
+  max-width: 1100px;
+}
+.gmail {
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 30px 70px rgba(15,24,48,0.10);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  width: 480px;
+  height: 360px;
+  display: flex;
+  flex-direction: column;
+}
+.gmail-bar {
+  background: #f5f5f5;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.gmail-bar .dots { display: flex; gap: 5px; }
+.gmail-bar .dots span { width: 10px; height: 10px; border-radius: 50%; }
+.gmail-bar .dots span:nth-child(1) { background: #FF5F57; }
+.gmail-bar .dots span:nth-child(2) { background: #FEBC2E; }
+.gmail-bar .dots span:nth-child(3) { background: #28C840; }
+.gmail-bar .url {
+  margin-left: auto;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  color: var(--navy-soft);
+}
+.email-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+.email-from {
+  font-size: 13px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--navy-soft);
+}
+.email-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue) 0%, #1E5BB8 100%);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 12px;
+}
+.email-from strong { color: var(--navy); margin-right: 6px; }
+.email-subject {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  letter-spacing: -0.01em;
+  color: var(--navy);
+}
+.email-content { flex: 1; }
+.email-content .line {
+  height: 9px;
+  background: rgba(15,24,48,0.08);
+  border-radius: 100px;
+  margin-bottom: 9px;
+  width: 0;
+}
+#scene-3.active .email-content .line:nth-child(1) { animation: lineFill 0.4s ease 0.3s forwards; --w: 100%; }
+#scene-3.active .email-content .line:nth-child(2) { animation: lineFill 0.4s ease 0.5s forwards; --w: 95%; }
+#scene-3.active .email-content .line:nth-child(3) { animation: lineFill 0.4s ease 0.7s forwards; --w: 88%; }
+#scene-3.active .email-content .line:nth-child(4) { animation: lineFill 0.4s ease 0.9s forwards; --w: 70%; }
+@keyframes lineFill { from { width: 0; } to { width: var(--w, 100%); } }
+
+/* Email-to-task arrow */
+.email-arrow {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.email-arrow svg {
+  width: 60px;
+  height: 24px;
+  opacity: 0;
+}
+#scene-3.active .email-arrow svg { animation: fadeIn 0.4s ease 1.2s forwards; }
+.email-arrow .pulse {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--purple);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--purple);
+  opacity: 0;
+}
+#scene-3.active .email-arrow .pulse { animation: arrowPulse 1.4s ease 1.4s infinite; }
+@keyframes arrowPulse {
+  0% { left: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+/* Email creates task */
+#scene-3 .cu-board { width: 460px; height: 360px; }
+#scene-3 .cu-card {
+  width: calc(33.33% - 12px);
+  border-left: 3px solid var(--purple);
+}
+#scene-3.active #ec-1 { animation: card3eIn 0.5s ease 1.6s forwards; }
+@keyframes card3eIn {
+  0% { left: 8px; opacity: 0; transform: scale(0.96); }
+  100% { left: 8px; opacity: 1; transform: scale(1); }
+}
+#scene-3.active #ec-1 {
+  animation: ec1Move 4s ease 1.6s forwards;
+}
+@keyframes ec1Move {
+  0% { left: 8px; opacity: 0; transform: translateY(8px); }
+  10%, 50% { left: 8px; opacity: 1; transform: translateY(0); }
+  60%, 75% { left: calc(33.85% + 8px); }
+  85%, 100% { left: calc(67.7% + 8px); }
+}
+
+/* ============================== SCENE 4: Inbox to zero ============================== */
+.inbox {
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 30px 70px rgba(15,24,48,0.10);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  width: 560px;
+  height: 480px;
+  display: flex;
+  flex-direction: column;
+}
+.inbox-header {
+  background: white;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+}
+.inbox-title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--navy);
+}
+.inbox-count {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: var(--coral-soft);
+  color: var(--coral-deep);
+  font-family: 'Space Grotesk', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  transition: background 0.4s, color 0.4s;
+}
+.inbox-count .num { min-width: 36px; text-align: right; }
+.inbox-count.done {
+  background: var(--green-soft);
+  color: var(--green);
+}
+.inbox-list {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.email-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 22px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  transition: opacity 0.4s, background 0.4s;
+}
+.email-row.read { opacity: 0.4; background: #fafaf6; }
+.email-row .avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+}
+.email-row .lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.email-row .ln {
+  height: 6px;
+  background: rgba(15,24,48,0.10);
+  border-radius: 100px;
+}
+.email-row .ln.short { width: 40%; height: 7px; background: rgba(15,24,48,0.16); }
+.email-row .ln.medium { width: 75%; }
+.email-row .ln.long { width: 92%; }
+.email-row .check {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--green);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: all 0.3s ease;
+}
+.email-row.read .check { opacity: 1; transform: scale(1); }
+
+/* Sequential read animation */
+#scene-4.active #er1 { animation: rowRead 0.35s ease 0.2s forwards; }
+#scene-4.active #er2 { animation: rowRead 0.35s ease 0.38s forwards; }
+#scene-4.active #er3 { animation: rowRead 0.35s ease 0.56s forwards; }
+#scene-4.active #er4 { animation: rowRead 0.35s ease 0.74s forwards; }
+#scene-4.active #er5 { animation: rowRead 0.35s ease 0.92s forwards; }
+#scene-4.active #er6 { animation: rowRead 0.35s ease 1.10s forwards; }
+#scene-4.active #er7 { animation: rowRead 0.35s ease 1.28s forwards; }
+#scene-4.active #er8 { animation: rowRead 0.35s ease 1.46s forwards; }
+
+@keyframes rowRead {
+  to { opacity: 0.4; background: #fafaf6; }
+}
+
+#scene-4.active .check { animation: checkPop 0.3s ease forwards; }
+#scene-4.active #er1 .check { animation-delay: 0.2s; }
+#scene-4.active #er2 .check { animation-delay: 0.38s; }
+#scene-4.active #er3 .check { animation-delay: 0.56s; }
+#scene-4.active #er4 .check { animation-delay: 0.74s; }
+#scene-4.active #er5 .check { animation-delay: 0.92s; }
+#scene-4.active #er6 .check { animation-delay: 1.10s; }
+#scene-4.active #er7 .check { animation-delay: 1.28s; }
+#scene-4.active #er8 .check { animation-delay: 1.46s; }
+
+@keyframes checkPop {
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Counter rapidly ticks down */
+#scene-4 .inbox-count {
+  animation: countDone 0.4s ease 2.5s forwards;
+}
+@keyframes countDone {
+  to {
+    background: var(--green-soft);
+    color: var(--green);
+  }
+}
+
+/* Avatar gradients */
+.av-1 { background: linear-gradient(135deg, var(--coral) 0%, var(--coral-deep) 100%); }
+.av-2 { background: linear-gradient(135deg, var(--blue) 0%, #1E5BB8 100%); }
+.av-3 { background: linear-gradient(135deg, var(--purple) 0%, #4A3B9C 100%); }
+.av-4 { background: linear-gradient(135deg, var(--green) 0%, #1F7846 100%); }
+.av-5 { background: linear-gradient(135deg, var(--tan) 0%, #8a6f4d 100%); }
+.av-6 { background: linear-gradient(135deg, #DC4C3F 0%, #a83c30 100%); }
+.av-7 { background: linear-gradient(135deg, var(--coral) 0%, var(--tan) 100%); }
+.av-8 { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%); }
+
+/* ============================== SCENE: Morning brief ============================== */
+.morning-phone {
+  background: var(--navy);
+  border-radius: 36px;
+  padding: 10px;
+  width: 320px;
+  height: 580px;
+  box-shadow: 0 30px 70px rgba(15,24,48,0.18);
+  position: relative;
+}
+.morning-phone::before {
+  content: '';
+  position: absolute;
+  top: 14px; left: 50%;
+  transform: translateX(-50%);
+  width: 90px; height: 18px;
+  background: var(--navy);
+  border-radius: 0 0 12px 12px;
+  z-index: 5;
+}
+.morning-screen {
+  background: linear-gradient(180deg, #FBE6D8 0%, var(--cream) 50%);
+  border-radius: 28px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 50px 22px 22px;
+}
+.morning-time {
+  text-align: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--navy-soft);
+  font-weight: 600;
+  opacity: 0;
+}
+#morning.active .morning-time { animation: fadeIn 0.4s ease 0.2s forwards; }
+.morning-greet {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-top: 12px;
+  opacity: 0;
+}
+.morning-greet em { color: var(--coral); font-style: normal; }
+#morning.active .morning-greet { animation: morningSlide 0.5s ease 0.4s forwards; }
+@keyframes morningSlide { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.morning-list {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.morning-item {
+  background: white;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 10px rgba(15,24,48,0.04);
+  opacity: 0;
+}
+.morning-item .pulse-mini {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--coral);
+  flex-shrink: 0;
+  animation: pulseDot 1.4s infinite ease;
+}
+.morning-item .text {
+  flex: 1;
+  font-size: 13px;
+  color: var(--navy);
+  font-weight: 600;
+}
+.morning-item .text .sub {
+  display: block;
+  font-size: 10.5px;
+  color: var(--navy-soft);
+  font-weight: 500;
+  margin-top: 2px;
+}
+.morning-item .stat {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--coral);
+  letter-spacing: -0.02em;
+}
+#morning.active .morning-item:nth-child(1) { animation: morningSlide 0.4s ease 0.7s forwards; }
+#morning.active .morning-item:nth-child(2) { animation: morningSlide 0.4s ease 0.9s forwards; }
+#morning.active .morning-item:nth-child(3) { animation: morningSlide 0.4s ease 1.1s forwards; }
+#morning.active .morning-item:nth-child(4) { animation: morningSlide 0.4s ease 1.3s forwards; }
+
+/* ============================== SCENE: Calendar transformation ============================== */
+.cal-card {
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 30px 70px rgba(15,24,48,0.10);
+  border: 1px solid var(--line);
+  padding: 22px;
+  width: 720px;
+  display: flex;
+  flex-direction: column;
+}
+.cal-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.cal-title { font-size: 15px; font-weight: 700; color: var(--navy); }
+.cal-week {
+  margin-left: auto;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  color: var(--navy-soft);
+  letter-spacing: 0.15em;
+}
+.cal-grid {
+  display: grid;
+  grid-template-columns: 50px repeat(5, 1fr);
+  gap: 4px;
+  position: relative;
+}
+.cal-time {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  color: var(--navy-soft);
+  text-align: right;
+  padding-right: 6px;
+  height: 30px;
+  line-height: 30px;
+}
+.cal-day {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cal-day-head {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--navy-soft);
+  text-align: center;
+  font-weight: 600;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+}
+.cal-block {
+  background: var(--coral-soft);
+  border-left: 3px solid var(--coral);
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 9px;
+  color: var(--coral-deep);
+  font-weight: 600;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  transition: all 0.5s ease;
+}
+.cal-block.free {
+  background: rgba(47,161,92,0.15);
+  border-left-color: var(--green);
+  color: var(--green);
+}
+.cal-block.gone {
+  opacity: 0;
+  transform: scale(0.6);
+  background: transparent;
+  border-color: transparent;
+}
+#calendar.active .cal-block.kill1 { animation: blockKill 0.5s ease 0.5s forwards; }
+#calendar.active .cal-block.kill2 { animation: blockKill 0.5s ease 0.7s forwards; }
+#calendar.active .cal-block.kill3 { animation: blockKill 0.5s ease 0.9s forwards; }
+#calendar.active .cal-block.kill4 { animation: blockKill 0.5s ease 1.1s forwards; }
+#calendar.active .cal-block.kill5 { animation: blockKill 0.5s ease 1.3s forwards; }
+#calendar.active .cal-block.kill6 { animation: blockKill 0.5s ease 1.5s forwards; }
+@keyframes blockKill {
+  to { opacity: 0; transform: scale(0.6); background: transparent; border-color: transparent; }
+}
+#calendar.active .cal-block.appear {
+  opacity: 0;
+  transform: scale(0.9);
+  animation: blockAppear 0.5s ease forwards;
+}
+#calendar.active .cal-block.appear.a1 { animation-delay: 1.7s; }
+#calendar.active .cal-block.appear.a2 { animation-delay: 1.85s; }
+@keyframes blockAppear {
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ============================== SCENE: Travel itinerary ============================== */
+.travel-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 30px 70px rgba(15,24,48,0.12);
+  border: 1px solid var(--line);
+  padding: 26px;
+  width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+.travel-header {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  opacity: 0;
+}
+.travel-header em { color: var(--coral); font-style: normal; }
+#travel.active .travel-header { animation: fadeIn 0.4s ease 0.2s forwards; }
+
+.travel-step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  background: var(--cream);
+  border-radius: 10px;
+  border-left: 3px solid var(--coral);
+  opacity: 0;
+  transform: translateX(-12px);
+}
+.travel-step .icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: var(--coral-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.travel-step .info { flex: 1; }
+.travel-step .info .label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--navy-soft);
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.travel-step .info .main {
+  font-size: 13px;
+  color: var(--navy);
+  font-weight: 700;
+}
+.travel-step .info .sub {
+  font-size: 11px;
+  color: var(--navy-soft);
+  margin-top: 2px;
+}
+.travel-step .check {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--green);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0;
+}
+#travel.active .travel-step:nth-child(2) { animation: travelIn 0.4s ease 0.5s forwards; }
+#travel.active .travel-step:nth-child(3) { animation: travelIn 0.4s ease 0.85s forwards; }
+#travel.active .travel-step:nth-child(4) { animation: travelIn 0.4s ease 1.2s forwards; }
+#travel.active .travel-step:nth-child(5) { animation: travelIn 0.4s ease 1.55s forwards; }
+@keyframes travelIn { to { opacity: 1; transform: translateX(0); } }
+#travel.active .travel-step:nth-child(2) .check { animation: fadeIn 0.3s ease 0.85s forwards; }
+#travel.active .travel-step:nth-child(3) .check { animation: fadeIn 0.3s ease 1.2s forwards; }
+#travel.active .travel-step:nth-child(4) .check { animation: fadeIn 0.3s ease 1.55s forwards; }
+#travel.active .travel-step:nth-child(5) .check { animation: fadeIn 0.3s ease 1.9s forwards; }
+
+/* ============================== SCENE: Decision queue ============================== */
+.decision-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 460px;
+}
+.decision-card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 20px rgba(15,24,48,0.06);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  opacity: 0;
+  transform: translateY(8px);
+}
+.decision-card .label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--coral-deep);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.decision-card .question {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+}
+.decision-card .text { flex: 1; }
+.decision-card .actions {
+  display: flex;
+  gap: 6px;
+}
+.decision-card .btn-yes,
+.decision-card .btn-no {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+.decision-card .btn-yes {
+  background: var(--green-soft);
+  color: var(--green);
+}
+.decision-card .btn-no {
+  background: rgba(15,24,48,0.06);
+  color: var(--navy-soft);
+}
+.decision-card.tapped {
+  background: var(--green-soft);
+  border-color: var(--green);
+}
+.decision-card.tapped .btn-yes {
+  background: var(--green);
+  color: white;
+  transform: scale(1.15);
+}
+.decision-card.tapped .btn-no {
+  opacity: 0.3;
+}
+#decision.active .decision-card:nth-child(1) { animation: decisionIn 0.35s ease 0.2s forwards; }
+#decision.active .decision-card:nth-child(2) { animation: decisionIn 0.35s ease 0.4s forwards; }
+#decision.active .decision-card:nth-child(3) { animation: decisionIn 0.35s ease 0.6s forwards; }
+@keyframes decisionIn { to { opacity: 1; transform: translateY(0); } }
+#decision.active .decision-card:nth-child(1) { animation: decisionIn 0.35s ease 0.2s forwards, decisionTap 0.4s ease 1.2s forwards; }
+#decision.active .decision-card:nth-child(2) { animation: decisionIn 0.35s ease 0.4s forwards, decisionTap 0.4s ease 1.6s forwards; }
+#decision.active .decision-card:nth-child(3) { animation: decisionIn 0.35s ease 0.6s forwards, decisionTap 0.4s ease 2.0s forwards; }
+@keyframes decisionTap {
+  0% { background: white; }
+  100% { background: var(--green-soft); border-color: var(--green); }
+}
+
+/* ============================== SCENE: While you slept ============================== */
+#sleep .clock-wrap {
+  position: relative;
+  width: 360px;
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.clock-face {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: var(--navy-2);
+  border: 6px solid rgba(232,122,93,0.25);
+  position: relative;
+  box-shadow: 0 40px 80px rgba(15,24,48,0.4), 0 0 0 0 rgba(232,122,93,0.3);
+  animation: clockGlow 2s ease infinite;
+}
+@keyframes clockGlow {
+  0%, 100% { box-shadow: 0 40px 80px rgba(15,24,48,0.4), 0 0 0 0 rgba(232,122,93,0.3); }
+  50% { box-shadow: 0 40px 80px rgba(15,24,48,0.4), 0 0 60px rgba(232,122,93,0.3); }
+}
+.clock-time {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 56px;
+  font-weight: 700;
+  color: var(--cream);
+  letter-spacing: -0.04em;
+}
+.clock-hand {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  width: 4px;
+  height: 90px;
+  background: var(--coral);
+  transform-origin: bottom center;
+  border-radius: 100px;
+  margin-left: -2px;
+}
+#sleep.active .clock-hand { animation: handSpin 3s linear forwards; }
+@keyframes handSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(720deg); }
+}
+.sleep-event {
+  position: absolute;
+  background: var(--navy-2);
+  border: 1px solid rgba(232,122,93,0.3);
+  border-radius: 100px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--cream);
+  font-weight: 600;
+  opacity: 0;
+  white-space: nowrap;
+}
+.sleep-event::before {
+  content: '';
+  width: 8px; height: 8px;
+  background: var(--coral);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sleep-event.e1 { top: 10%; left: -10%; }
+.sleep-event.e2 { top: 20%; right: -5%; }
+.sleep-event.e3 { bottom: 25%; left: -8%; }
+.sleep-event.e4 { bottom: 8%; right: 0%; }
+#sleep.active .sleep-event.e1 { animation: eventPop 0.6s ease 0.4s forwards; }
+#sleep.active .sleep-event.e2 { animation: eventPop 0.6s ease 1.0s forwards; }
+#sleep.active .sleep-event.e3 { animation: eventPop 0.6s ease 1.6s forwards; }
+#sleep.active .sleep-event.e4 { animation: eventPop 0.6s ease 2.2s forwards; }
+@keyframes eventPop {
+  0% { opacity: 0; transform: scale(0.7); }
+  20% { opacity: 1; transform: scale(1); }
+  85% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.4; transform: scale(0.95); }
+}
+
+/* ============================== SCENE 5: Polished brief deliverable ============================== */
+.brief-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 30px 70px rgba(15,24,48,0.14);
+  border: 1px solid var(--line);
+  padding: 28px;
+  width: 720px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.brief-card .accent-bar {
+  position: absolute;
+  top: 0; left: 0;
+  height: 6px;
+  background: var(--coral);
+  border-radius: 16px 0 0 0;
+  width: 0;
+}
+#scene-5.active .accent-bar { animation: barFill 0.5s ease 0.1s forwards; }
+@keyframes barFill { to { width: 100%; border-radius: 16px 16px 0 0; } }
+
+.brief-header {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 16px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+}
+.brief-header .left { flex: 1; }
+.brief-header .label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+  font-weight: 700;
+  margin-bottom: 6px;
+  opacity: 0;
+}
+.brief-header h3 {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  opacity: 0;
+}
+.brief-header .stamp {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  color: var(--navy-soft);
+  letter-spacing: 0.1em;
+  opacity: 0;
+}
+#scene-5.active .brief-header .label { animation: fadeIn 0.3s ease 0.4s forwards; }
+#scene-5.active .brief-header h3 { animation: fadeIn 0.3s ease 0.55s forwards; }
+#scene-5.active .brief-header .stamp { animation: fadeIn 0.3s ease 0.7s forwards; }
+
+.brief-body {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+}
+.brief-pie-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.pie-wrap {
+  width: 160px;
+  height: 160px;
+  position: relative;
+  opacity: 0;
+}
+#scene-5.active .pie-wrap { animation: fadeIn 0.4s ease 0.9s forwards; }
+
+.pie {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  position: relative;
+  background: conic-gradient(
+    var(--coral) 0% 0%,
+    var(--blue) 0% 0%,
+    var(--green) 0% 0%,
+    var(--tan) 0% 0%
+  );
+  transition: background 1.2s ease;
+}
+#scene-5.active .pie { animation: pieDraw 1.2s ease 1.0s forwards; }
+@keyframes pieDraw {
+  0% {
+    background: conic-gradient(
+      var(--coral) 0% 0%,
+      var(--blue) 0% 0%,
+      var(--green) 0% 0%,
+      var(--tan) 0% 0%
+    );
+  }
+  100% {
+    background: conic-gradient(
+      var(--coral) 0% 42%,
+      var(--blue) 42% 68%,
+      var(--green) 68% 86%,
+      var(--tan) 86% 100%
+    );
+  }
+}
+.pie::after {
+  content: '';
+  position: absolute;
+  inset: 28px;
+  background: white;
+  border-radius: 50%;
+}
+.pie-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2;
+}
+.pie-center .big {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.pie-center .small {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--navy-soft);
+  font-weight: 600;
+  margin-top: 4px;
+}
+.pie-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 14px;
+  font-size: 10px;
+  color: var(--navy-soft);
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  opacity: 0;
+}
+#scene-5.active .pie-legend { animation: fadeIn 0.3s ease 1.7s forwards; }
+.pie-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.pie-legend span::before {
+  content: '';
+  width: 9px; height: 9px;
+  border-radius: 2px;
+}
+.pie-legend .l1::before { background: var(--coral); }
+.pie-legend .l2::before { background: var(--blue); }
+.pie-legend .l3::before { background: var(--green); }
+.pie-legend .l4::before { background: var(--tan); }
+
+.brief-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.brief-bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 130px;
+  gap: 10px;
+  padding: 0 4px;
+}
+.brief-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.brief-bar {
+  width: 100%;
+  background: linear-gradient(180deg, var(--coral) 0%, var(--coral-deep) 100%);
+  border-radius: 4px 4px 0 0;
+  height: 0;
+  transition: height 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+#scene-5.active .brief-bar-col:nth-child(1) .brief-bar { animation: barRise1 0.6s ease 1.2s forwards; }
+#scene-5.active .brief-bar-col:nth-child(2) .brief-bar { animation: barRise2 0.6s ease 1.35s forwards; }
+#scene-5.active .brief-bar-col:nth-child(3) .brief-bar { animation: barRise3 0.6s ease 1.5s forwards; }
+#scene-5.active .brief-bar-col:nth-child(4) .brief-bar { animation: barRise4 0.6s ease 1.65s forwards; }
+#scene-5.active .brief-bar-col:nth-child(5) .brief-bar { animation: barRise5 0.6s ease 1.8s forwards; }
+#scene-5.active .brief-bar-col:nth-child(6) .brief-bar { animation: barRise6 0.6s ease 1.95s forwards; }
+@keyframes barRise1 { to { height: 35%; } }
+@keyframes barRise2 { to { height: 52%; } }
+@keyframes barRise3 { to { height: 41%; } }
+@keyframes barRise4 { to { height: 68%; } }
+@keyframes barRise5 { to { height: 88%; } }
+@keyframes barRise6 { to { height: 100%; } }
+.brief-bar-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--navy-soft);
+  font-weight: 600;
+}
+
+.brief-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-top: 4px;
+}
+.brief-stat {
+  background: var(--sand);
+  border-radius: 8px;
+  padding: 12px;
+  opacity: 0;
+}
+#scene-5.active .brief-stat:nth-child(1) { animation: fadeIn 0.3s ease 1.8s forwards; }
+#scene-5.active .brief-stat:nth-child(2) { animation: fadeIn 0.3s ease 1.95s forwards; }
+#scene-5.active .brief-stat:nth-child(3) { animation: fadeIn 0.3s ease 2.1s forwards; }
+.brief-stat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.brief-stat-num em { color: var(--green); font-style: normal; font-size: 13px; margin-left: 4px; }
+.brief-stat-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--navy-soft);
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+.brief-foot {
+  position: absolute;
+  bottom: 14px;
+  right: 22px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+  font-weight: 700;
+  opacity: 0;
+}
+.brief-foot::before {
+  content: '';
+  display: inline-block;
+  width: 6px; height: 6px;
+  background: var(--coral);
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+  animation: pulseDot 1.4s infinite ease;
+}
+#scene-5.active .brief-foot { animation: fadeIn 0.3s ease 2.3s forwards; }
+
+/* ============================== SCENE 6: Closing brand ============================== */
+#scene-6 .brand-wrap {
+  text-align: center;
+}
+#scene-6 .brand-svg {
+  color: white;
+  opacity: 0;
+  transform: translateY(8px);
+}
+#scene-6 .brand-svg svg { height: 56px; display: block; margin: 0 auto; }
+#scene-6.active .brand-svg { animation: brandIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s forwards; }
+@keyframes brandIn { to { opacity: 1; transform: translateY(0); } }
+
+#scene-6 .pulse-glow {
+  width: 100px;
+  height: 100px;
+  background: var(--coral);
+  border-radius: 50%;
+  margin: 32px auto 0;
+  opacity: 0;
+  filter: blur(28px);
+}
+#scene-6.active .pulse-glow { animation: glowIn 1s ease 0.5s forwards; }
+@keyframes glowIn {
+  0% { opacity: 0; transform: scale(0.8); }
+  50% { opacity: 0.7; transform: scale(1); }
+  100% { opacity: 0.45; transform: scale(1); }
+}
+
+@media (max-width: 1100px) {
+  .phone { width: 260px; height: 480px; }
+  .cu-board { width: 460px; height: 340px; }
+  #scene-3 .cu-board { width: 380px; height: 320px; }
+  .gmail { width: 380px; height: 320px; }
+  .brief-card { width: 600px; }
+  .morning-phone { width: 280px; height: 520px; }
+  .cal-card { width: 600px; }
+  .travel-card { width: 440px; }
+  .decision-stack { width: 420px; }
+  #sleep .clock-wrap { width: 320px; height: 320px; }
+  .clock-face { width: 240px; height: 240px; }
+  .clock-time { font-size: 48px; }
+}
+
+@media (max-width: 800px) {
+  .scene { padding: 24px 16px; }
+  .scene-label { left: 20px; top: 20px; font-size: 10px; }
+  .scene-headline { left: 20px; right: 20px; top: 50px; font-size: 18px; }
+
+  /* Scenes 2 & 3: stack vertically */
+  #scene-2, #scene-3 { padding-top: 90px; }
+  #scene-2 .stack, #scene-3 .stack { flex-direction: column; gap: 16px; align-items: center; }
+  .phone { width: 220px; height: 400px; transform: none; margin: 0 auto; }
+  .phone::before { width: 75px; height: 14px; top: 11px; }
+  .phone-screen { border-radius: 22px; }
+  .wa-header { padding: 26px 10px 8px; }
+  .wa-avatar { width: 26px; height: 26px; font-size: 11px; }
+  .wa-name { font-size: 12px; }
+  .wa-status { font-size: 9px; }
+  .wa-body { padding: 10px 8px 12px; gap: 4px; }
+  .bubble { font-size: 11px; padding: 6px 9px 4px; }
+  .wa-date { font-size: 8px; padding: 2px 8px; }
+  .flow { display: none; } /* hide horizontal arrow */
+  .cu-board, #scene-3 .cu-board { width: 100%; max-width: 340px; height: 240px; padding: 12px; }
+  .cu-card { font-size: 9px; padding: 6px 8px; width: calc(33% - 6px); }
+  .cu-card-title { font-size: 9px; }
+  .cu-card-meta { font-size: 8px; }
+  .cu-cols { gap: 6px; }
+
+  .gmail { width: 100%; max-width: 340px; height: 240px; }
+  .email-body { padding: 12px; }
+  .email-subject { font-size: 13px; }
+  .email-from { font-size: 11px; }
+
+  /* Morning brief */
+  #morning .morning-phone { width: 260px; height: 480px; transform: none; }
+  .morning-screen { padding: 40px 16px 16px; }
+  .morning-greet { font-size: 22px; }
+  .morning-item { padding: 9px 11px; }
+  .morning-item .text { font-size: 12px; }
+  .morning-item .text .sub { font-size: 9.5px; }
+  .morning-item .stat { font-size: 15px; }
+
+  /* Inbox-zero */
+  .inbox { width: 100%; max-width: 340px; height: 380px; }
+  .inbox-header { padding: 14px 18px; }
+  .inbox-title { font-size: 14px; }
+  .inbox-count { font-size: 11px; padding: 5px 12px; }
+  .email-row { padding: 8px 18px; gap: 10px; }
+  .email-row .avatar { width: 24px; height: 24px; font-size: 10px; }
+  .email-row .check { width: 18px; height: 18px; font-size: 11px; }
+
+  /* Calendar */
+  #calendar .cal-card { width: 100%; max-width: 360px; padding: 14px; }
+  .cal-header { margin-bottom: 10px; padding-bottom: 8px; }
+  .cal-title { font-size: 12px; }
+  .cal-week { font-size: 9px; }
+  .cal-grid { grid-template-columns: 28px repeat(5, 1fr); gap: 2px; }
+  .cal-time { font-size: 8px; height: 22px; line-height: 22px; }
+  .cal-day-head { font-size: 8px; padding: 4px 0; }
+  .cal-block { font-size: 7px; padding: 2px 4px; height: 18px; }
+
+  /* Travel */
+  .travel-card { width: 100%; max-width: 360px; padding: 18px; }
+  .travel-header { font-size: 18px; margin-bottom: 4px; }
+  .travel-step { padding: 9px 11px; gap: 10px; }
+  .travel-step .icon { width: 28px; height: 28px; font-size: 13px; }
+  .travel-step .info .label { font-size: 8px; }
+  .travel-step .info .main { font-size: 11px; }
+  .travel-step .info .sub { font-size: 9.5px; }
+  .travel-step .check { width: 18px; height: 18px; font-size: 10px; }
+
+  /* Decision queue */
+  .decision-stack { width: 100%; max-width: 340px; gap: 10px; }
+  .decision-card { padding: 12px 14px; gap: 10px; }
+  .decision-card .label { font-size: 8px; }
+  .decision-card .question { font-size: 12px; }
+  .decision-card .btn-yes,
+  .decision-card .btn-no { width: 30px; height: 30px; font-size: 12px; }
+
+  /* Sleep clock */
+  #sleep .clock-wrap { width: 280px; height: 280px; }
+  .clock-face { width: 200px; height: 200px; border-width: 4px; }
+  .clock-time { font-size: 40px; }
+  .clock-hand { height: 64px; width: 3px; }
+  .sleep-event { font-size: 8px; padding: 5px 10px; }
+  .sleep-event::before { width: 6px; height: 6px; }
+  .sleep-event.e1 { left: -8%; top: 5%; }
+  .sleep-event.e2 { right: -3%; top: 18%; }
+  .sleep-event.e3 { left: -5%; bottom: 25%; }
+  .sleep-event.e4 { right: 0; bottom: 5%; }
+
+  /* Polished brief */
+  #scene-5 { padding-top: 80px; }
+  .brief-card { width: 100%; max-width: 360px; padding: 16px; }
+  .brief-header { margin-bottom: 12px; padding-bottom: 10px; gap: 10px; }
+  .brief-header .label { font-size: 8.5px; }
+  .brief-header h3 { font-size: 16px; }
+  .brief-header .stamp { font-size: 8.5px; }
+  .brief-body { grid-template-columns: 1fr; gap: 14px; }
+  .pie-wrap { width: 130px; height: 130px; margin: 0 auto; }
+  .pie { width: 130px; height: 130px; }
+  .pie::after { inset: 22px; }
+  .pie-center .big { font-size: 22px; }
+  .pie-legend { font-size: 9px; }
+  .brief-bars { height: 90px; }
+  .brief-bar-label { font-size: 8px; }
+  .brief-stat-num { font-size: 18px; }
+  .brief-stat-label { font-size: 8px; }
+  .brief-foot { font-size: 8px; bottom: 10px; right: 12px; }
+
+  /* Closing */
+  #scene-6 .brand-svg svg { height: 36px; }
+  #scene-6 .pulse-glow { width: 70px; height: 70px; }
+
+  /* Progress (hidden but if shown, smaller) */
+  .progress { padding: 6px 10px; gap: 5px; bottom: 12px; }
+  .progress span { width: 6px; height: 6px; }
+  .progress span.active { width: 18px; }
+}
+
+/* ===== Back nav (fixed top-left, works on any scene) ===== */
+.back-nav {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px 9px 12px;
+  background: rgba(15, 24, 48, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--cream);
+  text-decoration: none;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  border-radius: 100px;
+  border: 1px solid rgba(253, 250, 242, 0.12);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.back-nav:hover {
+  background: rgba(15, 24, 48, 0.75);
+  transform: translateX(-2px);
+}
+.back-nav svg { width: 14px; height: 14px; }
+.back-nav .esc {
+  margin-left: 8px;
+  padding-left: 10px;
+  border-left: 1px solid rgba(253, 250, 242, 0.18);
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  opacity: 0.65;
+  text-transform: uppercase;
+}
+@media (max-width: 600px) {
+  .back-nav { top: 14px; left: 14px; padding: 8px 14px 8px 10px; font-size: 11px; }
+  .back-nav .esc { display: none; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-nav" aria-label="Back to fekreya.com">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Back to fekreya.com
+  <span class="esc">ESC</span>
+</a>
+
+<div class="stage">
+
+  <!-- ===== SCENE: Morning brief ===== -->
+  <section id="morning" class="scene sand active" data-duration="1900">
+    <div class="morning-phone">
+      <div class="morning-screen">
+        <div class="morning-time">TUESDAY . 7:14 AM</div>
+        <div class="morning-greet">Good morning.<br>Your day, <em>ready.</em></div>
+        <div class="morning-list">
+          <div class="morning-item">
+            <div class="pulse-mini"></div>
+            <div class="text">3 calls prepped<span class="sub">First at 9:30 with Acme</span></div>
+            <div class="stat">3</div>
+          </div>
+          <div class="morning-item">
+            <div class="pulse-mini"></div>
+            <div class="text">Decisions waiting<span class="sub">Vendor list, contract v2</span></div>
+            <div class="stat">2</div>
+          </div>
+          <div class="morning-item">
+            <div class="pulse-mini"></div>
+            <div class="text">Travel for Friday<span class="sub">Confirmed. Itinerary in your inbox</span></div>
+            <div class="stat">✓</div>
+          </div>
+          <div class="morning-item">
+            <div class="pulse-mini"></div>
+            <div class="text">Inbox triaged<span class="sub">8 replied. 2 escalated to you</span></div>
+            <div class="stat">✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SCENE 2: Full WhatsApp + Board flow ===== -->
+  <section id="scene-2" class="scene sand" data-duration="3700">
+    <div class="stack">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="wa-header">
+            <div class="wa-back">‹</div>
+            <div class="wa-avatar">L</div>
+            <div>
+              <div class="wa-name">My EA Layla</div>
+              <div class="wa-status">Your executive assistant</div>
+            </div>
+            <div class="wa-icons">
+              <span>📞</span><span>⋮</span>
+            </div>
+          </div>
+          <div class="wa-body">
+            <div class="wa-date">YESTERDAY</div>
+            <div class="bubble client old">
+              expense report march
+              <span class="time">14:22</span>
+            </div>
+            <div class="bubble assistant old">
+              Filed. Reconciled. PDF in your inbox.
+              <span class="time">17:05</span>
+            </div>
+            <div class="wa-date today">TODAY</div>
+            <div id="b1" class="bubble client">
+              minutes from leadership call → team
+              <span class="time">9:14</span>
+            </div>
+            <div id="b2" class="bubble client">
+              reply jason @ acme. yes to may 12.
+              <span class="time">9:15</span>
+            </div>
+            <div id="b3" class="bubble client">
+              Q1 deck. thursday board.
+              <span class="time">9:15</span>
+            </div>
+            <div id="typing" class="typing-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <div id="r1" class="bubble assistant">
+              Done. Sent.
+              <span class="time">10:48</span>
+            </div>
+            <div id="r2" class="bubble assistant">
+              Drafted. In your drafts.
+              <span class="time">11:06</span>
+            </div>
+            <div id="r3" class="bubble assistant">
+              Done. Link in your inbox.
+              <span class="time">11:31</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cu-board">
+        <div class="cu-header">
+          <div class="cu-title">Acme Corp <span class="accent">.</span> Today</div>
+          <div class="cu-meta">LIVE</div>
+        </div>
+        <div class="cu-cols">
+          <div class="cu-col cu-col-todo">
+            <div class="cu-col-head"><div class="cu-col-dot"></div>To do</div>
+          </div>
+          <div class="cu-col cu-col-doing">
+            <div class="cu-col-head"><div class="cu-col-dot"></div>In progress</div>
+          </div>
+          <div class="cu-col cu-col-done">
+            <div class="cu-col-head"><div class="cu-col-dot"></div>Done</div>
+          </div>
+
+          <!-- Existing static tasks -->
+          <div class="cu-card existing" style="left: calc(33.85% + 8px); top: 198px;">
+            <div class="cu-card-title">Vendor follow-up</div>
+            <div class="cu-card-meta">In progress</div>
+          </div>
+          <div class="cu-card existing done-static" style="left: calc(67.7% + 8px); top: 198px;">
+            <div class="cu-card-title">Travel for Friday</div>
+            <div class="cu-card-meta">Booked</div>
+          </div>
+          <div class="cu-card existing done-static" style="left: calc(67.7% + 8px); top: 252px;">
+            <div class="cu-card-title">Expense report</div>
+            <div class="cu-card-meta">Filed yesterday</div>
+          </div>
+
+          <!-- New cards from today's chat -->
+          <div id="card-1" class="cu-card from-wa">
+            <div class="cu-card-title">Leadership minutes</div>
+            <div class="cu-card-meta">From WhatsApp . 9:14</div>
+          </div>
+          <div id="card-2" class="cu-card from-wa">
+            <div class="cu-card-title">Reply Jason @ Acme</div>
+            <div class="cu-card-meta">From WhatsApp . 9:15</div>
+          </div>
+          <div id="card-3" class="cu-card from-wa">
+            <div class="cu-card-title">Q1 board deck</div>
+            <div class="cu-card-meta">From WhatsApp . 9:15</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SCENE 3: Email -> Task ===== -->
+  <section id="scene-3" class="scene cream" data-duration="2500">
+    <div class="stack">
+      <div class="gmail">
+        <div class="gmail-bar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <div class="url">layla@fekreya.com</div>
+        </div>
+        <div class="email-body">
+          <div class="email-from">
+            <div class="email-avatar">JK</div>
+            <span><strong>James K.</strong> jameskim@acme.co</span>
+          </div>
+          <div class="email-subject">Q3 deck for the Tuesday investor call</div>
+          <div class="email-content">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="email-arrow">
+        <svg viewBox="0 0 60 24" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="12" x2="50" y2="12" stroke="#6B5BD2" stroke-width="2"/>
+          <polyline points="44,6 52,12 44,18" fill="none" stroke="#6B5BD2" stroke-width="2"/>
+        </svg>
+        <div class="pulse"></div>
+      </div>
+
+      <div class="cu-board">
+        <div class="cu-header">
+          <div class="cu-title">Acme Corp <span class="accent">.</span> Today</div>
+          <div class="cu-meta">LIVE</div>
+        </div>
+        <div class="cu-cols">
+          <div class="cu-col cu-col-todo">
+            <div class="cu-col-head"><div class="cu-col-dot"></div>To do</div>
+          </div>
+          <div class="cu-col cu-col-doing">
+            <div class="cu-col-head"><div class="cu-col-dot"></div>In progress</div>
+          </div>
+          <div class="cu-col cu-col-done">
+            <div class="cu-col-head"><div class="cu-col-dot"></div>Done</div>
+          </div>
+
+          <!-- Existing tasks -->
+          <div class="cu-card existing" style="left: 8px; top: 90px;">
+            <div class="cu-card-title">Newsletter draft</div>
+            <div class="cu-card-meta">Awaiting your review</div>
+          </div>
+          <div class="cu-card existing" style="left: calc(33.85% + 8px); top: 36px;">
+            <div class="cu-card-title">Vendor follow-up</div>
+            <div class="cu-card-meta">Replying now</div>
+          </div>
+          <div class="cu-card existing done-static" style="left: calc(67.7% + 8px); top: 36px;">
+            <div class="cu-card-title">Travel for Friday</div>
+            <div class="cu-card-meta">Booked</div>
+          </div>
+          <div class="cu-card existing done-static" style="left: calc(67.7% + 8px); top: 90px;">
+            <div class="cu-card-title">Expense report</div>
+            <div class="cu-card-meta">Filed</div>
+          </div>
+
+          <div id="ec-1" class="cu-card" style="top: 144px;">
+            <div class="cu-card-title">Q3 investor deck</div>
+            <div class="cu-card-meta">From email . James K.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SCENE: Decision queue ===== -->
+  <section id="decision" class="scene sand-light" data-duration="1700">
+    <div class="decision-stack">
+      <div class="decision-card">
+        <div class="text">
+          <div class="label">DECISION 01</div>
+          <div class="question">Approve Q3 vendor list?</div>
+        </div>
+        <div class="actions">
+          <div class="btn-yes">✓</div>
+          <div class="btn-no">✕</div>
+        </div>
+      </div>
+      <div class="decision-card">
+        <div class="text">
+          <div class="label">DECISION 02</div>
+          <div class="question">Sign Acme contract v2?</div>
+        </div>
+        <div class="actions">
+          <div class="btn-yes">✓</div>
+          <div class="btn-no">✕</div>
+        </div>
+      </div>
+      <div class="decision-card">
+        <div class="text">
+          <div class="label">DECISION 03</div>
+          <div class="question">Confirm Tuesday all-hands?</div>
+        </div>
+        <div class="actions">
+          <div class="btn-yes">✓</div>
+          <div class="btn-no">✕</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SCENE: Calendar transformation ===== -->
+  <section id="calendar" class="scene cream" data-duration="2000">
+    <div class="cal-card">
+      <div class="cal-header">
+        <div class="cal-title">This week</div>
+        <div class="cal-week">OCT 7 - 11</div>
+      </div>
+      <div class="cal-grid">
+        <div></div>
+        <div class="cal-day-head">MON</div>
+        <div class="cal-day-head">TUE</div>
+        <div class="cal-day-head">WED</div>
+        <div class="cal-day-head">THU</div>
+        <div class="cal-day-head">FRI</div>
+
+        <div class="cal-time">9</div>
+        <div class="cal-day"><div class="cal-block">Standup</div></div>
+        <div class="cal-day"><div class="cal-block kill1">Vendor sync</div></div>
+        <div class="cal-day"><div class="cal-block kill2">1:1 Sarah</div></div>
+        <div class="cal-day"><div class="cal-block kill3">Status review</div></div>
+        <div class="cal-day"><div class="cal-block">Acme call</div></div>
+
+        <div class="cal-time">11</div>
+        <div class="cal-day"><div class="cal-block kill4">Catchup</div></div>
+        <div class="cal-day"><div class="cal-block">Strategy</div></div>
+        <div class="cal-day"><div class="cal-block kill5">Board prep</div></div>
+        <div class="cal-day"><div class="cal-block">Investor call</div></div>
+        <div class="cal-day"><div class="cal-block kill6">Internal</div></div>
+
+        <div class="cal-time">2</div>
+        <div class="cal-day"><div class="cal-block free appear a1">Deep work</div></div>
+        <div class="cal-day"><div class="cal-block">Customer call</div></div>
+        <div class="cal-day"><div class="cal-block free appear a2">Deep work</div></div>
+        <div class="cal-day"><div class="cal-block">Team review</div></div>
+        <div class="cal-day"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SCENE: Travel itinerary ===== -->
+  <section id="travel" class="scene sand" data-duration="2000">
+    <div class="travel-card">
+      <div class="travel-header">Friday <em>→ New York.</em></div>
+      <div class="travel-step">
+        <div class="icon">✈</div>
+        <div class="info">
+          <div class="label">FLIGHT</div>
+          <div class="main">UA 1234 . JFK 7:30 AM</div>
+          <div class="sub">Seat 2A . Priority boarding</div>
+        </div>
+        <div class="check">✓</div>
+      </div>
+      <div class="travel-step">
+        <div class="icon">⌂</div>
+        <div class="info">
+          <div class="label">HOTEL</div>
+          <div class="main">Four Seasons . Check-in 3 PM</div>
+          <div class="sub">King suite . High floor</div>
+        </div>
+        <div class="check">✓</div>
+      </div>
+      <div class="travel-step">
+        <div class="icon">⛟</div>
+        <div class="info">
+          <div class="label">GROUND</div>
+          <div class="main">Black car . 6:00 AM pickup</div>
+          <div class="sub">Driver confirmed . details in your inbox</div>
+        </div>
+        <div class="check">✓</div>
+      </div>
+      <div class="travel-step">
+        <div class="icon">🍽</div>
+        <div class="info">
+          <div class="label">DINNER</div>
+          <div class="main">Le Bernardin . 8 PM</div>
+          <div class="sub">Table for 2 . Tasting menu</div>
+        </div>
+        <div class="check">✓</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SCENE 4: Inbox to zero ===== -->
+  <section id="scene-4" class="scene cream" data-duration="2100">
+    <div class="inbox">
+      <div class="inbox-header">
+        <div class="inbox-title">Inbox</div>
+        <div class="inbox-count">
+          <span class="num" id="inbox-num">247</span>
+          <span>UNREAD</span>
+        </div>
+      </div>
+      <div class="inbox-list">
+        <div id="er1" class="email-row">
+          <div class="avatar av-1">JK</div>
+          <div class="lines">
+            <div class="ln short"></div>
+            <div class="ln long"></div>
+          </div>
+          <div class="check">✓</div>
+        </div>
+        <div id="er2" class="email-row">
+          <div class="avatar av-2">SM</div>
+          <div class="lines">
+            <div class="ln short"></div>
+            <div class="ln medium"></div>
+          </div>
+          <div class="check">✓</div>
+        </div>
+        <div id="er3" class="email-row">
+          <div class="avatar av-3">RC</div>
+          <div class="lines">
+            <div class="ln short"></div>
+            <div class="ln long"></div>
+          </div>
+          <div class="check">✓</div>
+        </div>
+        <div id="er4" class="email-row">
+          <div class="avatar av-4">AT</div>
+          <div class="lines">
+            <div class="ln short"></div>
+            <div class="ln medium"></div>
+          </div>
+          <div class="check">✓</div>
+        </div>
+        <div id="er5" class="email-row">
+          <div class="avatar av-5">DV</div>
+          <div class="lines">
+            <div class="ln short"></div>
+            <div class="ln long"></div>
+          </div>
+          <div class="check">✓</div>
+        </div>
+        <div id="er6" class="email-row">
+          <div class="avatar av-6">PL</div>
+          <div class="lines">
+            <div class="ln short"></div>
+            <div class="ln medium"></div>
+          </div>
+          <div class="check">✓</div>
+        </div>
+        <div id="er7" class="email-row">
+          <div class="avatar av-7">MO</div>
+          <div class="lines">
+            <div class="ln short"></div>
+            <div class="ln long"></div>
+          </div>
+          <div class="check">✓</div>
+        </div>
+        <div id="er8" class="email-row">
+          <div class="avatar av-8">KB</div>
+          <div class="lines">
+            <div class="ln short"></div>
+            <div class="ln medium"></div>
+          </div>
+          <div class="check">✓</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SCENE: While you slept ===== -->
+  <section id="sleep" class="scene dark" data-duration="2000">
+    <div class="clock-wrap">
+      <div class="clock-face">
+        <div class="clock-time">3:42</div>
+        <div class="clock-hand"></div>
+      </div>
+      <div class="sleep-event e1">EMAIL REPLIED</div>
+      <div class="sleep-event e2">DECK DRAFTED</div>
+      <div class="sleep-event e3">CALENDAR PREPPED</div>
+      <div class="sleep-event e4">BRIEF READY</div>
+    </div>
+  </section>
+
+  <!-- ===== SCENE 5: Polished brief deliverable ===== -->
+  <section id="scene-5" class="scene sand-light" data-duration="2800">
+    <div class="brief-card">
+      <div class="accent-bar"></div>
+      <div class="brief-header">
+        <div class="left">
+          <div class="label">STRATEGY BRIEF . Q3</div>
+          <h3>Acme Corp . performance overview</h3>
+        </div>
+        <div class="stamp">PREPARED FRI 4:00 PM</div>
+      </div>
+      <div class="brief-body">
+        <div class="brief-pie-block">
+          <div class="pie-wrap">
+            <div class="pie"></div>
+            <div class="pie-center">
+              <div class="big">$2.4M</div>
+              <div class="small">Pipeline</div>
+            </div>
+          </div>
+          <div class="pie-legend">
+            <span class="l1">Enterprise</span>
+            <span class="l2">SMB</span>
+            <span class="l3">Renewals</span>
+            <span class="l4">Other</span>
+          </div>
+        </div>
+        <div class="brief-right">
+          <div class="brief-bars">
+            <div class="brief-bar-col"><div class="brief-bar"></div><div class="brief-bar-label">APR</div></div>
+            <div class="brief-bar-col"><div class="brief-bar"></div><div class="brief-bar-label">MAY</div></div>
+            <div class="brief-bar-col"><div class="brief-bar"></div><div class="brief-bar-label">JUN</div></div>
+            <div class="brief-bar-col"><div class="brief-bar"></div><div class="brief-bar-label">JUL</div></div>
+            <div class="brief-bar-col"><div class="brief-bar"></div><div class="brief-bar-label">AUG</div></div>
+            <div class="brief-bar-col"><div class="brief-bar"></div><div class="brief-bar-label">SEP</div></div>
+          </div>
+          <div class="brief-stats">
+            <div class="brief-stat">
+              <div class="brief-stat-num">+18<em>%</em></div>
+              <div class="brief-stat-label">Growth</div>
+            </div>
+            <div class="brief-stat">
+              <div class="brief-stat-num">3</div>
+              <div class="brief-stat-label">Logos</div>
+            </div>
+            <div class="brief-stat">
+              <div class="brief-stat-num">94<em>%</em></div>
+              <div class="brief-stat-label">Retention</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="brief-foot">DELIVERED</div>
+    </div>
+  </section>
+
+  <!-- ===== SCENE 6: Brand close ===== -->
+  <section id="scene-6" class="scene dark" data-duration="1100">
+    <div class="brand-wrap">
+      <div class="brand-svg" aria-label="Fekreya">
+        <svg viewBox="0 0 8166.4 1192.0" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img"><title>Fekreya</title><g transform="translate(563.2, 968.5) scale(1, -1)"><path d="M83 0V745H555V655H181V414H520V324H181V0Z" transform="translate(-83,0)" fill="currentColor"/><path d="M83 0V745H568V655H181V419H548V329H181V90H568V0Z" transform="translate(839,0)" fill="currentColor"/><path d="M83 0V745H181V364L513 745H636L366 433L651 0H534L298 354L181 220V0Z" transform="translate(1774,0)" fill="currentColor"/><path d="M83 0V745H346Q420 745 476.0 717.0Q532 689 563.5 637.0Q595 585 595 515Q595 436 555.0 381.0Q515 326 447 302L620 0H506L345 285H181V0ZM181 375H349Q393 375 426.0 392.0Q459 409 477.5 441.0Q496 473 496 515Q496 558 477.5 589.5Q459 621 426.0 638.0Q393 655 349 655H181Z" transform="translate(2792,0)" fill="currentColor"/><path d="M83 0V745H568V655H181V419H548V329H181V90H568V0Z" transform="translate(3779,0)" fill="currentColor"/><path d="M269 0V341L11 745H122L318 437L513 745H624L368 341V0Z" transform="translate(4786,0)" fill="currentColor"/><path d="M11 0 278 745H394L661 0H556L495 175H177L116 0ZM208 265H464L336 634Z" transform="translate(5849,0)" fill="currentColor"/><rect x="6960" y="0" width="80" height="80" fill="#E87A5D"/></g></svg>
+      </div>
+      <div class="pulse-glow"></div>
+    </div>
+  </section>
+
+</div>
+
+
+<script>
+const scenes = document.querySelectorAll('.scene');
+const dots = document.querySelectorAll('.progress span');
+let currentIdx = 0;
+
+function tickInboxCount() {
+  const el = document.getElementById('inbox-num');
+  if (!el) return;
+  el.textContent = '247';
+  let val = 247;
+  const target = 0;
+  const duration = 1500; // total tick duration ms
+  const steps = 60;
+  const interval = duration / steps;
+  let stepCount = 0;
+  const timer = setInterval(() => {
+    stepCount++;
+    // Ease-out: faster early, slower late, but here we just decrement geometrically
+    const progress = stepCount / steps;
+    const eased = 1 - Math.pow(1 - progress, 2.2);
+    val = Math.round(247 * (1 - eased));
+    el.textContent = val;
+    if (stepCount >= steps) {
+      clearInterval(timer);
+      el.textContent = '0';
+    }
+  }, interval);
+}
+
+function showScene(idx) {
+  scenes.forEach((s, i) => s.classList.toggle('active', i === idx));
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+  const dur = parseInt(scenes[idx].dataset.duration) || 4000;
+  // Trigger scene-specific animations
+  if (scenes[idx].id === 'scene-4') {
+    setTimeout(tickInboxCount, 300);
+  }
+  setTimeout(() => {
+    showScene((idx + 1) % scenes.length);
+  }, dur);
+  currentIdx = idx;
+}
+
+setTimeout(() => {
+  showScene((currentIdx + 1) % scenes.length);
+}, parseInt(scenes[0].dataset.duration) || 2200);
+
+// ESC to go back (standalone only)
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') window.location.href = 'index.html';
+});
+
+// Hide the back-nav and progress dots when embedded as a hero iframe
+if (window.self !== window.top) {
+  const bn = document.querySelector('.back-nav');
+  const pg = document.querySelector('.progress');
+  if (bn) bn.style.display = 'none';
+  if (pg) pg.style.display = 'none';
+}
+</script>
+
+</body>
+</html>

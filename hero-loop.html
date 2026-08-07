@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fekreya . Hero loop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0F1830;
+  --navy-2: #1D2A4D;
+  --navy-soft: #4a5066;
+  --sand: #E8DCC4;
+  --cream: #fdfaf2;
+  --coral: #E87A5D;
+  --coral-deep: #c85f43;
+  --coral-soft: #fbe5dd;
+  --green: #2FA15C;
+  --green-soft: rgba(47,161,92,0.12);
+  --blue: #2C7BE5;
+  --blue-soft: rgba(44,123,229,0.10);
+  --purple: #6B5BD2;
+  --purple-soft: rgba(107,91,210,0.10);
+  --tan: #C2A279;
+  --border: rgba(15,24,48,0.10);
+  --shadow-soft: 0 24px 60px rgba(15,24,48,0.16);
+  --shadow-card: 0 4px 16px rgba(15,24,48,0.06);
+  --LOOP: 14s;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: transparent; }
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
+  color: var(--navy);
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.stage {
+  position: relative;
+  width: 920px;
+  max-width: 100%;
+  height: 440px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 24px;
+}
+
+/* ============== PHONE (left) ============== */
+.phone {
+  position: relative;
+  width: 230px;
+  height: 100%;
+  background: var(--navy);
+  border-radius: 36px;
+  padding: 8px;
+  box-shadow: var(--shadow-soft);
+  flex-shrink: 0;
+}
+.phone::before {
+  content: '';
+  position: absolute;
+  top: 14px; left: 50%;
+  transform: translateX(-50%);
+  width: 80px; height: 18px;
+  background: var(--navy);
+  border-radius: 0 0 12px 12px;
+  z-index: 5;
+}
+.screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #ECE5DD;
+  display: flex;
+  flex-direction: column;
+}
+.wa-header {
+  background: #075E54;
+  color: white;
+  padding: 30px 11px 9px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.wa-back { font-size: 16px; opacity: 0.9; }
+.wa-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--coral) 0%, var(--coral-deep) 100%);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 11px;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.wa-name { font-size: 12.5px; font-weight: 600; }
+.wa-status { font-size: 9px; opacity: 0.85; margin-top: 1px; }
+.wa-icons { margin-left: auto; display: flex; gap: 10px; opacity: 0.85; font-size: 11px; }
+
+.wa-body {
+  flex: 1;
+  padding: 9px 8px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+  justify-content: flex-end;
+}
+.bubble {
+  padding: 6px 9px 4px 9px;
+  border-radius: 7px;
+  max-width: 86%;
+  font-size: 10.5px;
+  line-height: 1.35;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.06);
+  color: var(--navy);
+  opacity: 0;
+  transform: translateY(5px);
+}
+.bubble.client {
+  align-self: flex-start;
+  background: white;
+  border-top-left-radius: 2px;
+}
+.bubble.assistant {
+  align-self: flex-end;
+  background: #DCF8C6;
+  border-top-right-radius: 2px;
+}
+.bubble .time {
+  display: inline-block;
+  font-size: 8.5px;
+  color: #888;
+  margin-left: 5px;
+}
+.bubble.assistant .time::after {
+  content: ' \2713\2713';
+  color: #34B7F1;
+}
+.typing-dots {
+  align-self: flex-end;
+  background: #DCF8C6;
+  padding: 7px 11px;
+  border-radius: 7px;
+  border-top-right-radius: 2px;
+  display: flex;
+  gap: 3px;
+  opacity: 0;
+}
+.typing-dots span {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: #4a5066;
+  opacity: 0.4;
+  animation: typing 1.2s infinite ease-in-out;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-3px); opacity: 1; }
+}
+
+/* ============== DASHBOARD (right) ============== */
+.dash {
+  flex: 1;
+  height: 100%;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.dash-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #faf8f1 0%, white 100%);
+  flex-shrink: 0;
+}
+.dash-head .pip {
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, var(--coral) 0%, var(--coral-deep) 100%);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: 10px;
+  letter-spacing: 0.4px;
+}
+.dash-head .title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 12.5px;
+  color: var(--navy);
+  letter-spacing: 0.2px;
+}
+.dash-head .sub {
+  font-size: 10.5px;
+  color: var(--navy-soft);
+  margin-left: 2px;
+}
+.dash-head .live {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--coral-deep);
+  background: var(--coral-soft);
+  padding: 4px 10px 4px 8px;
+  border-radius: 100px;
+  text-transform: uppercase;
+}
+.dash-head .live::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--coral);
+  border-radius: 50%;
+  animation: pulse 1.4s infinite ease-in-out;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.4); }
+}
+
+/* Body grid: calendar + kanban */
+.dash-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 0;
+  min-height: 0;
+}
+
+/* ============== Calendar (left of dashboard) ============== */
+.cal {
+  border-right: 1px solid var(--border);
+  padding: 10px 12px 10px 12px;
+  display: flex;
+  flex-direction: column;
+  background: #fcfaf4;
+  min-height: 0;
+}
+.cal-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.cal-eyebrow {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  color: var(--navy-soft);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.cal-day {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--coral-deep);
+  letter-spacing: 0.5px;
+}
+.cal-grid {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 0;
+}
+.cal-row {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 6px;
+  align-items: center;
+  height: 14.28%;
+  position: relative;
+}
+.cal-row::after {
+  content: '';
+  position: absolute;
+  left: 28px; right: 0; bottom: 0;
+  border-bottom: 1px dashed rgba(15,24,48,0.07);
+}
+.cal-row:last-child::after { border-bottom: 0; }
+.cal-time {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  color: var(--navy-soft);
+  font-weight: 600;
+  text-align: right;
+}
+.cal-track { position: relative; height: 100%; }
+.cal-event {
+  position: absolute;
+  left: 0; right: 4px;
+  top: 4px; bottom: 4px;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 9.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transform: translateX(-6px);
+}
+.cal-event.coral  { background: var(--coral-soft); color: var(--coral-deep); border-left: 3px solid var(--coral); }
+.cal-event.blue   { background: var(--blue-soft); color: #1e5fb8; border-left: 3px solid var(--blue); }
+.cal-event.green  { background: var(--green-soft); color: #1f7a45; border-left: 3px solid var(--green); }
+.cal-event.purple { background: var(--purple-soft); color: #4d40a8; border-left: 3px solid var(--purple); }
+.cal-event.gray   { background: rgba(15,24,48,0.05); color: var(--navy-soft); border-left: 3px solid rgba(15,24,48,0.18); }
+
+/* ============== Kanban (right of dashboard) ============== */
+.kan {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.kan-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.kan-eyebrow {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  color: var(--navy-soft);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.kan-meta {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: 0.3px;
+}
+.kan-meta em {
+  font-style: normal;
+  color: var(--coral);
+}
+.kan-cols {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  min-height: 0;
+}
+.kan-col {
+  background: #faf8f1;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+.kan-col-head {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 1.1px;
+  color: var(--navy-soft);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  padding: 0 2px;
+}
+.kan-col-head .dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--navy-soft);
+}
+.kan-col.todo  .kan-col-head .dot { background: var(--tan); }
+.kan-col.doing .kan-col-head .dot { background: var(--coral); }
+.kan-col.done  .kan-col-head .dot { background: var(--green); }
+.kan-col.done .kan-col-head { color: var(--green); }
+
+.kcard {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 7px 6px 8px;
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--navy);
+  line-height: 1.25;
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  box-shadow: 0 1px 2px rgba(15,24,48,0.04);
+}
+.kcard .tag {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  text-transform: uppercase;
+}
+.kcard .tag.eml { background: var(--purple-soft); color: #4d40a8; }
+.kcard .tag.doc { background: var(--blue-soft); color: #1e5fb8; }
+.kcard .tag.cal { background: var(--coral-soft); color: var(--coral-deep); }
+.kcard .tag.tsk { background: rgba(15,24,48,0.06); color: var(--navy-soft); }
+.kcard .tag.ppt { background: rgba(220,76,63,0.12); color: #b53d33; }
+.kcard .body { flex: 1; }
+.kcard .check {
+  color: var(--green);
+  font-weight: 800;
+  margin-left: 2px;
+  font-size: 10px;
+}
+
+/* New cards entering the DONE column (slide in with check) */
+.kcard-new {
+  opacity: 0;
+  transform: translateX(-12px);
+}
+
+/* ============== Activity strip ============== */
+.dash-foot {
+  border-top: 1px solid var(--border);
+  background: #faf8f1;
+  padding: 7px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  min-height: 32px;
+}
+.foot-eye {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 8.5px;
+  letter-spacing: 1.4px;
+  color: var(--coral-deep);
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.foot-eye::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--coral);
+  border-radius: 50%;
+  animation: pulse 1.4s infinite ease-in-out;
+}
+.foot-tick {
+  position: relative;
+  flex: 1;
+  height: 16px;
+  overflow: hidden;
+}
+.tick {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--navy);
+  font-weight: 600;
+  opacity: 0;
+}
+.tick .ck {
+  color: var(--green);
+  font-weight: 800;
+  font-size: 11px;
+}
+.tick .who {
+  color: var(--navy-soft);
+  font-weight: 500;
+  font-size: 9.5px;
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: 0.3px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.foot-stat {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: 0.4px;
+  flex-shrink: 0;
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
+}
+.foot-stat em {
+  font-style: normal;
+  color: var(--coral);
+  font-size: 12px;
+}
+
+/* ============== ANIMATION TIMELINE (14s loop) ============== */
+.anim {
+  animation-duration: var(--LOOP);
+  animation-iteration-count: infinite;
+  animation-timing-function: ease;
+}
+
+/* ----- WhatsApp messages (left phone) ----- */
+/* 5 client messages drop in fast, then typing, then EA replies */
+#cli-1 { animation-name: bub1; }
+#cli-2 { animation-name: bub2; }
+#cli-3 { animation-name: bub3; }
+#cli-4 { animation-name: bub4; }
+#cli-5 { animation-name: bub5; }
+@keyframes bub1 { 0%, 1% { opacity: 0; transform: translateY(5px); } 4%, 92% { opacity: 1; transform: translateY(0); } 96%, 100% { opacity: 0; } }
+@keyframes bub2 { 0%, 7% { opacity: 0; transform: translateY(5px); } 10%, 92% { opacity: 1; transform: translateY(0); } 96%, 100% { opacity: 0; } }
+@keyframes bub3 { 0%, 14% { opacity: 0; transform: translateY(5px); } 17%, 92% { opacity: 1; transform: translateY(0); } 96%, 100% { opacity: 0; } }
+@keyframes bub4 { 0%, 21% { opacity: 0; transform: translateY(5px); } 24%, 92% { opacity: 1; transform: translateY(0); } 96%, 100% { opacity: 0; } }
+@keyframes bub5 { 0%, 28% { opacity: 0; transform: translateY(5px); } 31%, 92% { opacity: 1; transform: translateY(0); } 96%, 100% { opacity: 0; } }
+
+#typing { animation-name: typingShow; }
+@keyframes typingShow {
+  0%, 35% { opacity: 0; }
+  38%, 44% { opacity: 1; }
+  47%, 100% { opacity: 0; }
+}
+
+#asst-1 { animation-name: ast1; }
+#asst-2 { animation-name: ast2; }
+#asst-3 { animation-name: ast3; }
+#asst-4 { animation-name: ast4; }
+@keyframes ast1 { 0%, 47% { opacity: 0; transform: translateY(5px); } 50%, 92% { opacity: 1; transform: translateY(0); } 96%, 100% { opacity: 0; } }
+@keyframes ast2 { 0%, 54% { opacity: 0; transform: translateY(5px); } 57%, 92% { opacity: 1; transform: translateY(0); } 96%, 100% { opacity: 0; } }
+@keyframes ast3 { 0%, 61% { opacity: 0; transform: translateY(5px); } 64%, 92% { opacity: 1; transform: translateY(0); } 96%, 100% { opacity: 0; } }
+@keyframes ast4 { 0%, 68% { opacity: 0; transform: translateY(5px); } 71%, 92% { opacity: 1; transform: translateY(0); } 96%, 100% { opacity: 0; } }
+
+/* ----- Calendar events fill in ----- */
+.cal-event { animation-duration: var(--LOOP); animation-iteration-count: infinite; animation-timing-function: ease; }
+#ev-1 { animation-name: ev1; } /* gray, pre-existing */
+#ev-2 { animation-name: ev1; } /* gray, pre-existing */
+#ev-3 { animation-name: ev3; } /* coral, drops in early */
+#ev-4 { animation-name: ev4; } /* blue, mid */
+#ev-5 { animation-name: ev5; } /* purple, mid */
+#ev-6 { animation-name: ev6; } /* green, late */
+@keyframes ev1 { 0%, 92% { opacity: 1; transform: translateX(0); } 96%, 100% { opacity: 0; } }
+@keyframes ev3 { 0%, 8% { opacity: 0; transform: translateX(-6px); } 12%, 92% { opacity: 1; transform: translateX(0); } 96%, 100% { opacity: 0; } }
+@keyframes ev4 { 0%, 22% { opacity: 0; transform: translateX(-6px); } 26%, 92% { opacity: 1; transform: translateX(0); } 96%, 100% { opacity: 0; } }
+@keyframes ev5 { 0%, 38% { opacity: 0; transform: translateX(-6px); } 42%, 92% { opacity: 1; transform: translateX(0); } 96%, 100% { opacity: 0; } }
+@keyframes ev6 { 0%, 56% { opacity: 0; transform: translateX(-6px); } 60%, 92% { opacity: 1; transform: translateX(0); } 96%, 100% { opacity: 0; } }
+
+/* ----- Kanban: new cards land in DONE through the loop ----- */
+.kcard-new { animation-duration: var(--LOOP); animation-iteration-count: infinite; animation-timing-function: ease; }
+
+/* TODO cards fade to "removed" state, then reset on loop */
+.kcard-fade { animation-duration: var(--LOOP); animation-iteration-count: infinite; animation-timing-function: ease; }
+
+#km-a { animation-name: kmIn1; } /* DONE: 1st new arrival */
+#km-b { animation-name: kmIn2; } /* DONE: 2nd */
+#km-c { animation-name: kmIn3; } /* DONE: 3rd */
+@keyframes kmIn1 { 0%, 18% { opacity: 0; transform: translateX(-12px); } 24%, 92% { opacity: 1; transform: translateX(0); } 96%, 100% { opacity: 0; } }
+@keyframes kmIn2 { 0%, 38% { opacity: 0; transform: translateX(-12px); } 44%, 92% { opacity: 1; transform: translateX(0); } 96%, 100% { opacity: 0; } }
+@keyframes kmIn3 { 0%, 58% { opacity: 0; transform: translateX(-12px); } 64%, 92% { opacity: 1; transform: translateX(0); } 96%, 100% { opacity: 0; } }
+
+#kd-1 { animation-name: kmFade1; } /* TODO card fading "moved out" */
+#kd-2 { animation-name: kmFade2; }
+#kd-3 { animation-name: kmFade3; }
+@keyframes kmFade1 { 0%, 18% { opacity: 1; } 22%, 92% { opacity: 0.28; filter: grayscale(0.6); } 96%, 100% { opacity: 1; filter: none; } }
+@keyframes kmFade2 { 0%, 38% { opacity: 1; } 42%, 92% { opacity: 0.28; filter: grayscale(0.6); } 96%, 100% { opacity: 1; filter: none; } }
+@keyframes kmFade3 { 0%, 58% { opacity: 1; } 62%, 92% { opacity: 0.28; filter: grayscale(0.6); } 96%, 100% { opacity: 1; filter: none; } }
+
+/* DOING column gets a brief "active" pulse on each card as it gets worked */
+.kcard-pulse { animation-duration: var(--LOOP); animation-iteration-count: infinite; animation-timing-function: ease; }
+#kp-1 { animation-name: kPulse1; }
+#kp-2 { animation-name: kPulse2; }
+@keyframes kPulse1 { 0%, 14% { box-shadow: 0 1px 2px rgba(15,24,48,0.04); } 18%, 22% { box-shadow: 0 0 0 2px var(--coral-soft), 0 4px 10px rgba(232,122,93,0.18); } 26%, 100% { box-shadow: 0 1px 2px rgba(15,24,48,0.04); } }
+@keyframes kPulse2 { 0%, 34% { box-shadow: 0 1px 2px rgba(15,24,48,0.04); } 38%, 42% { box-shadow: 0 0 0 2px var(--coral-soft), 0 4px 10px rgba(232,122,93,0.18); } 46%, 100% { box-shadow: 0 1px 2px rgba(15,24,48,0.04); } }
+
+/* ----- Activity ticker ----- */
+.tick { animation-duration: var(--LOOP); animation-iteration-count: infinite; animation-timing-function: ease; }
+#tk-1 { animation-name: tk1; }
+#tk-2 { animation-name: tk2; }
+#tk-3 { animation-name: tk3; }
+#tk-4 { animation-name: tk4; }
+#tk-5 { animation-name: tk5; }
+@keyframes tk1 { 0%, 4% { opacity: 0; transform: translateY(8px); } 7%, 18% { opacity: 1; transform: translateY(0); } 22%, 100% { opacity: 0; transform: translateY(-8px); } }
+@keyframes tk2 { 0%, 22% { opacity: 0; transform: translateY(8px); } 25%, 36% { opacity: 1; transform: translateY(0); } 40%, 100% { opacity: 0; transform: translateY(-8px); } }
+@keyframes tk3 { 0%, 40% { opacity: 0; transform: translateY(8px); } 43%, 54% { opacity: 1; transform: translateY(0); } 58%, 100% { opacity: 0; transform: translateY(-8px); } }
+@keyframes tk4 { 0%, 58% { opacity: 0; transform: translateY(8px); } 61%, 72% { opacity: 1; transform: translateY(0); } 76%, 100% { opacity: 0; transform: translateY(-8px); } }
+@keyframes tk5 { 0%, 76% { opacity: 0; transform: translateY(8px); } 79%, 92% { opacity: 1; transform: translateY(0); } 96%, 100% { opacity: 0; transform: translateY(-8px); } }
+
+/* Stat counter rises (layered numbers, swap via opacity) */
+.fs-stack { position: relative; display: inline-block; min-width: 18px; text-align: right; }
+.fs-stack span {
+  position: absolute;
+  right: 0; top: 0;
+  opacity: 0;
+  animation-duration: var(--LOOP);
+  animation-iteration-count: infinite;
+  animation-timing-function: ease;
+}
+.fs-stack span.lead { position: static; opacity: 1; visibility: hidden; } /* reserves width */
+#n3 { animation-name: n3; }
+#n5 { animation-name: n5; }
+#n7 { animation-name: n7; }
+#n9 { animation-name: n9; }
+@keyframes n3 { 0%, 14% { opacity: 1; } 17%, 100% { opacity: 0; } }
+@keyframes n5 { 0%, 17% { opacity: 0; } 20%, 38% { opacity: 1; } 41%, 100% { opacity: 0; } }
+@keyframes n7 { 0%, 41% { opacity: 0; } 44%, 62% { opacity: 1; } 65%, 100% { opacity: 0; } }
+@keyframes n9 { 0%, 65% { opacity: 0; } 68%, 92% { opacity: 1; } 96%, 100% { opacity: 0; } }
+
+/* ============== Reduced motion: show final state ============== */
+@media (prefers-reduced-motion: reduce) {
+  .anim, .kcard-moving, .cal-event, .tick, .fs-stack span { animation: none !important; }
+  .bubble, .typing-dots, .cal-event { opacity: 1 !important; transform: none !important; }
+  #typing { display: none; }
+  #km-a { left: calc(200% / 3 + 6px); right: calc(-200% / 3 + 6px); top: 32px; opacity: 1; }
+  #km-b { left: calc(200% / 3 + 6px); right: calc(-200% / 3 + 6px); top: 60px; opacity: 1; }
+  #km-c { left: calc(100% / 3 + 6px); right: calc(-100% / 3 + 6px); top: 32px; opacity: 1; }
+  #tk-5 { opacity: 1; transform: none; }
+  #n9 { opacity: 1; }
+  .typing-dots span, .dash-head .live::before, .foot-eye::before { animation: none !important; }
+}
+
+/* ============== Responsive ============== */
+@media (max-width: 760px) {
+  .stage {
+    flex-direction: column;
+    height: auto;
+    gap: 14px;
+    padding: 4px 0;
+    width: 100%;
+  }
+  .phone { width: 200px; height: 320px; }
+  .dash { width: 100%; height: 380px; }
+  .dash-body { grid-template-columns: 160px 1fr; }
+  .cal-row { font-size: 8px; }
+  .kcard { font-size: 9px; padding: 5px 6px; }
+}
+@media (max-width: 520px) {
+  .dash-body { grid-template-columns: 130px 1fr; }
+  .cal { padding: 8px 8px; }
+  .kan { padding: 8px 8px; }
+  .kan-cols { gap: 5px; }
+  .kan-col { padding: 6px 4px; }
+  .kcard { font-size: 8.5px; }
+  .kcard .tag { font-size: 7px; }
+}
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- ============== PHONE ============== -->
+  <div class="phone">
+    <div class="screen">
+      <div class="wa-header">
+        <div class="wa-back">&#8249;</div>
+        <div class="wa-avatar">L</div>
+        <div>
+          <div class="wa-name">My EA Layla</div>
+          <div class="wa-status">Your executive assistant</div>
+        </div>
+        <div class="wa-icons"><span>&#128222;</span><span>&#8942;</span></div>
+      </div>
+
+      <div class="wa-body">
+        <div id="cli-1" class="bubble client anim">
+          minutes from leadership call &rarr; team
+          <span class="time">9:14</span>
+        </div>
+        <div id="cli-2" class="bubble client anim">
+          reply jason @ acme. yes to may 12.
+          <span class="time">9:15</span>
+        </div>
+        <div id="cli-3" class="bubble client anim">
+          book sf trip thursday
+          <span class="time">9:16</span>
+        </div>
+        <div id="cli-4" class="bubble client anim">
+          q1 deck for board
+          <span class="time">9:17</span>
+        </div>
+        <div id="cli-5" class="bubble client anim">
+          dinner res tonight, party of 4
+          <span class="time">9:18</span>
+        </div>
+
+        <div id="typing" class="typing-dots anim">
+          <span></span><span></span><span></span>
+        </div>
+
+        <div id="asst-1" class="bubble assistant anim">
+          Sent. Reply scheduled.
+          <span class="time">10:48</span>
+        </div>
+        <div id="asst-2" class="bubble assistant anim">
+          SF booked. Itinerary in inbox.
+          <span class="time">11:06</span>
+        </div>
+        <div id="asst-3" class="bubble assistant anim">
+          Deck v1 in your drive.
+          <span class="time">11:31</span>
+        </div>
+        <div id="asst-4" class="bubble assistant anim">
+          Zuma. 8pm. Confirmed.
+          <span class="time">11:42</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== DASHBOARD ============== -->
+  <div class="dash">
+    <div class="dash-head">
+      <div class="pip">FK</div>
+      <div>
+        <div class="title">Operations <span style="color:var(--coral)">.</span> Tuesday</div>
+      </div>
+      <div class="live">Layla &middot; Working</div>
+    </div>
+
+    <div class="dash-body">
+
+      <!-- Calendar -->
+      <div class="cal">
+        <div class="cal-head">
+          <div class="cal-eyebrow">Today</div>
+          <div class="cal-day">5 events</div>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-row"><div class="cal-time">9</div><div class="cal-track"><div id="ev-1" class="cal-event gray">Focus block</div></div></div>
+          <div class="cal-row"><div class="cal-time">10</div><div class="cal-track"><div id="ev-3" class="cal-event coral">Acme call</div></div></div>
+          <div class="cal-row"><div class="cal-time">11</div><div class="cal-track"></div></div>
+          <div class="cal-row"><div class="cal-time">12</div><div class="cal-track"><div id="ev-4" class="cal-event blue">Lunch &middot; Sarah</div></div></div>
+          <div class="cal-row"><div class="cal-time">1</div><div class="cal-track"><div id="ev-5" class="cal-event purple">Vendor review</div></div></div>
+          <div class="cal-row"><div class="cal-time">2</div><div class="cal-track"><div id="ev-2" class="cal-event gray">Email batch</div></div></div>
+          <div class="cal-row"><div class="cal-time">3</div><div class="cal-track"><div id="ev-6" class="cal-event green">Board prep</div></div></div>
+        </div>
+      </div>
+
+      <!-- Kanban -->
+      <div class="kan">
+        <div class="kan-head">
+          <div class="kan-eyebrow">Task board</div>
+          <div class="kan-meta">9 active &middot; <em>4 cleared today</em></div>
+        </div>
+        <div class="kan-cols">
+          <!-- TO DO column: cards fade as they get pulled into work -->
+          <div class="kan-col todo">
+            <div class="kan-col-head"><div class="dot"></div>To do</div>
+            <div id="kd-1" class="kcard kcard-fade anim"><span class="tag doc">DOC</span><span class="body">Leadership minutes</span></div>
+            <div id="kd-2" class="kcard kcard-fade anim"><span class="tag eml">EML</span><span class="body">Reply Jason @ Acme</span></div>
+            <div id="kd-3" class="kcard kcard-fade anim"><span class="tag cal">CAL</span><span class="body">Book SF travel</span></div>
+            <div class="kcard"><span class="tag tsk">OPS</span><span class="body">Renew Notion seats</span></div>
+          </div>
+          <!-- DOING column: active work, cards pulse as Layla moves through -->
+          <div class="kan-col doing">
+            <div class="kan-col-head"><div class="dot"></div>In progress</div>
+            <div id="kp-1" class="kcard kcard-pulse anim"><span class="tag ppt">PPT</span><span class="body">Q1 board deck v1</span></div>
+            <div id="kp-2" class="kcard kcard-pulse anim"><span class="tag doc">DOC</span><span class="body">Vendor brief &middot; Acme</span></div>
+            <div class="kcard"><span class="tag eml">EML</span><span class="body">Investor follow-ups</span></div>
+          </div>
+          <!-- DONE column: 2 static from before, 3 new arrivals slide in across the loop -->
+          <div class="kan-col done">
+            <div class="kan-col-head"><div class="dot"></div>Done</div>
+            <div class="kcard"><span class="tag eml">EML</span><span class="body">Inbox triaged 47&rarr;0</span><span class="check">&#10003;</span></div>
+            <div class="kcard"><span class="tag cal">CAL</span><span class="body">Expense report filed</span><span class="check">&#10003;</span></div>
+            <div id="km-a" class="kcard kcard-new anim"><span class="tag doc">DOC</span><span class="body">Leadership minutes</span><span class="check">&#10003;</span></div>
+            <div id="km-b" class="kcard kcard-new anim"><span class="tag eml">EML</span><span class="body">Reply Jason @ Acme</span><span class="check">&#10003;</span></div>
+            <div id="km-c" class="kcard kcard-new anim"><span class="tag cal">CAL</span><span class="body">SF travel booked</span><span class="check">&#10003;</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="dash-foot">
+      <div class="foot-eye">Live</div>
+      <div class="foot-tick">
+        <div id="tk-1" class="tick"><span class="ck">&#10003;</span> Inbox cleared <span class="who">Layla &middot; 9:42</span></div>
+        <div id="tk-2" class="tick"><span class="ck">&#10003;</span> Acme call brief sent <span class="who">Layla &middot; 10:11</span></div>
+        <div id="tk-3" class="tick"><span class="ck">&#10003;</span> SF travel confirmed <span class="who">Layla &middot; 11:06</span></div>
+        <div id="tk-4" class="tick"><span class="ck">&#10003;</span> Q1 deck v1 in your drive <span class="who">Layla &middot; 11:31</span></div>
+        <div id="tk-5" class="tick"><span class="ck">&#10003;</span> Zuma table for 4 confirmed <span class="who">Layla &middot; 11:42</span></div>
+      </div>
+      <div class="foot-stat">
+        <div class="fs-stack">
+          <span class="lead">9</span>
+          <span id="n3">3</span>
+          <span id="n5">5</span>
+          <span id="n7">7</span>
+          <span id="n9">9</span>
+        </div>
+        <em>&nbsp;done</em>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
