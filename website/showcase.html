@@ -29,7 +29,7 @@
 html, body { height: 100%; overflow: hidden; }
 body {
   font-family: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
-  background: var(--cream);
+  background: transparent;
   color: var(--navy);
   -webkit-font-smoothing: antialiased;
 }
@@ -85,16 +85,6 @@ body {
   0%, 100% { box-shadow: 0 0 0 0 rgba(232,122,93,0.5); transform: scale(1); }
   50% { box-shadow: 0 0 0 14px rgba(232,122,93,0); transform: scale(1.15); }
 }
-
-/* ============================== SCENE 1: Intro (brand only) ============================== */
-#scene-1 .brand-svg {
-  color: white;
-  opacity: 0;
-  transform: translateY(8px);
-}
-#scene-1 .brand-svg svg { height: 56px; display: block; }
-#scene-1.active .brand-svg { animation: brandIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0s forwards; }
-@keyframes brandIn { to { opacity: 1; transform: translateY(0); } }
 
 /* ============================== SCENE 2: WhatsApp + Board ============================== */
 #scene-2 .stack {
@@ -229,13 +219,13 @@ body {
   30% { transform: translateY(-3px); opacity: 1; }
 }
 
-#scene-2.active #b1 { animation: bubbleIn 0.4s ease 0.2s forwards; }
-#scene-2.active #b2 { animation: bubbleIn 0.4s ease 0.7s forwards; }
-#scene-2.active #b3 { animation: bubbleIn 0.4s ease 1.2s forwards; }
-#scene-2.active #typing { animation: typingShow 1s ease 1.7s forwards; }
-#scene-2.active #r1 { animation: bubbleIn 0.4s ease 2.6s forwards; }
-#scene-2.active #r2 { animation: bubbleIn 0.4s ease 3.1s forwards; }
-#scene-2.active #r3 { animation: bubbleIn 0.4s ease 3.6s forwards; }
+#scene-2.active #b1 { animation: bubbleIn 0.3s ease 0.08s forwards; }
+#scene-2.active #b2 { animation: bubbleIn 0.3s ease 0.32s forwards; }
+#scene-2.active #b3 { animation: bubbleIn 0.3s ease 0.56s forwards; }
+#scene-2.active #typing { animation: typingShow 0.6s ease 0.85s forwards; }
+#scene-2.active #r1 { animation: bubbleIn 0.3s ease 1.55s forwards; }
+#scene-2.active #r2 { animation: bubbleIn 0.3s ease 1.85s forwards; }
+#scene-2.active #r3 { animation: bubbleIn 0.3s ease 2.15s forwards; }
 
 @keyframes bubbleIn {
   to { opacity: 1; transform: translateY(0); }
@@ -329,9 +319,9 @@ body {
 #card-1 { top: 36px; }
 #card-2 { top: 90px; }
 #card-3 { top: 144px; }
-#scene-2.active #card-1 { animation: card1Move 5s ease 0.4s forwards; }
-#scene-2.active #card-2 { animation: card2Move 5s ease 0.9s forwards; }
-#scene-2.active #card-3 { animation: card3Move 5s ease 1.4s forwards; }
+#scene-2.active #card-1 { animation: card1Move 2.4s ease 0.25s forwards; }
+#scene-2.active #card-2 { animation: card2Move 2.4s ease 0.55s forwards; }
+#scene-2.active #card-3 { animation: card3Move 2.4s ease 0.85s forwards; }
 
 @keyframes card1Move {
   0%, 4% { left: 8px; opacity: 0; transform: scale(0.96); }
@@ -585,28 +575,28 @@ body {
 .email-row.read .check { opacity: 1; transform: scale(1); }
 
 /* Sequential read animation */
-#scene-4.active #er1 { animation: rowRead 0.4s ease 0.3s forwards; }
-#scene-4.active #er2 { animation: rowRead 0.4s ease 0.55s forwards; }
-#scene-4.active #er3 { animation: rowRead 0.4s ease 0.8s forwards; }
-#scene-4.active #er4 { animation: rowRead 0.4s ease 1.05s forwards; }
-#scene-4.active #er5 { animation: rowRead 0.4s ease 1.3s forwards; }
-#scene-4.active #er6 { animation: rowRead 0.4s ease 1.55s forwards; }
-#scene-4.active #er7 { animation: rowRead 0.4s ease 1.8s forwards; }
-#scene-4.active #er8 { animation: rowRead 0.4s ease 2.05s forwards; }
+#scene-4.active #er1 { animation: rowRead 0.35s ease 0.2s forwards; }
+#scene-4.active #er2 { animation: rowRead 0.35s ease 0.38s forwards; }
+#scene-4.active #er3 { animation: rowRead 0.35s ease 0.56s forwards; }
+#scene-4.active #er4 { animation: rowRead 0.35s ease 0.74s forwards; }
+#scene-4.active #er5 { animation: rowRead 0.35s ease 0.92s forwards; }
+#scene-4.active #er6 { animation: rowRead 0.35s ease 1.10s forwards; }
+#scene-4.active #er7 { animation: rowRead 0.35s ease 1.28s forwards; }
+#scene-4.active #er8 { animation: rowRead 0.35s ease 1.46s forwards; }
 
 @keyframes rowRead {
   to { opacity: 0.4; background: #fafaf6; }
 }
 
 #scene-4.active .check { animation: checkPop 0.3s ease forwards; }
-#scene-4.active #er1 .check { animation-delay: 0.3s; }
-#scene-4.active #er2 .check { animation-delay: 0.55s; }
-#scene-4.active #er3 .check { animation-delay: 0.8s; }
-#scene-4.active #er4 .check { animation-delay: 1.05s; }
-#scene-4.active #er5 .check { animation-delay: 1.3s; }
-#scene-4.active #er6 .check { animation-delay: 1.55s; }
-#scene-4.active #er7 .check { animation-delay: 1.8s; }
-#scene-4.active #er8 .check { animation-delay: 2.05s; }
+#scene-4.active #er1 .check { animation-delay: 0.2s; }
+#scene-4.active #er2 .check { animation-delay: 0.38s; }
+#scene-4.active #er3 .check { animation-delay: 0.56s; }
+#scene-4.active #er4 .check { animation-delay: 0.74s; }
+#scene-4.active #er5 .check { animation-delay: 0.92s; }
+#scene-4.active #er6 .check { animation-delay: 1.10s; }
+#scene-4.active #er7 .check { animation-delay: 1.28s; }
+#scene-4.active #er8 .check { animation-delay: 1.46s; }
 
 @keyframes checkPop {
   to { opacity: 1; transform: scale(1); }
@@ -1318,9 +1308,9 @@ body {
   padding: 12px;
   opacity: 0;
 }
-#scene-5.active .brief-stat:nth-child(1) { animation: fadeIn 0.3s ease 2.2s forwards; }
-#scene-5.active .brief-stat:nth-child(2) { animation: fadeIn 0.3s ease 2.35s forwards; }
-#scene-5.active .brief-stat:nth-child(3) { animation: fadeIn 0.3s ease 2.5s forwards; }
+#scene-5.active .brief-stat:nth-child(1) { animation: fadeIn 0.3s ease 1.8s forwards; }
+#scene-5.active .brief-stat:nth-child(2) { animation: fadeIn 0.3s ease 1.95s forwards; }
+#scene-5.active .brief-stat:nth-child(3) { animation: fadeIn 0.3s ease 2.1s forwards; }
 .brief-stat-num {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 22px;
@@ -1362,7 +1352,7 @@ body {
   vertical-align: middle;
   animation: pulseDot 1.4s infinite ease;
 }
-#scene-5.active .brief-foot { animation: fadeIn 0.3s ease 2.7s forwards; }
+#scene-5.active .brief-foot { animation: fadeIn 0.3s ease 2.3s forwards; }
 
 /* ============================== SCENE 6: Closing brand ============================== */
 #scene-6 .brand-wrap {
@@ -1375,6 +1365,7 @@ body {
 }
 #scene-6 .brand-svg svg { height: 56px; display: block; margin: 0 auto; }
 #scene-6.active .brand-svg { animation: brandIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s forwards; }
+@keyframes brandIn { to { opacity: 1; transform: translateY(0); } }
 
 #scene-6 .pulse-glow {
   width: 100px;
@@ -1436,9 +1427,6 @@ body {
   .email-body { padding: 12px; }
   .email-subject { font-size: 13px; }
   .email-from { font-size: 11px; }
-
-  /* Scene 1: brand */
-  #scene-1 .brand-svg svg { height: 36px; }
 
   /* Morning brief */
   #morning .morning-phone { width: 260px; height: 480px; transform: none; }
@@ -1526,21 +1514,62 @@ body {
   .progress span { width: 6px; height: 6px; }
   .progress span.active { width: 18px; }
 }
+
+/* ===== Back nav (fixed top-left, works on any scene) ===== */
+.back-nav {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px 9px 12px;
+  background: rgba(15, 24, 48, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--cream);
+  text-decoration: none;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  border-radius: 100px;
+  border: 1px solid rgba(253, 250, 242, 0.12);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.back-nav:hover {
+  background: rgba(15, 24, 48, 0.75);
+  transform: translateX(-2px);
+}
+.back-nav svg { width: 14px; height: 14px; }
+.back-nav .esc {
+  margin-left: 8px;
+  padding-left: 10px;
+  border-left: 1px solid rgba(253, 250, 242, 0.18);
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  opacity: 0.65;
+  text-transform: uppercase;
+}
+@media (max-width: 600px) {
+  .back-nav { top: 14px; left: 14px; padding: 8px 14px 8px 10px; font-size: 11px; }
+  .back-nav .esc { display: none; }
+}
 </style>
 </head>
 <body>
 
+<a href="index.html" class="back-nav" aria-label="Back to fekreya.com">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  Back to fekreya.com
+  <span class="esc">ESC</span>
+</a>
+
 <div class="stage">
 
-  <!-- ===== SCENE 1: Brand intro ===== -->
-  <section id="scene-1" class="scene dark active" data-duration="900">
-    <div class="brand-svg" aria-label="Fekreya">
-      <svg viewBox="0 0 8166.4 1192.0" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img"><title>Fekreya</title><g transform="translate(563.2, 968.5) scale(1, -1)"><path d="M83 0V745H555V655H181V414H520V324H181V0Z" transform="translate(-83,0)" fill="currentColor"/><path d="M83 0V745H568V655H181V419H548V329H181V90H568V0Z" transform="translate(839,0)" fill="currentColor"/><path d="M83 0V745H181V364L513 745H636L366 433L651 0H534L298 354L181 220V0Z" transform="translate(1774,0)" fill="currentColor"/><path d="M83 0V745H346Q420 745 476.0 717.0Q532 689 563.5 637.0Q595 585 595 515Q595 436 555.0 381.0Q515 326 447 302L620 0H506L345 285H181V0ZM181 375H349Q393 375 426.0 392.0Q459 409 477.5 441.0Q496 473 496 515Q496 558 477.5 589.5Q459 621 426.0 638.0Q393 655 349 655H181Z" transform="translate(2792,0)" fill="currentColor"/><path d="M83 0V745H568V655H181V419H548V329H181V90H568V0Z" transform="translate(3779,0)" fill="currentColor"/><path d="M269 0V341L11 745H122L318 437L513 745H624L368 341V0Z" transform="translate(4786,0)" fill="currentColor"/><path d="M11 0 278 745H394L661 0H556L495 175H177L116 0ZM208 265H464L336 634Z" transform="translate(5849,0)" fill="currentColor"/><rect x="6960" y="0" width="80" height="80" fill="#E87A5D"/></g></svg>
-    </div>
-  </section>
-
   <!-- ===== SCENE: Morning brief ===== -->
-  <section id="morning" class="scene sand" data-duration="3500">
+  <section id="morning" class="scene sand active" data-duration="1900">
     <div class="morning-phone">
       <div class="morning-screen">
         <div class="morning-time">TUESDAY . 7:14 AM</div>
@@ -1572,7 +1601,7 @@ body {
   </section>
 
   <!-- ===== SCENE 2: Full WhatsApp + Board flow ===== -->
-  <section id="scene-2" class="scene sand" data-duration="5500">
+  <section id="scene-2" class="scene sand" data-duration="3700">
     <div class="stack">
       <div class="phone">
         <div class="phone-screen">
@@ -1580,7 +1609,7 @@ body {
             <div class="wa-back">‹</div>
             <div class="wa-avatar">L</div>
             <div>
-              <div class="wa-name">Layla</div>
+              <div class="wa-name">My EA Layla</div>
               <div class="wa-status">Your executive assistant</div>
             </div>
             <div class="wa-icons">
@@ -1678,7 +1707,7 @@ body {
   </section>
 
   <!-- ===== SCENE 3: Email -> Task ===== -->
-  <section id="scene-3" class="scene cream" data-duration="4500">
+  <section id="scene-3" class="scene cream" data-duration="2500">
     <div class="stack">
       <div class="gmail">
         <div class="gmail-bar">
@@ -1752,7 +1781,7 @@ body {
   </section>
 
   <!-- ===== SCENE: Decision queue ===== -->
-  <section id="decision" class="scene sand-light" data-duration="3000">
+  <section id="decision" class="scene sand-light" data-duration="1700">
     <div class="decision-stack">
       <div class="decision-card">
         <div class="text">
@@ -1788,7 +1817,7 @@ body {
   </section>
 
   <!-- ===== SCENE: Calendar transformation ===== -->
-  <section id="calendar" class="scene cream" data-duration="3500">
+  <section id="calendar" class="scene cream" data-duration="2000">
     <div class="cal-card">
       <div class="cal-header">
         <div class="cal-title">This week</div>
@@ -1827,7 +1856,7 @@ body {
   </section>
 
   <!-- ===== SCENE: Travel itinerary ===== -->
-  <section id="travel" class="scene sand" data-duration="3500">
+  <section id="travel" class="scene sand" data-duration="2000">
     <div class="travel-card">
       <div class="travel-header">Friday <em>→ New York.</em></div>
       <div class="travel-step">
@@ -1853,7 +1882,7 @@ body {
         <div class="info">
           <div class="label">GROUND</div>
           <div class="main">Black car . 6:00 AM pickup</div>
-          <div class="sub">Driver: Marcus . +1 555 0142</div>
+          <div class="sub">Driver confirmed . details in your inbox</div>
         </div>
         <div class="check">✓</div>
       </div>
@@ -1870,7 +1899,7 @@ body {
   </section>
 
   <!-- ===== SCENE 4: Inbox to zero ===== -->
-  <section id="scene-4" class="scene cream" data-duration="3000">
+  <section id="scene-4" class="scene cream" data-duration="2100">
     <div class="inbox">
       <div class="inbox-header">
         <div class="inbox-title">Inbox</div>
@@ -1949,7 +1978,7 @@ body {
   </section>
 
   <!-- ===== SCENE: While you slept ===== -->
-  <section id="sleep" class="scene dark" data-duration="3500">
+  <section id="sleep" class="scene dark" data-duration="2000">
     <div class="clock-wrap">
       <div class="clock-face">
         <div class="clock-time">3:42</div>
@@ -1963,7 +1992,7 @@ body {
   </section>
 
   <!-- ===== SCENE 5: Polished brief deliverable ===== -->
-  <section id="scene-5" class="scene sand-light" data-duration="4000">
+  <section id="scene-5" class="scene sand-light" data-duration="2800">
     <div class="brief-card">
       <div class="accent-bar"></div>
       <div class="brief-header">
@@ -2019,7 +2048,7 @@ body {
   </section>
 
   <!-- ===== SCENE 6: Brand close ===== -->
-  <section id="scene-6" class="scene dark" data-duration="2000">
+  <section id="scene-6" class="scene dark" data-duration="1100">
     <div class="brand-wrap">
       <div class="brand-svg" aria-label="Fekreya">
         <svg viewBox="0 0 8166.4 1192.0" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img"><title>Fekreya</title><g transform="translate(563.2, 968.5) scale(1, -1)"><path d="M83 0V745H555V655H181V414H520V324H181V0Z" transform="translate(-83,0)" fill="currentColor"/><path d="M83 0V745H568V655H181V419H548V329H181V90H568V0Z" transform="translate(839,0)" fill="currentColor"/><path d="M83 0V745H181V364L513 745H636L366 433L651 0H534L298 354L181 220V0Z" transform="translate(1774,0)" fill="currentColor"/><path d="M83 0V745H346Q420 745 476.0 717.0Q532 689 563.5 637.0Q595 585 595 515Q595 436 555.0 381.0Q515 326 447 302L620 0H506L345 285H181V0ZM181 375H349Q393 375 426.0 392.0Q459 409 477.5 441.0Q496 473 496 515Q496 558 477.5 589.5Q459 621 426.0 638.0Q393 655 349 655H181Z" transform="translate(2792,0)" fill="currentColor"/><path d="M83 0V745H568V655H181V419H548V329H181V90H568V0Z" transform="translate(3779,0)" fill="currentColor"/><path d="M269 0V341L11 745H122L318 437L513 745H624L368 341V0Z" transform="translate(4786,0)" fill="currentColor"/><path d="M11 0 278 745H394L661 0H556L495 175H177L116 0ZM208 265H464L336 634Z" transform="translate(5849,0)" fill="currentColor"/><rect x="6960" y="0" width="80" height="80" fill="#E87A5D"/></g></svg>
@@ -2042,7 +2071,7 @@ function tickInboxCount() {
   el.textContent = '247';
   let val = 247;
   const target = 0;
-  const duration = 2200; // total tick duration ms
+  const duration = 1500; // total tick duration ms
   const steps = 60;
   const interval = duration / steps;
   let stepCount = 0;
@@ -2077,6 +2106,19 @@ function showScene(idx) {
 setTimeout(() => {
   showScene((currentIdx + 1) % scenes.length);
 }, parseInt(scenes[0].dataset.duration) || 2200);
+
+// ESC to go back (standalone only)
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') window.location.href = 'index.html';
+});
+
+// Hide the back-nav and progress dots when embedded as a hero iframe
+if (window.self !== window.top) {
+  const bn = document.querySelector('.back-nav');
+  const pg = document.querySelector('.progress');
+  if (bn) bn.style.display = 'none';
+  if (pg) pg.style.display = 'none';
+}
 </script>
 
 </body>
